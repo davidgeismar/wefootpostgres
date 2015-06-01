@@ -44,9 +44,9 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false
     },
-    chat:{
-      model:'chat'
-    }
+    // chat:{
+    //   model:'chat'
+    // }
 
 
   }

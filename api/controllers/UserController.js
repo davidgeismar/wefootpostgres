@@ -303,8 +303,7 @@ resetPassword: function(req,res){
       console.log(err);
       return res.status(406).end();
     }
-    if(user && user.facebook_id){
-    console.log(user.email);
+    if(user && !user.facebook_id){
     user.generatePasswordResetToken();
     user.sendPasswordResetEmail();
       return res.status(200).end();
@@ -316,6 +315,7 @@ resetPassword: function(req,res){
 },
 
 newPassword: function(req,res){
+
 
   User.findOne({email:req.param('email'), passwordResetToken:req.param('token')}).exec(function(err,user){
     if(err)
@@ -330,10 +330,13 @@ newPassword: function(req,res){
           return res.status(406);
         }
         return res.status(200);
-      });
 
-    }
+  
   });
+
+}
+
+});
 }
 
 

@@ -17,6 +17,7 @@ module.exports = {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
 
+<<<<<<< HEAD
   // models: {
   //   connection: 'someMysqlServer'
   // },
@@ -26,6 +27,17 @@ module.exports = {
    ***************************************************************************/
 
   // port: 80,
+=======
+  models: {
+    connection: 'postgres'
+  },
+
+  // **************************************************************************
+  //  * Set the port in the production environment to 80                        *
+  //  **************************************************************************
+
+  port: 80
+>>>>>>> cdfb4d95814110dab134ad6e7a17a196e957fa89
 
   /***************************************************************************
    * Set the log level in production environment to "silent"                 *

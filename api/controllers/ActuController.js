@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing actus
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
- 
+
 module.exports = {
 
 	getNotif: function(req,res){

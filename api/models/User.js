@@ -51,6 +51,7 @@ beforeCreate: function (attrs, next) {
   });
 },
 
+
 //permet de recrypter le MDP après modification
 beforeUpdate: [ function(attrs, next) {
 
@@ -69,6 +70,25 @@ beforeUpdate: [ function(attrs, next) {
   }
 }
 ],
+
+//permet de crypter le MDP après modification
+// beforeUpdate: [ function(attrs, next) {
+
+//   if (!attrs.password) {
+//     next();
+//     return next();
+//   }
+//   else{
+//   bcrypt.hash(attrs.password, salt, function(err, hash) {
+//     if (err) return next(err);
+//     attrs.password = hash;
+//     attrs.password_confirmation = hash;
+//     next();
+//   });
+// }
+// }
+//   ],
+
 
 
 
@@ -176,27 +196,28 @@ toJSON: function(){
   var obj= this.toObject();
   delete obj.password;
   delete obj.password_confirmation;
+
   delete obj.passwordResetToken;
   return obj;
 },
-generatePasswordResetToken: function(next) {
+
+generatePasswordResetToken: function() {
 
   this.passwordResetToken = token();
   this.save(function (err) {
-    if(err) return next(err);
-    next();
+    if(err) console.log(err);
   });
 },
 
 sendPasswordResetEmail: function() {
-
+console.log(this.email.toString());
   sails.hooks.email.send(
     "resetPassword",
     {
       recipientName: this.first_name,
       senderName: "Wefoot",
       token:this.passwordResetToken,
-      email:this.email
+      email:this.email.toString()
     },
     {
       to: this.email.toString(),
@@ -206,6 +227,7 @@ sendPasswordResetEmail: function() {
 }
 
 }
+
 
 };
 

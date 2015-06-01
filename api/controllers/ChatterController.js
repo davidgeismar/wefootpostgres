@@ -6,9 +6,7 @@
  */
 
  module.exports = {
- 
-  
- 
+
  	getAllChats: function (req, res, next){
   var chats = new Array();
   var i = 0;
@@ -39,6 +37,10 @@
     });
 
   });
+
+
+    
+
 
 }
 
