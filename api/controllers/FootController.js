@@ -7,7 +7,7 @@
 
 module.exports = {
 
-    create: function(req, res){
+  create: function(req, res){
         Foot.create(req.params.all(), function FootCreated(err, foot){
             if(err){
                 console.log(err);

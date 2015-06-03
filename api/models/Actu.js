@@ -28,6 +28,9 @@ module.exports = {
 	typ: {
 		type: 'string',
 		enum: ['newFriend','endGame','hommeDuMatch','footInvit','messageReceived','footConfirm']
+	},
+	related_stuff :{
+		type: 'integer'
 	}
   }
 };
