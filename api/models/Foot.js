@@ -43,7 +43,10 @@ module.exports = {
     booked: {
       type: 'boolean',
       defaultsTo: false
-    }
+    },
+    // chat:{
+    //   model:'chat'
+    // }
 
 
   }

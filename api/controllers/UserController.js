@@ -316,8 +316,7 @@ resetPassword: function(req,res){
       console.log(err);
       return res.status(406).end();
     }
-    if(user && user.facebook_id){
-    console.log(user.email);
+    if(user && !user.facebook_id){
     user.generatePasswordResetToken();
     user.sendPasswordResetEmail();
       return res.status(200).end();
@@ -329,19 +328,29 @@ resetPassword: function(req,res){
 },
 
 newPassword: function(req,res){
-  User.findone({email:req.param('email'), passwordResetToken:req.param('token')}).exec(function(err,user){
-    if(err)
-      return res.status(404).end();
-    if(!user)
-      return res.status(404).end();
-    else{
-      User.update({email:req.param('email')}, {password:req.param('password')}).exec(function(err, updatedUser){
-        return res.status(200).message("Le mot de passe a bien été modifié");
-      });
 
-    }
+
+  User.findOne({email:req.param('email'), passwordResetToken:req.param('token')}).exec(function(err,user){
+    if(err)
+      return res.status(406).end();
+    if(!user || !user.passwordResetToken)
+      return res.status(406).end();
+    else{
+      User.update({email:req.param('email')}, {password:req.param('password'), passwordResetToken:null}).exec(function(err, updatedUser){
+        // return res.status(200).message("Le mot de passe a bien été modifié");
+        if(err){
+          console.log(err);
+          return res.status(406);
+        }
+        return res.status(200);
+
+  
   });
-},
+
+}
+
+});
+}
 
 
 
