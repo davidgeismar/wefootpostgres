@@ -183,10 +183,10 @@ picture: {
   type:'string'
 },
 
-chats: {
-  collection: 'chat',
-  via: 'chatters'
-},
+// chats: {
+//   collection: 'chat',
+//   via: 'chatters'
+// },
 
 passwordResetToken:{
   type:'string'
@@ -196,7 +196,6 @@ toJSON: function(){
   var obj= this.toObject();
   delete obj.password;
   delete obj.password_confirmation;
-
   delete obj.passwordResetToken;
   return obj;
 },

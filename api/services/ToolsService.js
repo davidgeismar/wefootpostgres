@@ -19,3 +19,16 @@ module.exports = {
 
   }
 };
+
+ var pluckMany = function() {
+
+    var source = arguments[0];
+    var propertiesToPluck = _.rest(arguments, 1);
+    return _.map(source, function(item) {
+      var obj = {};
+      _.each(propertiesToPluck, function(property) {
+        obj[property] = item[property]; 
+      });
+      return obj;
+    });
+};

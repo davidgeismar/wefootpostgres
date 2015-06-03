@@ -91,5 +91,9 @@ module.exports = {
         return res.json(results).status(200);
       });
     }
+
+    // chevreAndHommeElection: function(req,res){
+      
+    // }
 };
 

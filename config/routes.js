@@ -66,7 +66,11 @@ module.exports.routes = {
 
   'GET /getNotif/:id': 'ActuController.getNotif',
 
-  'GET /getDetailledGrades/:note': 'NotationController.getDetailledGrades'
+  'GET /getDetailledGrades/:note': 'NotationController.getDetailledGrades',
+
+  'GET /getVoters/:footId' : 'VoteController.getVoters',
+
+  'GET /getChatNotif/:id' :'Chat.getChatNotif'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

@@ -47,6 +47,16 @@ module.exports = {
     // chat:{
     //   model:'chat'
     // }
+    chevre: {
+      model:'user'
+    },
+    //homme du match
+    homme: {
+      model:'user'
+    },
+    isElectionOver:{
+      type:'boolean'
+    }
 
 
   }

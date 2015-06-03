@@ -119,7 +119,7 @@
                     statuts.push(0);
                 }
               });
-            User.find().where({id:results}).populate('chats').limit(20).exec(function(err,users){   // Find users contained in results
+            User.find().where({id:results}).limit(20).exec(function(err,users){   // Find users contained in results
               if(err) res.status(400).end();
               else{
                 _.each(users, function(user){      // Remove token from json
