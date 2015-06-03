@@ -14,12 +14,23 @@
         console.log(err);
         return res.status(406).end();         
       }
+      if(!user) return res.status(200);
       var tok = jwt.sign(user,'123Tarbahh');
             User.update(user.id,{token:tok}).exec(function(error,user) {   // TODO Use After Create to be faster
               res.status(200);
               res.json(user);
             });
           });
+  },
+
+  get: function(req,res){
+    User.findOne(req.param('id'),function(err,user){
+      if(err) return res.status(400);
+      if(!user) return res.status(200).end();
+      delete user.token;
+      delete user.passwordResetToken;
+      return res.status(200).json(user);
+    })
   },
   
   profil: function(req, res, next){
@@ -67,10 +78,10 @@
         full_name: {
           'contains': word 
         }  
-      }).limit(10).exec(function(err,univ){
+      }).limit(10).exec(function(err,user){
         if(err) return res.status(404).end();
         res.status(200);
-        res.json(univ);
+        res.json(user);
       });     
     },
     addFriend: function (req,res) {
@@ -79,8 +90,9 @@
       if(req.param('user1') && req.param('user2')){
         Friendship.create({user1: req.param('user1'), user2: req.param('user2')},function(err,user){
           if(err) return res.status(400).end();
-            User.find(req.param('user2'),function(err,user){
+            User.findOne(req.param('user2'),function(err,user){
               if(err) return res.status(400).end();
+              if(!user) return res.status(200);
               else{ 
                 delete user.token;
                 finish = true;
@@ -103,7 +115,7 @@
      }).exec(function(err,friendships){
       if(err) res.status(400).end();
       else{ 
-              _.each(friendships, function(friendship){       // Loop to get the ids of friends            
+              _.each(friendships, function(friendship){       // Loop to get the ids of friends    
                 if(friendship.user1 == req.param('id')){
                   results.push(friendship.user2);
                   if(friendship.statut%2==1)
@@ -113,7 +125,7 @@
                 }
                 else{
                   results.push(friendship.user1);
-                  if(friendship.statut%2>1)
+                  if(friendship.statut>=2)
                     statuts.push(1);
                   else
                     statuts.push(0);
@@ -143,6 +155,7 @@ addFavorite: function(req,res){
      user2: req.param('id1')
    }]             
  }).exec(function(err,friendship){
+  console.log(friendship);
   if(err) res.status(400).end();
   if(!friendship) res.status(400).end();
   else{
@@ -273,7 +286,7 @@ removeFavorite: function(req,res){
             var name = ToolsService.clean(user.first_name)+ToolsService.clean(user.last_name);
             User.update(user.id,{token:tok, full_name:name}).exec(function(error,user) {   // TODO Use After Create to be faster
               res.status(200);
-              res.json(user);
+              res.json(user[0]);
             });
           });
         }

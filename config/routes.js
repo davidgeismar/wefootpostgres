@@ -36,6 +36,10 @@ module.exports.routes = {
     view: 'homepage'
   },
 
+  'GET /user/get/:id': 'UserController.get',
+
+  'GET /foot/get/:id': 'FootController.get',
+
   'GET /search/:word': 'UserController.search',
     
   'GET /field/search/:word': 'FieldController.search',
@@ -66,7 +70,9 @@ module.exports.routes = {
 
   'GET /getNotif/:id': 'ActuController.getNotif',
 
-  'GET /getDetailledGrades/:note': 'NotationController.getDetailledGrades'
+  'GET /getDetailledGrades/:note': 'NotationController.getDetailledGrades',
+
+  '/player/update': 'FootController.updatePlayer'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

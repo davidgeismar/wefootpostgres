@@ -49,6 +49,15 @@ module.exports.connections = {
     database: 'wefoot'
   },
 
+    mysql_prod: {
+    adapter: 'sails-mysql',
+    host: '62.210.115.66',
+    port:   89,
+    user: 'root',
+    password: 'labzeur1230',
+    database: 'wefoot'
+  },
+
   /***************************************************************************
   *                                                                          *
   * MongoDB is the leading NoSQL database.                                   *
@@ -78,11 +87,12 @@ module.exports.connections = {
   ***************************************************************************/
   postgres: {
     adapter: 'sails-postgresql',
-    host: 'ec2-54-235-134-167.compute-1.amazonaws.com',
+    url: 'postgres://xhmytviptgvuqm:9XBYDf_CwYJsozc_WHOHk07gK9@ec2-54-235-134-167.compute-1.amazonaws.com:5432/d1dg5dohvl8hho',
     port: 5432,
     user: 'xhmytviptgvuqm',
     password: '9XBYDf_CwYJsozc_WHOHk07gK9',
-    database: 'd1dg5dohvl8hho'
+    database: 'd1dg5dohvl8hho',
+    ssl: true
   }
 
 

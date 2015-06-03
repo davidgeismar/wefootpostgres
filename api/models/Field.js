@@ -9,7 +9,7 @@ module.exports = {
 
     beforeCreate: function (attrs, next) {
 
-      attrs.cleanName = ToolsService.clean(attrs.name);
+      attrs.cleanname = ToolsService.clean(attrs.name)+ToolsServiceService.clean(attrs.city);
       next();
 
   },
@@ -45,6 +45,9 @@ module.exports = {
     	required:true
     },
     cleanname: {
+        type: 'string'
+    },
+    telephone: {
         type: 'string'
     }
 }
