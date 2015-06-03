@@ -13,14 +13,15 @@ module.exports = {
 			res.json(actus);
 		});
 	},
-	newFriend: function(req,res){
-		Actu.create({user: req.param('user2'), related_user: req.param('user1'), typ: 'newFriend', related_stuff: req.param('user1')},function(err,actu){
+	newNotif: function(req,res){
+		Actu.create(req.params.all(),function(err,actu){
 			if(err) return res.status(400).end();
-			Connexion.findOne().where({user: req.param('user2')}).exec(function(err,connexion){
+			Connexion.findOne().where({user: req.param('user')}).exec(function(err,connexion){
 				if(err) return res.status(400).end();
 				if(!connexion) return res.status(200).end(); // Si l'utlisateur n'est pas connecté on envoi rien.
-            		sails.sockets.emit(connexion.socketId,'notif',actu);   // Envoi un évènement socket.
-            		return res.status(200).end();
+				console.log(connexion);
+            	sails.sockets.emit(connexion.socketId,'notif',actu);   // Envoi un évènement socket.
+            	return res.status(200).end();
        		 });
 		});
 	},
@@ -32,23 +33,19 @@ module.exports = {
 			related = req.param('from');
 		else
 			related = req.param('created_by');
-		console.log(req.param('id'));
-		_.each(req.param('toInvite'),function(player){
+		async.each(req.param('toInvite'),function(player,callback){
 			Actu.create({user: player, related_user: related, typ: 'footInvit', related_stuff: req.param('id')},function(err,actu){
 				if(err) return res.status(400).end();
 				Connexion.findOne().where({user : player}).exec(function(err,connexion){
 					if(err) return res.status(400).end();
 					if(connexion)   //On verifie que l'utilsateur est connecté, (pas de return car on est dans une boucle).
 						sails.sockets.emit(connexion.socketId,'notif',actu);   // Envoi un évènement socket.
-					toFinish++;
-					if(toFinish==req.param('toInvite').length)// Comme la boucle est asynchrone capte que tout soit fini.
-						return res.status(200).end();
+					callback();
 				});
 			});
+		},function(){
+			return res.status(200).end();
 		});
 	}
-
-	
-
 };
 

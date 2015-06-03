@@ -125,12 +125,14 @@ module.exports = {
     },
 
     sendInvits: function(req,res){
-      _.each(req.param('toInvite'),function(user){
+      async.each(req.param('toInvite'),function(user,callback){
         Player.create({foot: req.param('id'), user: user, statut: 1 },function PlayerAdded(err,player){
           if(err) return res.status(400).end();
+          callback();
           });
+      },function(){
+        return res.status(200).end();
       });
-    return res.status(200).end();  //TODO Check all invits are ok.
     },
 
     removePlayer: function(req,res){
