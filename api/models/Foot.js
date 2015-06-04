@@ -14,7 +14,7 @@ module.exports = {
       primaryKey: true
     },
     date: {
-      type: 'date',
+      type: 'datetime',
       required : true
     },
     nbPlayer: {
