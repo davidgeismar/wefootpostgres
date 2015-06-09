@@ -352,6 +352,22 @@ newPassword: function(req,res){
 }
 
 });
+},
+
+updateSeen: function(req,res){
+  User.update({id : req.param('id')},{last_seen: new Date()},function(){res.status(200).end();});
+},
+getLastNotif: function(req,res){
+  var moment = require('moment');
+  last_seen = moment(req.param('last_seen')).format();
+  Actu.find()
+  .where({user: req.param('id')})
+  .where({ createdAt: {'>':last_seen}})
+  .exec(function(err,vals){
+    console.log(vals);
+    if(err){console.log(err); return res.status(400).end();}
+    res.status(200).json(vals);
+  });
 }
 
 

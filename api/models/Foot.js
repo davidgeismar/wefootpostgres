@@ -44,6 +44,16 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false
     },
+    created_by: {
+      type: 'integer',
+      foreignKey: true,
+      references: 'user',
+      on: 'id'
+    },
+    confirmedPlayers: {
+      type: 'integer',
+      defaultsTo: 1
+    }
     // chat:{
     //   model:'chat'
     // }

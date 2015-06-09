@@ -156,42 +156,22 @@ full_name: {
 poste: {
   type: 'string'
 },
-// frappe: {
-//   type:'float',
-//   defaultsTo:0
-// },
-// physique: {
-//   type:'float',
-//   defaultsTo:0
-// },
-// technique: {
-//   type:'float',
-//   defaultsTo:0
-// },
-// fair_play: {
-//   type:'float',
-//   defaultsTo:0
-// },
-// assiduite: {
-//   type:'float',
-//   defaultsTo:0
-// },
 favorite_club: {
  type:'string'
 },
 picture: {
   type:'string'
 },
-
 chats: {
   collection: 'chat',
   via: 'chatters'
 },
-
 passwordResetToken:{
   type:'string'
 },
-
+last_seen:{   //Last opening of notif page
+  type:'datetime'
+},
 toJSON: function(){
   var obj= this.toObject();
   delete obj.password;

@@ -71,19 +71,16 @@ module.exports = {
 
     getInfo: function(req,res){
       var info = {};
-      Player.findOne().where({
-        foot: req.param('id'),
-        statut : 3
-      }).exec(function(err,player){
-        if(err) return res.status(400).end();
-        if(!player) return res.status(200).end();
-        info.orga = player.user;
-        User.findOne({id:player.user},function(err,user){
+      Foot.findOne().where({
+        id: req.param('id')
+      }).exec(function(err,foot){
+        if(!foot || err) return res.status(400).end();
+        User.findOne().where({id:foot.created_by}).exec(function(err,user){
           if(err) return res.status(400).end();
-          info.orgaName = "";
-          if(user)
-            info.orgaName = user.first_name + " "+ user.last_name;
-          if(info.field) return res.json(info).status(200).end();   // Asychrone, permet de vérifier si l'autre query est fini.
+          if(!user) return res.status(200).end();
+          info.orga = user.id;
+          info.orgaName = user.first_name + " "+ user.last_name;
+          if(info.field) res.json(info).status(200).end();
         });
       });
       Foot.query('SELECT t.name,t.picture,t.city,t.zip_code,t.address,t.telephone FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
@@ -113,9 +110,14 @@ module.exports = {
 
     updatePlayer: function(req,res){
       Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
-        if(err) return res.status(400).end();
-        if(player.length == 0) return res.status(400).end();
-        return res.status(200).end();
+        Foot.findOne({id: req.param('foot')},function(err,foot){
+          foot.confirmedPlayers = foot.confirmedPlayers+1;
+          foot.save(function(err){
+          if(err) return res.status(400).end();
+          if(player.length == 0) return res.status(400).end();
+          return res.status(200).end();
+          });
+        });
       });
     },
 
@@ -150,5 +152,31 @@ module.exports = {
         return res.status(200).end();
       });
     },
+
+    query: function(req,res){
+      var moment = require('moment');
+      var dateReq = moment(req.param('date')).format('llll').substring(0,17);
+      dateReq = dateReq.replace(/,+/g, '');
+      console.log(dateReq);
+      Field.find().where({
+          cleanname: {
+            'contains': ToolsService.clean(req.param('field')) 
+          }  
+        }).exec(function(err,fields){
+            if(err) return res.status(400).end();
+            fieldsId = _.pluck(fields,'id');
+            Foot.find().where({
+              field: fieldsId,
+              priv: false,
+              date: {
+                'contains': moment(req.param('date')).format().substring(0,10)
+              }
+            }).exec(function(err,foots){
+                if(err) return res.status(400).end();
+                if(foots[0]) console.log(foots[0].date);
+                res.status(200).json(foots);
+            });
+        });
+      }
 };
 

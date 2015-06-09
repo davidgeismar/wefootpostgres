@@ -16,15 +16,12 @@ setSocket: function(req,res){   //Link a connexion with an user
 	},
 
 	delete: function(req,res){
-		if(req.isSocket){
+		console.log(req.param('id'));
+			console.log('heelo');
 			Connexion.destroy({user: req.param('id')},function(err){
 				if(err){ console.log(err); res.status(400).end();}
 				res.status(200).end();
 			});
-		}
-		else{
-			res.status(400).end();
-		}
 	}
 
 

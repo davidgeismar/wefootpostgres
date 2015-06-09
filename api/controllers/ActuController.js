@@ -8,7 +8,7 @@
 module.exports = {
 
 	getNotif: function(req,res){
-		Actu.find().where({user: req.param('id'),typ:['newFriend','hommeDuMatch','footInvit','footConfirm','chevreDuMatch']}).exec(function(err,actus){
+		Actu.find().where({user: req.param('id')}).exec(function(err,actus){
 			if(err) return res.status(400).end();
 			res.json(actus);
 		});
@@ -17,6 +17,8 @@ module.exports = {
 		Actu.create(req.params.all(),function(err,actu){
 			if(err) return res.status(400).end();
 			Connexion.findOne().where({user: req.param('user')}).exec(function(err,connexion){
+				console.log('here');
+				console.log(connexion);
 				if(err) return res.status(400).end();
 				if(!connexion) return res.status(200).end(); // Si l'utlisateur n'est pas connecté on envoi rien.
 				console.log(connexion);
