@@ -29,7 +29,7 @@ module.exports = {
   // port: 80,
 =======
   models: {
-    connection: 'postgres'
+    connection: 'mysql_prod'
   },
 
   // **************************************************************************

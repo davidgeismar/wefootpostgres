@@ -36,6 +36,10 @@ module.exports.routes = {
     view: 'homepage'
   },
 
+  'GET /user/get/:id': 'UserController.get',
+
+  'GET /foot/get/:id': 'FootController.get',
+
   'GET /search/:word': 'UserController.search',
     
   'GET /field/search/:word': 'FieldController.search',
@@ -70,7 +74,12 @@ module.exports.routes = {
 
   'GET /getVoters/:footId' : 'VoteController.getVoters',
 
-  'GET /getChatNotif/:id' :'Chat.getChatNotif'
+  'GET /getChatNotif/:id' :'Chat.getChatNotif',
+
+  '/player/update': 'FootController.updatePlayer',
+
+  'GET /getVotedStatus/:electeur/:footId' : 'VoteController.getVotedStatus'
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

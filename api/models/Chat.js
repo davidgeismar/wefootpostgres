@@ -21,7 +21,7 @@ module.exports = {
         type:'int'
       },
       //foot ou défi avec caractéristiques
-      chatDescription:{
+      desc:{
         type:'string'
       },
 

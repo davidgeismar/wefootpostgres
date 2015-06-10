@@ -4,6 +4,7 @@
  * @description :: Server-side logic for managing Notations
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
+ var async = require('async');
 
  module.exports = {
 
@@ -39,12 +40,10 @@
  	},
 
  	getDetailledGrades: function(req, res){
- 		console.log(req.param('note'));
  		Notation.find({note:req.param('note')}).exec(function notation(err, notes){
  			var sumGrades = [0,0,0,0,0];
  			var cptGrades = [0,0,0,0,0];
- 			console.log(notes);
- 			notes.forEach(function(note){
+ 			async.each(notes, function(note,callback){
  				if(note.frappe){
  					sumGrades[0]+= note.frappe;
  					cptGrades[0]+= 1;
@@ -65,7 +64,8 @@
  					sumGrades[4]+= note.assiduite;
  					cptGrades[4]+= 1;
  				}
- 			});
+ 				callback();
+ 			},function(err){
  			if(cptGrades[0]!=0)
  				var frappe = sumGrades[0]/cptGrades[0];
  			else
@@ -94,6 +94,7 @@
  			// console.log(assiduite);
 
  				res.status(200).json({nbGrades:notes.length, frappe:frappe, physique:physique, technique:technique, fair_play:fair_play, assiduite:assiduite});
+ 			});
  			
  		});
 }

@@ -7,32 +7,31 @@
 
 module.exports = {
 
-	attributes: {
-		id: {
-			type: 'int',
-			primaryKey: true,
-			autoIncrement: true
-		},
-		user: {
-			type: 'integer',
-			foreignKey: true,
-			references: 'user',
-			on: 'id'  
-		},
-		related_user: {
-			type: 'integer',
-			foreignKey: true,
-			references: 'user',
-			on: 'id' 
-		},
-		typ: {
-			type: 'string',
-			enum: ['newFriend','endGame','hommeDuMatch','footInvit','messageReceived','footConfirm']
-		},
-		related_stuff :{
-			type: 'integer',
-			foreignKey: true	
-		}
+  attributes: {
+  	id: {
+ 		type: 'int',
+  		primaryKey: true,
+ 		autoIncrement: true
+	},
+	user: {
+	  	type: 'integer',
+  		foreignKey: true,
+    	references: 'user',
+   		on: 'id'  
+	},
+	related_user: {
+		type: 'integer',
+  		foreignKey: true,
+    	references: 'user',
+   		on: 'id' 
+	},
+	typ: {
+		type: 'string',
+		enum: ['newFriend','endGame','hommeDuMatch','footInvit','messageReceived','footConfirm']
+	},
+	related_stuff :{
+		type: 'integer'
 	}
+}
 };
 

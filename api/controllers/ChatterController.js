@@ -8,8 +8,12 @@
 
  module.exports = {
 
-
-  create: function(req,res,next){
+  //Met à jour le last time seen
+  updateLts: function(req,res,next){
+    var currentTime = new Date();
+    Chatter.update({user:req.param('user'), chat:req.param('chat')}, {lastTimeSeen:currentTime}).exec(function(err, chatter){
+      return res.status(200).end();
+    });
 
   },
 

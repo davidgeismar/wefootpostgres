@@ -1,5 +1,5 @@
 /**
-* Election.js
+* Trophe.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -7,9 +7,9 @@
 
 module.exports = {
 
-	attributes: {
+  attributes: {
 
-		id:{
+  		id:{
 			type: 'int',
 			autoIncrement: true,
 			primaryKey: true
@@ -18,22 +18,21 @@ module.exports = {
 			model:'foot',
 			required:true
 		},
-		electeur:{
+		user:{
 			model:'user',
 			required:true
 		},
-		chevre:{
-			model:'user'
-		},
-
-		homme:{
-			model:'user'
+		//0 = chevre, 1 = homme
+		trophe:{
+			type:'int',
+			required:true
 		}
+		// ,
+		// nbVotes:{
+		// 	type:'int',
+		// 	required:true
+		// }
 
-
-
-
-
-	}
+  }
 };
 

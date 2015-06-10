@@ -16,37 +16,40 @@ module.exports = {
  						console.log(err);
  						return res.status(406).end();         
  					}
-
+ 					//On ajoute un message au chat
  					chat.messages.add(message.id);
-
  					chat.save(function(err) {
  						if(err){
  							console.log(err);
  							return res.status(406).end(); 
- 							}        
+ 						}        
+ 					});
+ 						//On envoie le message aux users par socket
+ 						var users = new Array();
+ 						users =_.pluck(req.param('receivers'), 'id');
+ 						//NO NEED
+ 						// users.push(req.param('senderId'));
+ 						console.log("users");
+ 						console.log(users);
+ 						Connexion.find({user:users}).exec(function(err, connexions){
+ 							if(connexions){
+ 								async.each(connexions,function(connexion,callback){
+ 									sails.sockets.emit(connexion.socketId,'newMessage',{senderId: req.param('senderId'),messagestr:message.messagestr, chat:req.param('chat'), createdAt:message.createdAt});
+ 									callback();
+ 								}
+ 								,function(err){
+ 									return res.status(200).end();
+
+ 								});
+ 							}
  						});
- 						Connexion.findOne({user:2}).exec(function(err, connexion){
 
- 							//async.each(connexions,function(connexion,callback){
- 								sails.sockets.emit(connexion.socketId,'message',{from: req.param('senderId'),typ: 'messageReceived',message:message.messagestr});
- 								return res.status(200).json(message);
- 							});
- 							//,function(err){
- 								
- 							//});
- 						//});
-
-
-
-
-
-
- 				});
+ 					});
  			}
 
  		});
 
 
- 	}
+}
 
- }
+}

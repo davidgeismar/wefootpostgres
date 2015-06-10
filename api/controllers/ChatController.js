@@ -8,76 +8,82 @@
  var async = require('async');
  var merge = require('merge');
 
-
- var pluckMany = function() {
-
-    var source = arguments[0];
-    var propertiesToPluck = _.rest(arguments, 1);
-    return _.map(source, function(item) {
-      var obj = {};
-      _.each(propertiesToPluck, function(property) {
-        obj[property] = item[property]; 
-      });
-      return obj;
-    });
+ var shrinkUsers = function(users){
+  return _.map(users, function(obj) { return _.pick(obj, 'first_name','last_name' ,'picture', 'id'); });
 };
- module.exports = {
 
-   create: function(req, res, next){
-    Chat.create({typ:req.param('typ'), chatDescription:req.param('desc')}, function chatCreated(err, chat){
+module.exports = {
+
+ create: function(req, res, next){
+  Chat.create({typ:req.param('typ'), desc:req.param('desc')}, function chatCreated(err, chat){
+    if(err){
+      return res.status(406).end();         
+    }
+    async.each(req.param('users'),function(user,callback){
+      Chatter.create({user:user,chat:chat.id}, function chatterCreated(err, chatter){});
+      callback();
+    }, function(err){
       if(err){
-        return res.status(406).end();         
+        console.log(err);
       }
-      async.each(req.param('users'),function(user,callback){
-        Chatter.create({user:user,chat:chat.id}, function chatterCreated(err, chatter){
+      else {
+        User.find({id:req.param('users')}).exec(function(err,bigUsers){
+          var smallUsers = shrinkUsers(bigUsers);
+          Connexion.find({user:req.param('users')}).exec(function(err, connexions){
+            if(connexions){
+              async.each(connexions,function(connexion,callback){
+                sails.sockets.emit(connexion.socketId,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages}, {lastTime: null}, { users : smallUsers}));
+                callback();
+              }
+              ,function(err){
+                return res.status(200).end();
+              });
+            }
+          });
+          
+          
         });
-        callback();
-      }, function(err){
-        if(err){
-          console.log(err);
-        }
-        else {
-          return res.status(200).json(chat);
-        }
-      });
+
+      }
 
     });
-  },
+});
+},
 
   //get all chats for a given user
   getAllChats: function (req, res, next){
     var chats = new Array();
 
-    Chatter.find({id:req.param('id')}).exec(function(err,chatters){
+    Chatter.find({user:req.param('id')}).exec(function(err,chatters){
       if(err){
+        console.log(err);
         return res.status(406).end();         
       }
-      console.log('test1');
-      console.log(chatters.length);
+
       async.each(chatters,function(chatter,callback){
         Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
           if(err){
+            console.log(err);
             return res.status(406).end();         
           }
-          console.log('test');
-          console.log(chatter);
-          Chatter.find({chat:chatter.chat, user: { '!': req.param('id') }}).exec(function(err, usersChatters){
+
+          Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
             if(usersChatters){
-            var usersID = _.pluck(usersChatters, 'id');
-            User.find(usersID).exec(function(err, bigUsers){
-
-              var smallUsers = _.map(bigUsers, function(obj) { return _.pick(obj, 'first_name', 'picture', 'id'); });
-
-              chats.push(merge(chat, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
-              console.log(chats);
-              if(chatters.length==chats.length)
+              var usersID = _.pluck(usersChatters, 'user');
+              console.log(usersID);
+              User.find(usersID).exec(function(err, bigUsers){
+                if(err){
+                  console.log(err);
+                  return res.status(406).end();         
+                }
+                var smallUsers = shrinkUsers(bigUsers);
+                chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt}, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
+                callback();
+              });
+            }
+            else{
               callback();
-            });
-          }
-          else{
-            if(chatters.length==chats.length)
-            callback();
-        }
+            }
           });
         });
 
@@ -86,16 +92,15 @@
           console.log(err);
         }
         else {
-          console.log(chats);
           return res.status(200).json(chats);
         }
       });
 
 
-    });
+});
 
 
-  },
+},
 
   // getAllChats: function (req, res, next){
   //   var chats = new Array();
@@ -145,7 +150,7 @@
       if(err){
         return res.status(406).end();         
       }
-
+      if(chatters){
       async.each(chatters,function(chatter,callback){
 
         Chat.findOne({id:chatter.chat}).exec(function(err,chat){
@@ -163,7 +168,8 @@
           return res.status(200).json(chats);
         }
       });
-
+    }
+    else return res.status(200).end();
     });
 
   },
