@@ -121,10 +121,10 @@ module.exports = {
       });
     },
 
-    getInvited: function(req,res){
+    getAllPlayers: function(req,res){
       Player.find({foot:req.param('id')},function(err,players){
         if(err) return res.status(400).end();
-        res.status(200).json(_.pluck(players,'user'));
+        res.status(200).json(players);
       });
     },
 
@@ -177,6 +177,12 @@ module.exports = {
                 res.status(200).json(foots);
             });
         });
-      }
+    },
+    askToPlay: function(req,res){
+      Player.create({foot: req.param('foot'),user: req.param('userId'), statut: 0},function(err){
+        if(err) return res.status(400).end();
+        res.status(200).end();
+      });
+    }
 };
 

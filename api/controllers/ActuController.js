@@ -13,6 +13,14 @@ module.exports = {
 			res.json(actus);
 		});
 	},
+	getActu: function(req,res){
+		var moment = require('moment');
+		Actu.find({where: {user: req.param('friends'),typ:['footConfirm','hommeDuMatch','chevreDuMatch','newFriend']},sort:'createdAt DESC',skip:req.param('skip'),limit:30},function(err,actu){
+			var result = _.groupBy(actu, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
+			console.log(result);
+			res.status(200).json(result);
+		});
+	},
 	newNotif: function(req,res){
 		Actu.create(req.params.all(),function(err,actu){
 			if(err) return res.status(400).end();
@@ -49,5 +57,7 @@ module.exports = {
 			return res.status(200).end();
 		});
 	}
+
+
 };
 
