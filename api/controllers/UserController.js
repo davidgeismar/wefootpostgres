@@ -25,7 +25,7 @@
 
   get: function(req,res){
     User.findOne(req.param('id'),function(err,user){
-      if(err) return res.status(400);
+      if(err) return res.status(400).end();
       if(!user) return res.status(200).end();
       delete user.token;
       delete user.passwordResetToken;
