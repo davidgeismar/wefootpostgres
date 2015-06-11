@@ -14,7 +14,7 @@ module.exports = {
    		on: 'id'  		
   	},
   	statut:{
-  		type: 'integer', // 0 invited, 1 playing, 2 denied, 3 organisator
+  		type: 'integer', //  1 invited, 2 playing, 3 organisator
   		defaultsTo: 0
   	}
   }

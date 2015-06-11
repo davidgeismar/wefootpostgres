@@ -10,7 +10,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.sockets.html
  */
 
-module.exports.sockets = {
+ module.exports.sockets = {
 
 
   /***************************************************************************
@@ -109,11 +109,11 @@ module.exports.sockets = {
   // beforeConnect: function(handshake, cb) {
   //   // `true` allows the connection
   //   return cb(null, true);
-  //
+  
   //   // (`false` would reject the connection)
   // },
 
-  authorization: false,
+  // authorization: false,
 
   /***************************************************************************
   *                                                                          *
@@ -123,10 +123,14 @@ module.exports.sockets = {
   * disconnects                                                              *
   *                                                                          *
   ***************************************************************************/
-  // afterDisconnect: function(session, socket, cb) {
-  //   // By default: do nothing.
-  //   return cb();
-  // },
+  afterDisconnect: function(session, socket) {
+    // console.log(session);
+    console.log(socket.id);
+    Connexion.destroy({socketId: socket.id}).exec(function(err, connexion){
+      if(err)
+        console.log(err);
+    });
+  },
 
   /***************************************************************************
   *                                                                          *
@@ -138,6 +142,6 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
   // transports: ["polling", "websocket"]
-   origins: '*:*',
+  origins: '*:*',
 
 };

@@ -27,12 +27,9 @@ module.exports = {
 
     //MANY USERS FOR MANY CHATS
 
-    // chatters: {
-    //   dominant:'true',
-    //   collection: 'user',
-    //   via : 'chats'
-    // },
-
+    related: {
+      type: 'int'
+    },
     //MANY MESSAGES FOR ONE CHAT
     messages: {
     	collection: 'message',

@@ -134,11 +134,13 @@
             User.find().where({id:results}).limit(20).exec(function(err,users){   // Find users contained in results
               if(err) res.status(400).end();
               else{
-                _.each(users, function(user){      // Remove token from json
+                async.each(users, function(user,callback){      // Remove token from json
                   toSend.push(statuts[results.indexOf(user.id)]);
                   delete user.token;
-                });
+                  callback();
+                },function(){
                 res.status(200).json([users,toSend]);
+               }); 
               }
             });
           }
@@ -350,6 +352,22 @@ newPassword: function(req,res){
 }
 
 });
+},
+
+updateSeen: function(req,res){
+  User.update({id : req.param('id')},{last_seen: new Date()},function(){res.status(200).end();});
+},
+getLastNotif: function(req,res){
+  var moment = require('moment');
+  last_seen = moment(req.param('last_seen')).format();
+  Actu.find()
+  .where({user: req.param('id')})
+  .where({ createdAt: {'>':last_seen}})
+  .exec(function(err,vals){
+    console.log(vals);
+    if(err){console.log(err); return res.status(400).end();}
+    res.status(200).json(vals);
+  });
 }
 
 

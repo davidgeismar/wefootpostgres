@@ -27,7 +27,7 @@ module.exports = {
 	},
 	typ: {
 		type: 'string',
-		enum: ['newFriend','endGame','hommeDuMatch','footInvit','messageReceived','footConfirm']
+		enum: ['newFriend','endGame','hommeDuMatch','footInvit','messageReceived','footConfirm','footAnnul']
 	},
 	related_stuff :{
 		type: 'integer'

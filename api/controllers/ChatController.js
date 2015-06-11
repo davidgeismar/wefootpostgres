@@ -15,7 +15,7 @@
 module.exports = {
 
  create: function(req, res, next){
-  Chat.create({typ:req.param('typ'), desc:req.param('desc')}, function chatCreated(err, chat){
+  Chat.create({typ:req.param('typ'), desc:req.param('desc'), related:req.param('related')}, function chatCreated(err, chat){
     if(err){
       return res.status(406).end();         
     }
@@ -32,7 +32,7 @@ module.exports = {
           Connexion.find({user:req.param('users')}).exec(function(err, connexions){
             if(connexions){
               async.each(connexions,function(connexion,callback){
-                sails.sockets.emit(connexion.socketId,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages}, {lastTime: null}, { users : smallUsers}));
+                sails.sockets.emit(connexion.socketId,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
                 callback();
               }
               ,function(err){
@@ -77,7 +77,7 @@ module.exports = {
                   return res.status(406).end();         
                 }
                 var smallUsers = shrinkUsers(bigUsers);
-                chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt}, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
+                chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt, related:chat.related }, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
                 callback();
               });
             }
