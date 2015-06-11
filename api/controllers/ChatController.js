@@ -59,7 +59,7 @@ module.exports = {
         console.log(err);
         return res.status(406).end();         
       }
-
+      if(chatters){
       async.each(chatters,function(chatter,callback){
         Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
           if(err){
@@ -96,7 +96,7 @@ module.exports = {
         }
       });
 
-
+}
 });
 
 
