@@ -20,14 +20,16 @@ module.exports = {
       typ: {
         type:'int'
       },
+      //foot ou défi avec caractéristiques
+      desc:{
+        type:'string'
+      },
 
     //MANY USERS FOR MANY CHATS
-    chatters: {
-      dominant:'true',
-      collection: 'user',
-      via : 'chats'
-    },
 
+    related: {
+      type: 'int'
+    },
     //MANY MESSAGES FOR ONE CHAT
     messages: {
     	collection: 'message',

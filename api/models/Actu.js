@@ -32,6 +32,6 @@ module.exports = {
 	related_stuff :{
 		type: 'integer'
 	}
-  }
+}
 };
 

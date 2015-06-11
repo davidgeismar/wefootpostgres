@@ -83,9 +83,10 @@ module.exports = {
           if(info.field) res.json(info).status(200).end();
         });
       });
-      Foot.query('SELECT t.name,t.picture,t.city,t.zip_code,t.address,t.telephone FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
+      Foot.query('SELECT f.date ,t.name,t.picture,t.city,t.zip_code,t.address,t.telephone FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
         if(err) return res.status(400).end();
         if(!field) return res.status(200).end();
+        //Careful, the date in field[0] belongs to the foot
         info.field = field[0];
         if(info.orgaName) return res.json(info).status(200).end();
       });      
@@ -106,6 +107,7 @@ module.exports = {
         if(err) return res.status(400).end();
         return res.json(results).status(200).end();
       });
+
     },
 
     updatePlayer: function(req,res){
