@@ -78,7 +78,9 @@ module.exports.routes = {
 
   '/player/update': 'FootController.updatePlayer',
 
-  'GET /getVotedStatus/:electeur/:footId' : 'VoteController.getVotedStatus'
+  'GET /getVotedStatus/:electeur/:footId' : 'VoteController.getVotedStatus',
+
+  'GET /user/toConfirm/:user/:id': 'UserController.toConfirm'
 
   /***************************************************************************
   *                                                                          *

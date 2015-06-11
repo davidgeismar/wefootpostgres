@@ -368,6 +368,19 @@ getLastNotif: function(req,res){
     if(err){console.log(err); return res.status(400).end();}
     res.status(200).json(vals);
   });
+},
+toConfirm: function(req,res){
+  var moment = require('moment');
+  Player.find({user: req.param('user'),statut: 0},function(err,players){
+    if(err) return res.status(400).end();
+    if(players.length == 0) return res.status(200).end();
+    players = _.pluck(players,'foot');
+    Foot.find({created_by: req.param('id'), id: players, date:{'>': moment().format()}},function(err,foot){
+      if(err) return res.status(400).end();
+      console.log(foot);
+      res.status(200).json(foot);
+    });
+  });
 }
 
 
