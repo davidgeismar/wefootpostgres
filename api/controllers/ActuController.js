@@ -15,7 +15,8 @@ module.exports = {
 	},
 	getActu: function(req,res){
 		var moment = require('moment');
-		Actu.find({where: {user: req.param('friends'),typ:['footConfirm','hommeDuMatch','chevreDuMatch','newFriend']},sort:'createdAt DESC',skip:req.param('skip'),limit:30},function(err,actu){
+		console.log(req.param('user'));
+		Actu.find({where: {user: req.param('friends'),typ:['footConfirm','hommeDuMatch','chevreDuMatch','newFriend'],user:{'!':req.param('user')},related_user:{'!':req.param('user')}},sort:'createdAt DESC',skip:req.param('skip'),limit:30},function(err,actu){
 			var result = _.groupBy(actu, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
 			console.log(result);
 			res.status(200).json(result);
