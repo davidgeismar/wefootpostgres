@@ -7,34 +7,34 @@
 
 module.exports = {
 
-    beforeCreate: function (attrs, next) {
+  beforeCreate: function (attrs, next) {
 
-      attrs.cleanname = ToolsService.clean(attrs.name)+ToolsServiceService.clean(attrs.city);
-      next();
+    attrs.cleanname = ToolsService.clean(attrs.name)+ToolsService.clean(attrs.city);
+    next();
 
   },
 
   attributes: {
 
   	id: {
-          type: 'float',
-          autoIncrement: true,
-          primaryKey: true
-      },
-      name: {
-         type: 'string',
-         required: true
-     },
-     address: {
-         type: 'string',
-         required: true
-     },
-     city: {
-         type: 'string',
-         required: true
-     },
-     zip_code: {
-         type:'integer',
+      type: 'float',
+      autoIncrement: true,
+      primaryKey: true
+    },
+    name: {
+     type: 'string',
+     required: true
+   },
+   address: {
+     type: 'string',
+     required: true
+   },
+   city: {
+     type: 'string',
+     required: true
+   },
+   zip_code: {
+     type:'integer',
     	//required:true
     },
     picture: {
@@ -42,14 +42,19 @@ module.exports = {
     },
     origin:{
     	type: 'string',
-    	required:true
+    	required:true,
+      enum:['private','public']
     },
     cleanname: {
-        type: 'string'
+      type: 'string'
     },
     telephone: {
-        type: 'string'
+      type: 'string'
+    },
+    //IF ORIGIN = PRIVATE related_to = user, else related_to = center
+    related_to:{
+      type: 'integer'
     }
-}
+  }
 };
 

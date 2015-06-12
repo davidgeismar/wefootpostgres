@@ -42,7 +42,7 @@ module.exports.routes = {
 
   'GET /search/:word': 'UserController.search',
     
-  'GET /field/search/:word': 'FieldController.search',
+  'GET /field/search/:id/:word': 'FieldController.search',
 
   '/addFriend': 'UserController.addFriend',
   
