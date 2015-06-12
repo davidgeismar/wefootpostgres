@@ -144,9 +144,19 @@ module.exports = {
     removePlayer: function(req,res){
       Player.destroy({foot: req.param('foot'), user: req.param('user')},function(err){
         if(err) return res.status(400).end();
+        foot.confirmedPlayers = foot.confirmedPlayers-1;
+        foot.save();
         return res.status(200).end();
       });
     },
+
+    refusePlayer: function(req,res){
+      Player.destroy({foot: req.param('foot'), user: req.param('user')},function(err){
+        if(err) return res.status(400).end();
+        return res.status(200).end();
+      });
+    },
+
 
     deleteFoot: function(req,res){
       Player.destroy({foot: req.param('foot')},function(err){
