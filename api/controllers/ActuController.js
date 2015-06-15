@@ -46,7 +46,7 @@ module.exports = {
 		async.each(req.param('toInvite'),function(player,callback){
 			Actu.create({user: player, related_user: related, typ: 'footInvit', related_stuff: req.param('id')},function(err,actu){
 				if(err) return res.status(400).end();
-				Connexion.find().where({user : player}).exec(function(err,connexion){
+				Connexion.find().where({user : player}).exec(function(err,connexions){
 					if(err) return res.status(400).end();
 					if(connexions[0]){   //On verifie que l'utilsateur est connecté, (pas de return car on est dans une boucle).
 						_.each(connexions,function(connexion,index){
