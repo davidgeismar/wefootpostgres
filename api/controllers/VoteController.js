@@ -45,10 +45,11 @@ module.exports = {
 
 
   getVoters: function(req,res){
+    console.log(req.param('footId'));
    Player.find().where({
     or:[{
      foot: req.param('footId'),
-     statut : 1
+     statut : 2
    },
    {
      foot: req.param('footId'),
@@ -56,10 +57,12 @@ module.exports = {
    }]
  }).exec(function(err,players){
   if(err) return res.status(400);
-  var playersId = _.pluck(players, "id");
+  console.log(players);
+  var playersId = _.pluck(players, "user");
   User.find(playersId).exec(function(err,users){
     if(err) return res.status(400);
     var results = shrinkUsers(users);
+    console.log(users);
     return res.json(results).status(200);
   });
 

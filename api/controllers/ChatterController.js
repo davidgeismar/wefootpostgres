@@ -6,9 +6,10 @@
  */
  var async = require('async');
 
+
  module.exports = {
 
-  //Met à jour le last time seen
+  //Met à jour le last time seen, à base de popopop et tout ça dans ma benzbenzbenz
   updateLts: function(req,res,next){
     var currentTime = new Date();
     Chatter.update({user:req.param('user'), chat:req.param('chat')}, {lastTimeSeen:currentTime}).exec(function(err, chatter){
@@ -16,6 +17,20 @@
     });
 
   },
+
+  addToChat: function(req, res, next){
+    if(req.param('type')==2){
+      Chat.find({related:req.param('related')}).exec(function(err, chat){
+        Chatter.create({user:req.param('user'), chat:chat.id}).exec(function(err, chatter){
+          User.findOne(req.param('user')).exec(function(err,user){
+            sails.sockets.emit(connexion.socketId,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
+          });
+
+        });
+      });
+    }
+
+  }
 
   //get all chats for a given user
   // getAllChats: function (req, res, next){
@@ -62,12 +77,6 @@
   // },
 
 
-  chatNotif: function(req, res){
-
-
-
-
-  },
 
   // getChatNotifAtLaunch : function (req, res){
 
