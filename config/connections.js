@@ -51,8 +51,8 @@ module.exports.connections = {
 
     mysql_prod: {
     adapter: 'sails-mysql',
-    host: '62.210.115.66',
-    port:   89,
+    host: 'localhost',
+    port:   3306,
     user: 'root',
     password: 'labzeur1230',
     database: 'wefoot'

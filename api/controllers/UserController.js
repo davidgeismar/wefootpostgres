@@ -50,21 +50,30 @@
     },
 
     uploadProfilPic: function  (req, res) {
-      if(req.method === 'GET')
-        return res.json({'status':'GET not allowed'});            
-      //  Call to /upload via GET is error
-
+      var easyimg = require('easyimage'); 
       var uploadFile = req.file('file');
+      var path = require('path');
+      uploadFile.upload({ dirname: '../../assets/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {        
+        if (err) return res.serverError(err);
+        var url = path.join(__dirname,'../../assets/images/profils/'+req.body.userId+'.jpg');
+        easyimg.info(url).then(function(file){  //RESIZING IMAGES
+            var min = Math.min(file.width,file.height);
+            console.log(min);
+          easyimg.crop({
+            src:url,dst:url,cropwidth: min,cropheight: min
+          }).then(function(file2){
+            console.log(file2);
+            User.update(req.body.userId,{picture: 'http://localhost:1337/images/profils/'+req.body.userId+'.jpg'},function(err){
+              if(err) return res.status(400).end();
+                res.status(200).send('http://localhost:1337/images/profils/'+req.body.userId+'.jpg');
+            });
+          });
+        },function(err){console.log(err)});
+        // ({src:'../../assets/images/profils'+req.body.userId+'.jpg',
 
-
-      uploadFile.upload({ dirname: '../../assets/images/profils' ,saveAs:req.body.fieldId+".jpg"} ,function onUploadComplete (err, files) {        
-
-
-        if (err) return res.serverError(err);               
+        // });
         //  IF ERROR Return and send 500 error with error
-        
         //console.log(files);
-        res.json({status:200,file:files});
       });
     },
 
@@ -277,6 +286,8 @@ removeFavorite: function(req,res){
   },
 
   facebookConnect: function(req,res){
+    var http = require('http');
+    var fs = require('fs');
     var jwt = require('jsonwebtoken');
     if(req.param('email')){
       User.findOneByEmail(req.param('email'),function(err,user){
@@ -286,7 +297,7 @@ removeFavorite: function(req,res){
             if(err){ console.log(err); return res.status(400).end();}    
             var tok = jwt.sign(user,'123Tarbahh');
             var name = ToolsService.clean(user.first_name)+ToolsService.clean(user.last_name);
-            User.update(user.id,{token:tok, full_name:name}).exec(function(error,user) {   // TODO Use After Create to be faster
+            User.update(user.id,{token:tok, full_name:name,picture: 'https://graph.facebook.com/'+user.facebook_id+'/picture?width=400&height=400'}).exec(function(error,user) {   // TODO Use After Create to be faster
               res.status(200);
               res.json(user[0]);
             });

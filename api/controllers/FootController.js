@@ -38,8 +38,8 @@ module.exports = {
   },
 
   update: function(req,res){
-    Foot.update(req.param('id'),req.params.all(),function(err){
-      if(err) return res.status(400).end();
+    Foot.update({id: req.param('id')},req.params.all(),function(err){
+      if(err) { console.log(err); return res.status(400).end()};
       res.status(200).end(); 
     });
   },
@@ -80,10 +80,11 @@ module.exports = {
           if(!user) return res.status(200).end();
           info.orga = user.id;
           info.orgaName = user.first_name + " "+ user.last_name;
+          info.picture = user.picture;
           if(info.field) res.json(info).status(200).end();
         });
       });
-      Foot.query('SELECT f.date ,t.name,t.picture,t.city,t.zip_code,t.address,t.telephone FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
+      Foot.query('SELECT f.date ,t.name,t.id,t.picture,t.city,t.zip_code,t.address,t.telephone FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
         if(err) return res.status(400).end();
         if(!field) return res.status(200).end();
         //Careful, the date in field[0] belongs to the foot
