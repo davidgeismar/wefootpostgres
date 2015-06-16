@@ -80,6 +80,7 @@ module.exports = {
           if(!user) return res.status(200).end();
           info.orga = user.id;
           info.orgaName = user.first_name + " "+ user.last_name;
+          info.picture = user.picture;
           if(info.field) res.json(info).status(200).end();
         });
       });

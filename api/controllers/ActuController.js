@@ -15,10 +15,13 @@ module.exports = {
 	},
 	getActu: function(req,res){
 		var moment = require('moment');
-		console.log(req.param('user'));
-		Actu.find({where: {user: req.param('friends'),typ:['footConfirm','hommeDuMatch','chevreDuMatch','newFriend','demandAccepted'],user:{'!':req.param('user')},related_user:{'!':req.param('user')}},sort:'createdAt DESC',skip:req.param('skip'),limit:30},function(err,actu){
-			var result = _.groupBy(actu, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
-			console.log(result);
+		console.log(req.param('friends'));
+		//related_user:{'!':req.param('user')}
+		Actu.find({where: { or:[{related_user: req.param('friends'),typ:['footConfirm','newFriend','demandAccepted']},
+			{user:req.param('friends'),typ:['hommeDuMatch','chevreDuMatch','newFriend']}]}
+			,sort:'createdAt DESC',skip:req.param('skip'),limit:30},function(err,actu){
+			var notMine = _.filter(actu,function(elem){return elem.user!=req.param('user')&&elem.related_user != req.param('user')});
+			var result = _.groupBy(notMine, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
 			res.status(200).json(result);
 		});
 	},
