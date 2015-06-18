@@ -24,22 +24,19 @@
     if(req.method === 'GET')
       return res.json({'status':'GET not allowed'});            
 
+    var uploadFile = req.file('file');
 
-      var uploadFile = req.file('file');
-
-
-      uploadFile.upload({ dirname: '../../assets/images/fields' ,saveAs:req.body.fieldId+".jpg"} ,function onUploadComplete (err, file) {        
-
-
-        if (err) return res.serverError(err);               
-        //  IF ERROR Return and send 500 error with error
-        
-        //console.log(files);
-        res.json({status:200,file:file});
+    uploadFile.upload({ dirname: '../../assets/images/fields' ,saveAs:req.body.fieldId+".jpg"} ,function onUploadComplete (err, file) {        
+      if (err) return res.serverError(err);  
+      Field.update(req.body.fieldId, {picture: 'http://localhost:1337/images/fields/'+req.body.fieldId+'.jpg'}, function(err){
+        if(err) return res.status(400);
       });
-    },
-    
-    search: function (req,res) {
+
+      res.json({status:200,file:file});
+    });
+  },
+
+  search: function (req,res) {
 
     var word = ToolsService.clean(req.param('word')); // to do: improve search result via creating array that tries all the dif combination of words separated with a blank
     console.log(word);

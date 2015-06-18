@@ -38,7 +38,8 @@ module.exports = {
     	//required:true
     },
     picture: {
-    	type: 'string'
+    	type: 'string',
+      defaultsTo: 'img/field_default.jpg'
     },
     origin:{
     	type: 'string',
