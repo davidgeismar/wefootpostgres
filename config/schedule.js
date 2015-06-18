@@ -8,16 +8,18 @@
 
       //Check end election
       //Everyday at 2:30AM
-      "30 2 * * *"   : function ()
+      // "30 2 * * *" 
+      "* * * * *"  : function ()
       {
       	var nowMinus3d = moment().subtract(3, 'days').calendar();
         var nowMinus4d = moment().subtract(4, 'days').calendar();
 
           // On sélectionne les gagnants des foots qui ont plus de 3 jours et qui ne sont terminés  		
           Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot group by v.chevre, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
-          	async.each(results, function(result, callback){
-          		Trophe.create({foot:result.foot, trophe:0, user:result.chevre, nbVotes:result.maxVotes});
-
+           console.log("success");
+           if(results){
+            async.each(results, function(result, callback){
+              Trophe.create({foot:result.foot, trophe:0, user:result.chevre, nbVotes:result.maxVotes});
               Actu.create({user:result.chevre, related_user:result.chevre, typ:'chevreDuMatch', related_stuff:foot.id}).exec(function(err,actu){
                 if(err)
                   console.log(err);
@@ -31,30 +33,31 @@
               callback();
             }, function(err){
             });
+          }
+        });
 
-          });
+Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot group by v.homme, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
+ if(results){
+  async.each(results, function(result, callback){
+    Trophe.create({foot:result.foot, trophe:1, user:result.homme, nbVotes:result.maxVotes});
+    Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:foot.id}).exec(function(err,actu){
+      if(err)
+        console.log(err);
+      Connexion.findOne({user:result.homme}).exec(function(err, connexion){
+        if(connexion){
 
-          Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot group by v.homme, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
-          	async.each(results, function(result, callback){
-          		Trophe.create({foot:result.foot, trophe:1, user:result.homme, nbVotes:result.maxVotes});
-              Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:foot.id}).exec(function(err,actu){
-                if(err)
-                  console.log(err);
-                Connexion.findOne({user:result.homme}).exec(function(err, connexion){
-                  if(connexion){
+          sails.sockets.emit(connexion.socketId,'notif',actu);
+        }
+      });
 
-                    sails.sockets.emit(connexion.socketId,'notif',actu);
-                  }
-                });
+    });
+    callback();
+  }, function(err){
 
-              });
-              callback();
-            }, function(err){
-
-            });
-
-          });
-        },
+  });
+}
+});
+},
 
       //Check end foot, trigger vote for each player
       //Every 4 hours

@@ -71,23 +71,6 @@ beforeUpdate: [ function(attrs, next) {
 }
 ],
 
-//permet de crypter le MDP après modification
-// beforeUpdate: [ function(attrs, next) {
-
-//   if (!attrs.password) {
-//     next();
-//     return next();
-//   }
-//   else{
-//   bcrypt.hash(attrs.password, salt, function(err, hash) {
-//     if (err) return next(err);
-//     attrs.password = hash;
-//     attrs.password_confirmation = hash;
-//     next();
-//   });
-// }
-// }
-//   ],
 
 
 
@@ -161,7 +144,7 @@ favorite_club: {
 },
 picture: {
   type:'string',
-  defaultsTo: 'http://localhost:1337/images/profils/default.jpg'
+  defaultsTo: 'img/profil_default.jpg'
 },
 
 // chats: {

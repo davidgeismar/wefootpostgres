@@ -51,7 +51,7 @@ sendPush: function(tokens){
 		headers : {
 			"Content-type" :"application/json",
 			"X-Ionic-Application-Id" : app_id,
-			"Authorization" : "Basic "
+			"Authorization" : "Basic"
 			// +b64
 		},
 		data:pushData
