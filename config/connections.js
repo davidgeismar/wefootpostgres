@@ -19,7 +19,7 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.connections.html
  */
 
-module.exports.connections = {
+ module.exports.connections = {
 
   /***************************************************************************
   *                                                                          *
@@ -49,13 +49,22 @@ module.exports.connections = {
     database: 'wefoot'
   },
 
-    mysql_prod: {
+  mysql_prod: {
     adapter: 'sails-mysql',
     host: 'localhost',
     port:   3306,
     user: 'root',
     password: 'labzeur1230',
     database: 'wefoot'
+  },
+  
+  mysql_dev: {
+    adapter: 'sails-mysql',
+    host: 'localhost',
+    port:   3306,
+    user: 'root',
+    password: 'labzeur1230',
+    database: 'dev'
   },
 
   /***************************************************************************

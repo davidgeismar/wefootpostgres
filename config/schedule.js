@@ -8,15 +8,14 @@
 
       //Check end election
       //Everyday at 2:30AM
-      // "30 2 * * *" 
-      "* * * * *"  : function ()
+      "30 2 * * *"  : function ()
       {
-      	var nowMinus3d = moment().subtract(3, 'days').calendar();
-        var nowMinus4d = moment().subtract(4, 'days').calendar();
+      	var nowMinus3d = moment().subtract(3, 'days').format('YYYY-MM-DD HH:MM:SS');
+        var nowMinus4d = moment().subtract(4, 'days').format('YYYY-MM-DD HH:MM:SS');
 
           // On sélectionne les gagnants des foots qui ont plus de 3 jours et qui ne sont terminés  		
           Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot group by v.chevre, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
-           console.log("success");
+
            if(results){
             async.each(results, function(result, callback){
               Trophe.create({foot:result.foot, trophe:0, user:result.chevre, nbVotes:result.maxVotes});
@@ -62,10 +61,9 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
       //Check end foot, trigger vote for each player
       //Every 4 hours
       "0 */4 * * *": function (){
-        console.log("job test");
-        var nowMinus4h = moment().subtract(4, 'hours').calendar();
 
-        var nowMinus8h = moment().subtract(8, 'hours').calendar();
+        var nowMinus4h = moment().subtract(4, 'hours').format('YYYY-MM-DD HH:MM:SS');
+        var nowMinus8h = moment().subtract(8, 'hours').format('YYYY-MM-DD HH:MM:SS');
 
 // { date: { '>': nowMinus8h, '<': nowMinus4h }}
 Foot.find().exec(function(err, foots){
@@ -98,8 +96,8 @@ Foot.find().exec(function(err, foots){
 
 //SEND PUSH TO WARN USER ABOUT COMMING FOOT
 '*/10 * * * *' : function (){
-  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').calendar();
-  var nowMinus3h = moment().subtract(3, 'hours').calendar();
+  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format('YYYY-MM-DD HH:MM:SS');
+  var nowMinus3h = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:MM:SS');
 
 
   Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
