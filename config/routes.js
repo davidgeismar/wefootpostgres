@@ -46,7 +46,7 @@ module.exports.routes = {
 
   '/addFriend': 'UserController.addFriend',
   
-  'GET /getAllFriends/:id': 'UserController.getAllFriends',
+  'GET /getAllFriends/:id/:skip': 'UserController.getAllFriends',
 
   // '/checkConnect' : 'UserController.checkConnect',
 
@@ -64,7 +64,7 @@ module.exports.routes = {
 
   'GET /getAllChats/:id': 'ChatController.getAllChats',
 
-  'GET /getFootByUser/:player': 'FootController.getFootByUser',
+  'GET /getFootByUser/:player/:skip': 'FootController.getFootByUser',
 
   'GET /getGrade/:noteur/:note': 'NotationController.getGrade',
 

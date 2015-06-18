@@ -121,23 +121,23 @@
          user1: req.param('id') },
          { user2: req.param('id')
        }]
-     }).exec(function(err,friendships){
+     }).skip(req.param('skip')).exec(function(err,friendships){
       if(err) res.status(400).end();
       else{ 
               _.each(friendships, function(friendship){       // Loop to get the ids of friends    
                 if(friendship.user1 == req.param('id')){
                   results.push(friendship.user2);
                   if(friendship.statut%2==1)
-                    statuts.push(1);              // Session user added the other as favorite
+                    statuts.push({stat: 1,friendship: friendship.id});              // Session user added the other as favorite
                   else
-                    statuts.push(0);
+                    statuts.push({stat: 0,friendship: friendship.id});
                 }
                 else{
                   results.push(friendship.user1);
                   if(friendship.statut>=2)
-                    statuts.push(1);
+                    statuts.push({stat: 1,friendship: friendship.id});
                   else
-                    statuts.push(0);
+                    statuts.push({stat: 0,friendship: friendship.id});
                 }
               });
             User.find().where({id:results}).limit(20).exec(function(err,users){   // Find users contained in results
