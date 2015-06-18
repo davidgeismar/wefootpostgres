@@ -47,7 +47,7 @@ module.exports = {
       }
 
     });
-});
+  });
 },
 
   //get all chats for a given user
@@ -60,41 +60,41 @@ module.exports = {
         return res.status(406).end();         
       }
       if(chatters){
-      async.each(chatters,function(chatter,callback){
-        Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
+        async.each(chatters,function(chatter,callback){
+          Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
+            if(err){
+              console.log(err);
+              return res.status(406).end();         
+            }
+
+            Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
+              if(usersChatters){
+                var usersID = _.pluck(usersChatters, 'user');
+                console.log(usersID);
+                User.find(usersID).exec(function(err, bigUsers){
+                  if(err){
+                    console.log(err);
+                    return res.status(406).end();         
+                  }
+                  var smallUsers = shrinkUsers(bigUsers);
+                  chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt, related:chat.related }, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
+                  callback();
+                });
+              }
+              else{
+                callback();
+              }
+            });
+          });
+
+        }, function(err){
           if(err){
             console.log(err);
-            return res.status(406).end();         
           }
-
-          Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
-            if(usersChatters){
-              var usersID = _.pluck(usersChatters, 'user');
-              console.log(usersID);
-              User.find(usersID).exec(function(err, bigUsers){
-                if(err){
-                  console.log(err);
-                  return res.status(406).end();         
-                }
-                var smallUsers = shrinkUsers(bigUsers);
-                chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt, related:chat.related }, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
-                callback();
-              });
-            }
-            else{
-              callback();
-            }
-          });
+          else {
+            return res.status(200).json(chats);
+          }
         });
-
-      }, function(err){
-        if(err){
-          console.log(err);
-        }
-        else {
-          return res.status(200).json(chats);
-        }
-      });
 
 }
 });
@@ -102,6 +102,31 @@ module.exports = {
 
 },
 
+
+getUnseenMessages: function (req, res, next){
+  var unseenMessages = new Array();
+  Chatter.find({user:req.param('id')}).exec(function(err,chatters){
+    if(err){
+      return res.status(406).end();         
+    }
+    async.each(chatters,function(chatter,callback){
+      var params = {};
+      if(chatter.lastTimeSeen)
+        params = { chat:chatter.chat, createdAt: { '>=': lt}};
+      else
+        params = { chat:chatter.chat};
+      var lt = chatter.lastTimeSeen;
+      Message.find(params).exec(function(err, messages){
+        if(messages)
+          unseenMessages.push({chat:chatter.chat, messages:messages});
+      })
+      callback();
+    },function(err){
+      return res.status(200).json(unseenMessages);
+
+    });
+  });
+},
   // getAllChats: function (req, res, next){
   //   var chats = new Array();
   //   var i = 0;
@@ -151,25 +176,25 @@ module.exports = {
         return res.status(406).end();         
       }
       if(chatters){
-      async.each(chatters,function(chatter,callback){
+        async.each(chatters,function(chatter,callback){
 
-        Chat.findOne({id:chatter.chat}).exec(function(err,chat){
+          Chat.findOne({id:chatter.chat}).exec(function(err,chat){
+            if(err){
+              return res.status(406).end();         
+            }
+            chats.push({chat : chat , lastTime : chatter.lastTimeSeen});
+          });
+
+        }, function(err){
           if(err){
-            return res.status(406).end();         
+            console.log(err);
           }
-          chats.push({chat : chat , lastTime : chatter.lastTimeSeen});
+          else {
+            return res.status(200).json(chats);
+          }
         });
-
-      }, function(err){
-        if(err){
-          console.log(err);
-        }
-        else {
-          return res.status(200).json(chats);
-        }
-      });
-    }
-    else return res.status(200).end();
+      }
+      else return res.status(200).end();
     });
 
   },

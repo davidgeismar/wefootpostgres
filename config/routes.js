@@ -80,7 +80,9 @@ module.exports.routes = {
 
   'GET /getVotedStatus/:electeur/:footId' : 'VoteController.getVotedStatus',
 
-  'GET /user/toConfirm/:user/:id': 'UserController.toConfirm'
+  'GET /user/toConfirm/:user/:id': 'UserController.toConfirm',
+
+  'GET /chat/getUnseenMessages/:id': 'ChatController.getUnseenMessages'
 
   /***************************************************************************
   *                                                                          *

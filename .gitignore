@@ -99,6 +99,11 @@ lib-cov
 npm-debug.log
 
 
+/config/local.js
+/config/connections.js
+/config/models.js
+
+
 
 
 
