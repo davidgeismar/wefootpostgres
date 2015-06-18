@@ -366,7 +366,7 @@ newPassword: function(req,res){
 },
 
 updateSeen: function(req,res){
-  User.update({id : req.param('id')},{last_seen: new Date()},function(){res.status(200).end();});
+  User.update({id : req.param('id')},{last_seen: new Date()},function(err,user){res.status(200).json(user[0]);});
 },
 getLastNotif: function(req,res){
   var moment = require('moment');
