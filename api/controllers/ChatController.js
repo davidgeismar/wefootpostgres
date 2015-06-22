@@ -111,11 +111,13 @@ getUnseenMessages: function (req, res, next){
     }
     async.each(chatters,function(chatter,callback){
       var params = {};
-      if(chatter.lastTimeSeen)
+      if(chatter.lastTimeSeen){
+        var lt = chatter.lastTimeSeen;
         params = { chat:chatter.chat, createdAt: { '>=': lt}};
+      }
       else
         params = { chat:chatter.chat};
-      var lt = chatter.lastTimeSeen;
+
       Message.find(params).exec(function(err, messages){
         if(messages)
           unseenMessages.push({chat:chatter.chat, messages:messages});

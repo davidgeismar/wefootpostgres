@@ -12,9 +12,9 @@
  module.exports.bootstrap = function(cb) {
 
  	sails.on('lifted', function() {
- 		PushService.sendPush("DEV-5b33232d-8a65-4688-ba58-05a07d760ce8");
- 		console.log('sockets destroyed');
- 		// Connexion.query('TRUNCATE TABLE connexion');
+ 		PushService.sendPush("1b4d1a8ba6b24cf15871e6481b108cc91cf397afa04ecf29e78a7236cc11edc0");
+ 		// console.log('sockets destroyed');
+ 		Connexion.query('TRUNCATE TABLE connexion');
  	});
 
  	cb();
