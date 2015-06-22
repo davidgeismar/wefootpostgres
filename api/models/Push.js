@@ -7,12 +7,17 @@
 
 module.exports = {
 
-  attributes: {
+	attributes: {
 
-  	connexion:{
-  		model:'connexion'
-  	},
-  	
-  }
+		id:{
+			type:'int',
+			primaryKey: true
+		},
+
+		user:{
+			model:'user'
+		}
+		
+	}
 };
 
