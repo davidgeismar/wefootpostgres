@@ -9,9 +9,13 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
-module.exports.bootstrap = function(cb) {
+ module.exports.bootstrap = function(cb) {
 
-  // It's very important to trigger this callback method when you are finished
-  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
-};
+ 	sails.on('lifted', function() {
+ 		PushService.sendPush("DEV-5b33232d-8a65-4688-ba58-05a07d760ce8");
+ 		console.log('sockets destroyed');
+ 		// Connexion.query('TRUNCATE TABLE connexion');
+ 	});
+
+ 	cb();
+ };
