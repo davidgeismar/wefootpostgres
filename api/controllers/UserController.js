@@ -50,25 +50,34 @@
     },
 
     uploadProfilPic: function  (req, res) {
+      var fs = require('fs');
       var easyimg = require('easyimage'); 
       var uploadFile = req.file('file');
       var path = require('path');
-      uploadFile.upload({ dirname: '../../assets/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {        
+      uploadFile.upload({ dirname: '../../.tmp/public/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {  //Here to display the cropped image without restarting the server
         if (err) return res.serverError(err);
-        var url = path.join(__dirname,'../../assets/images/profils/'+req.body.userId+'.jpg');
+        var url = path.join(__dirname,'../../.tmp/public/images/profils/'+req.body.userId+'.jpg'); 
         easyimg.info(url).then(function(file){  //RESIZING IMAGES
             var min = Math.min(file.width,file.height);
-            console.log(min);
           easyimg.crop({
             src:url,dst:url,cropwidth: min,cropheight: min
           }).then(function(file2){
             console.log(file2);
-            User.update(req.body.userId,{picture: 'http://localhost:1337/images/profils/'+req.body.userId+'.jpg'},function(err){
+            var url2 = path.join(__dirname,'../../assets/images/profils/'+req.body.userId+'.jpg'); //Allow to keep the file after server restart
+            fs.readFile(url,function(err,contentPic){
+              console.log(contentPic);
+              fs.writeFile(url2,contentPic,function(err){
+                console.log(err);
+                if(!err) console.log('done');
+              });
+            });
+            User.update(req.body.userId,{picture: 'http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg'},function(err){
               if(err) return res.status(400).end();
-                res.status(200).send('http://localhost:1337/images/profils/'+req.body.userId+'.jpg');
+              console.log('here');
+              res.status(200).send('http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg');
             });
           });
-        },function(err){console.log(err)});
+        },function(err){console.log(err); res.status(400).end(); });
         // ({src:'../../assets/images/profils'+req.body.userId+'.jpg',
 
         // });
