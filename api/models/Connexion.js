@@ -6,9 +6,6 @@ module.exports = {
   		type: 'string',
   		primaryKey: true
   	},
-    pushId:{
-      type: 'string'
-    },
   	user: {
   		type: 'integer',
   		foreignKey: true,

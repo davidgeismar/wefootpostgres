@@ -31,6 +31,32 @@
     }
 
   });
+  },
+
+  create: function(req,res) {
+    Session.create(req.params.all(),function(err){
+      if(err) { console.log(err); return res.status(400).end();}
+      return res.status(200).end();
+    });
+  },
+
+  isConnected: function(req,res){ //When user restart the app
+    console.log('called at least');
+    Session.findOne({uuid: req.param('uuid')},function(err,session){
+      console.log(session);
+      if(err) {console.log(err); return res.status(400).end();}
+      if(session)
+        return res.status(200).json({userId : session.user});
+      else 
+        return res.status(200).json({userId: 0});
+    });
+  },
+
+  delete: function(req,res){
+    Session.destroy({uuid: req.param('uuid')},function(err){
+      if(err) {console.log(err); return res.status(400).end();}
+      else return res.status(200).end();
+    });
   }
   
 };

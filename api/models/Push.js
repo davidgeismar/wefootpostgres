@@ -9,8 +9,8 @@ module.exports = {
 
 	attributes: {
 
-		id:{
-			type:'int',
+		pushId:{
+			type:'string',
 			primaryKey: true
 		},
 
