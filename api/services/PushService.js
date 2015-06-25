@@ -9,35 +9,35 @@
 
 // var b64 = Base64.encode(private_key).replace('\n', '');
 
-module.exports = {
-
-
-
-//TODO : Décliner cette méthode en fonction des types de push (ou ajouter des paramètres)
-sendPush: function(tokens){
-
-
 var ionicPushServer = require('ionic-push-server');
  
 var credentials = {
     IonicApplicationID : "82c453c4",
-    IonicApplicationAPIsecret : "12a08671f72fdd97aa5f603a399b7c9c6a358704d8e88cbc"
+    IonicApplicationAPIsecret : "2599140a1570fcfbd7309bfc451e43df5ddb58d47f649b96"
 };
+
+module.exports = {
+
+// raph push : 1b4d1a8ba6b24cf15871e6481b108cc91cf397afa04ecf29e78a7236cc11edc0
+
+//TODO : Décliner cette méthode en fonction des types de push (ou ajouter des paramètres)
+sendPush: function(tokens){
  
 var notification = {
-  "tokens":["1b4d1a8ba6b24cf15871e6481b108cc91cf397afa04ecf29e78a7236cc11edc0"],
+  "tokens":tokens,
   "notification":{
     "alert":"Ionic sucks!",
     "ios":{
-      "badge":1,
-      "sound":"chime.aiff",
-      "expiry": 1423238641,
-      "priority": 10,
-      "contentAvailable": true,
-      "payload":{
-        "key1":"value",
-        "key2":"value"
-      }
+      "badge":1
+      // ,
+      // "sound":"chime.aiff",
+      // "expiry": 1423238641,
+      // "priority": 10,
+      // "contentAvailable": true,
+      // "payload":{
+      //   "key1":"value",
+      //   "key2":"value"
+      // }
     }
   } 
 };
