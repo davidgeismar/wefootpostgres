@@ -48,15 +48,6 @@
     password: 'root',
     database: 'wefoot'
   },
-
-  mysql_prod: {
-    adapter: 'sails-mysql',
-    host: 'localhost',
-    port:   3306,
-    user: 'root',
-    password: 'labzeur1230',
-    database: 'wefoot'
-  },
   
   mysql_dev: {
     adapter: 'sails-mysql',
@@ -64,7 +55,7 @@
     port:   3306,
     user: 'root',
     password: 'labzeur1230',
-    database: 'dev'
+    database: 'wefoot'
   },
 
   /***************************************************************************
@@ -81,7 +72,7 @@
     port: 27017,
     user: 'root',
     password: 'root',
-    database: 'wefoot',
+    database: 'wefoot'
     //schema : true
   },
 
@@ -97,9 +88,9 @@
 
   postgres: {
     adapter: 'sails-postgresql',
-    url: 'postgres://xhmytviptgvuqm:9XBYDf_CwYJsozc_WHOHk07gK9@ec2-54-235-134-167.compute-1.amazonaws.com:5432/d1dg5dohvl8hho',
+    url: 'postgres://rycylnbajtinpx:gbaZVTZiscp23YlURuG_YGDPfW@ec2-54-83-18-87.compute-1.amazonaws.com:5432/d24j1kt7fmfa3g',
     port: 5432,
-    user: 'xhmytviptgvuqm',
+    user: 'rycylnbajtinpx',
     password: '9XBYDf_CwYJsozc_WHOHk07gK9',
     database: 'd1dg5dohvl8hho',
     ssl: true
