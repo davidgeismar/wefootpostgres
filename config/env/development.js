@@ -20,7 +20,7 @@ module.exports = {
   models: {
     connection: 'mysql',
     migrate: 'alter'
-  }
+  },
 
   port: 1337
 
