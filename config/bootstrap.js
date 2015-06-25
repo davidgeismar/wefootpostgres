@@ -14,7 +14,7 @@
  	sails.on('lifted', function() {
  		// PushService.sendPush("1b4d1a8ba6b24cf15871e6481b108cc91cf397afa04ecf29e78a7236cc11edc0");
  		// console.log('sockets destroyed');
- 		Connexion.query('TRUNCATE TABLE connexion');
+ 		// Connexion.query('TRUNCATE TABLE connexion');
  	});
 
  	cb();
