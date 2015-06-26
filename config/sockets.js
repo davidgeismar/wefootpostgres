@@ -126,7 +126,7 @@
   afterDisconnect: function(session, socket) {
     // console.log(session);
     console.log(socket.id);
-    Connexion.destroy({socketId: socket.id}).exec(function(err, connexion){
+    Connexion.destroy({socket_id: socket.id}).exec(function(err, connexion){
       if(err)
         console.log(err);
     });

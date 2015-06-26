@@ -42,6 +42,7 @@
 config/local.js
 config/models.js
 config/connections.js
+config/env
 
 
 
