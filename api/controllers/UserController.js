@@ -28,7 +28,7 @@
       if(err) return res.status(400).end();
       if(!user) return res.status(200).end();
       delete user.token;
-      delete user.passwordResetToken;
+      delete user.password_reset_token;
       return res.status(200).json(user);
     })
   },
@@ -261,7 +261,7 @@ removeFavorite: function(req,res){
       else res.status(406).end();
     },
 
-    updateData: function(req,res){
+    updatedAta: function(req,res){
       var jwt = require('jsonwebtoken');   
       User.find().where({id:{ '>':req.param('start')}}).exec(function(err,users)
       {
@@ -339,7 +339,7 @@ resetPassword: function(req,res){
       return res.status(406).end();
     }
     if(user && !user.facebook_id){
-    user.generatePasswordResetToken();
+    user.generatepassword_reset_token();
     user.sendPasswordResetEmail();
       return res.status(200).end();
     }
@@ -352,13 +352,13 @@ resetPassword: function(req,res){
 newPassword: function(req,res){
 
 
-  User.findOne({email:req.param('email'), passwordResetToken:req.param('token')}).exec(function(err,user){
+  User.findOne({email:req.param('email'), password_reset_token:req.param('token')}).exec(function(err,user){
     if(err)
       return res.status(406).end();
-    if(!user || !user.passwordResetToken)
+    if(!user || !user.password_reset_token)
       return res.status(406).end();
     else{
-      User.update({email:req.param('email')}, {password:req.param('password'), passwordResetToken:null}).exec(function(err, updatedUser){
+      User.update({email:req.param('email')}, {password:req.param('password'), password_reset_token:null}).exec(function(err, updatedUser){
         // return res.status(200).message("Le mot de passe a bien été modifié");
         if(err){
           console.log(err);

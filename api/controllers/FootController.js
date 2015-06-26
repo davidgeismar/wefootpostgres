@@ -63,7 +63,7 @@ module.exports = {
     // },
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
       var moment = require('moment');
-      Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.id>"+req.param('skip')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:MM:SS')+"' ORDER BY f.date", function(err,foots){
+      Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:MM:SS')+"' ORDER BY f.date", function(err,foots){
         console.log(foots);
         if(err) return res.status(400).end();
         return res.json(foots).status(200).end();
@@ -116,7 +116,7 @@ module.exports = {
       Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
         Foot.findOne({id: req.param('foot')},function(err,foot){
           if(!foot) return res.status(200).end();
-          foot.confirmedPlayers = foot.confirmedPlayers+1;
+          foot.confirmed_players = foot.confirmed_players+1;
           foot.save(function(err){
           if(err) return res.status(400).end();
           if(player.length == 0) return res.status(400).end();
@@ -147,9 +147,12 @@ module.exports = {
     removePlayer: function(req,res){
       Player.destroy({foot: req.param('foot'), user: req.param('user')},function(err){
         if(err) return res.status(400).end();
-        foot.confirmedPlayers = foot.confirmedPlayers-1;
-        foot.save();
-        return res.status(200).end();
+        Foot.findOne({id: req.param('foot')},function(err,foot){
+          if(err) return res.status(400).end();
+          foot.confirmed_players = foot.confirmed_players-1;
+          foot.save();
+          return res.status(200).end();
+        });
       });
     },
 

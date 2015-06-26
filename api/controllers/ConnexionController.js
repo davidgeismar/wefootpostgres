@@ -2,7 +2,7 @@ module.exports = {
 
 setSocket: function(req,res){   //Link a connexion with an user
 	if(req.isSocket){
-		Connexion.create({socketId: sails.sockets.id(req.socket),user: req.param('id')},function(err,sock){
+		Connexion.create({socket_id: sails.sockets.id(req.socket),user: req.param('id')},function(err,sock){
 			if(err){ console.log(err); res.status(400).end();}
 			res.status(200).end();
 		});
@@ -14,7 +14,7 @@ setSocket: function(req,res){   //Link a connexion with an user
 
 	setConnexion: function(req,res){   //Link a connexion with an user
 		if(req.isSocket){
-			Connexion.create({socketId: sails.sockets.id(req.socket),user: req.param('id')},function(err,sock){
+			Connexion.create({socket_id: sails.sockets.id(req.socket),user: req.param('id')},function(err,sock){
 				if(err){ console.log(err); res.status(400).end();}
 				res.status(200).end();
 			});
@@ -25,7 +25,7 @@ setSocket: function(req,res){   //Link a connexion with an user
 	},
 
 	delete: function(req,res){
-			Connexion.destroy({socketId: sails.sockets.id(req.socket)},function(err){
+			Connexion.destroy({socket_id: sails.sockets.id(req.socket)},function(err){
 				if(err){ console.log(err); res.status(400).end();}
 				res.status(200).end();
 			});
