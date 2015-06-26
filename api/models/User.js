@@ -109,9 +109,7 @@ facebook_id: {
 },
 email: {
  type: 'string',
- required: true,
- unique: true,
- email: true
+ required: true
 },
 password:{
  type: 'string'
