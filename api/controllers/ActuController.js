@@ -32,7 +32,7 @@ module.exports = {
 				if(err) return res.status(400).end();
 				if(!connexions[0]) return res.status(200).end(); // Si l'utlisateur n'est pas connecté on envoi rien.
 				_.each(connexions,function(connexion){
-					sails.sockets.emit(connexion.socketId,'notif',actu);   // Envoi un évènement socket.
+					sails.sockets.emit(connexion.socket_id,'notif',actu);   // Envoi un évènement socket.
 				});
             	res.status(200).end();
        		 });
@@ -53,7 +53,7 @@ module.exports = {
 					if(err) return res.status(400).end();
 					if(connexions[0]){   //On verifie que l'utilsateur est connecté, (pas de return car on est dans une boucle).
 						_.each(connexions,function(connexion,index){
-								sails.sockets.emit(connexion.socketId,'notif',actu);   // Envoi un évènement socket.
+								sails.sockets.emit(connexion.socket_id,'notif',actu);   // Envoi un évènement socket.
 								if(index==connexions.length-1)
 									callback();
 						});

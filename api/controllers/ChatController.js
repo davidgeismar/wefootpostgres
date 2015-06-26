@@ -32,7 +32,7 @@ module.exports = {
           Connexion.find({user:req.param('users')}).exec(function(err, connexions){
             if(connexions){
               async.each(connexions,function(connexion,callback){
-                sails.sockets.emit(connexion.socketId,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
+                sails.sockets.emit(connexion.socket_id,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
                 callback();
               }
               ,function(err){
@@ -77,7 +77,7 @@ module.exports = {
                     return res.status(406).end();         
                   }
                   var smallUsers = shrinkUsers(bigUsers);
-                  chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt, related:chat.related }, {lastTime: chatter.lastTimeSeen}, { users : smallUsers}));
+                  chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt, related:chat.related }, {lastTime: chatter.last_time_seen}, { users : smallUsers}));
                   callback();
                 });
               }
@@ -111,8 +111,8 @@ getUnseenMessages: function (req, res, next){
     }
     async.each(chatters,function(chatter,callback){
       var params = {};
-      if(chatter.lastTimeSeen){
-        var lt = chatter.lastTimeSeen;
+      if(chatter.last_time_seen){
+        var lt = chatter.last_time_seen;
         params = { chat:chatter.chat, createdAt: { '>=': lt}};
       }
       else
@@ -184,7 +184,7 @@ getUnseenMessages: function (req, res, next){
             if(err){
               return res.status(406).end();         
             }
-            chats.push({chat : chat , lastTime : chatter.lastTimeSeen});
+            chats.push({chat : chat , lastTime : chatter.last_time_seen});
           });
 
         }, function(err){

@@ -116,7 +116,7 @@ module.exports = {
       Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
         Foot.findOne({id: req.param('foot')},function(err,foot){
           if(!foot) return res.status(200).end();
-          foot.confirmedPlayers = foot.confirmedPlayers+1;
+          foot.confirmed_players = foot.confirmed_players+1;
           foot.save(function(err){
           if(err) return res.status(400).end();
           if(player.length == 0) return res.status(400).end();
@@ -149,7 +149,7 @@ module.exports = {
         if(err) return res.status(400).end();
         Foot.findOne({id: req.param('foot')},function(err,foot){
           if(err) return res.status(400).end();
-          foot.confirmedPlayers = foot.confirmedPlayers-1;
+          foot.confirmed_players = foot.confirmed_players-1;
           foot.save();
           return res.status(200).end();
         });

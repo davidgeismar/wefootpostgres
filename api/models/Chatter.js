@@ -20,7 +20,7 @@ module.exports = {
  	user:{
  		model:'user'
  	},
- 	lastTimeSeen:{
+ 	last_time_seen:{
  		type:'datetime'
  	}
  	

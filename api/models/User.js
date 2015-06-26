@@ -152,7 +152,7 @@ picture: {
 //   via: 'chatters'
 // },
 
-passwordResetToken:{
+password_reset_token:{
   type:'string'
 },
 last_seen:{   //Last opening of notif page
@@ -162,13 +162,13 @@ toJSON: function(){
   var obj= this.toObject();
   delete obj.password;
   delete obj.password_confirmation;
-  delete obj.passwordResetToken;
+  delete obj.password_reset_token;
   return obj;
 },
 
-generatePasswordResetToken: function() {
+generatepassword_reset_token: function() {
 
-  this.passwordResetToken = token();
+  this.password_reset_token = token();
   this.save(function (err) {
     if(err) console.log(err);
   });
@@ -181,7 +181,7 @@ console.log(this.email.toString());
     {
       recipientName: this.first_name,
       senderName: "Wefoot",
-      token:this.passwordResetToken,
+      token:this.password_reset_token,
       email:this.email.toString()
     },
     {
