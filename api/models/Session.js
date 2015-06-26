@@ -8,10 +8,12 @@
 module.exports = {
 
   attributes: {
-  	id:{
-  		type: 'float',
-  		autoIncrement: true,
+  	uuid:{
+  		type: 'string',
   		primaryKey: true
+  	},
+  	user:{
+  		model: 'user'
   	}
   }
 };
