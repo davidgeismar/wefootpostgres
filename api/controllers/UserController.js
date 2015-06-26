@@ -261,7 +261,7 @@ removeFavorite: function(req,res){
       else res.status(406).end();
     },
 
-    updatedata: function(req,res){
+    updatedAta: function(req,res){
       var jwt = require('jsonwebtoken');   
       User.find().where({id:{ '>':req.param('start')}}).exec(function(err,users)
       {
@@ -382,7 +382,7 @@ getLastNotif: function(req,res){
   last_seen = moment(req.param('last_seen')).format();
   Actu.find()
   .where({user: req.param('id')})
-  .where({ createdat: {'>':last_seen}})
+  .where({ createdAt: {'>':last_seen}})
   .exec(function(err,vals){
     console.log(vals);
     if(err){console.log(err); return res.status(400).end();}

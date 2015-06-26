@@ -34,7 +34,7 @@ module.exports = {
  						Connexion.find({user:users}).exec(function(err, connexions){
  							if(connexions){
  								async.each(connexions,function(connexion,callback){
- 									sails.sockets.emit(connexion.socket_id,'newMessage',{sender_id: req.param('sender_id'),messagestr:message.messagestr, chat:req.param('chat'), createdat:message.createdat});
+ 									sails.sockets.emit(connexion.socket_id,'newMessage',{sender_id: req.param('sender_id'),messagestr:message.messagestr, chat:req.param('chat'), createdAt:message.createdAt});
  									callback();
  								}
  								,function(err){
