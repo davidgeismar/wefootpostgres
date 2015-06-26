@@ -18,10 +18,10 @@ module.exports = {
 		console.log(req.param('skip'));
 		Actu.find({where: { or:[{related_user: req.param('friends'),typ:['footConfirm','newFriend','demandAccepted']},
 			{user:req.param('friends'),typ:['hommeDuMatch','chevreDuMatch','newFriend']}], id: {'>': req.param('skip')}}
-			,sort:'createdAt DESC',limit:30},function(err,actu){
+			,sort:'createdat DESC',limit:30},function(err,actu){
 				console.log(actu);
 			var notMine = _.filter(actu,function(elem){return elem.user!=req.param('user')&&elem.related_user != req.param('user')});
-			var result = _.groupBy(notMine, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
+			var result = _.groupBy(notMine, function(elem){return moment(elem.createdat).lang('fr').format('L')});
 			res.status(200).json(result);
 		});
 	},

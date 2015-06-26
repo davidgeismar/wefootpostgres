@@ -77,7 +77,7 @@ module.exports = {
                     return res.status(406).end();         
                   }
                   var smallUsers = shrinkUsers(bigUsers);
-                  chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedAt:chat.updatedAt, related:chat.related }, {lastTime: chatter.last_time_seen}, { users : smallUsers}));
+                  chats.push(merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, updatedat:chat.updatedat, related:chat.related }, {lastTime: chatter.last_time_seen}, { users : smallUsers}));
                   callback();
                 });
               }
@@ -113,7 +113,7 @@ getUnseenMessages: function (req, res, next){
       var params = {};
       if(chatter.last_time_seen){
         var lt = chatter.last_time_seen;
-        params = { chat:chatter.chat, createdAt: { '>=': lt}};
+        params = { chat:chatter.chat, createdat: { '>=': lt}};
       }
       else
         params = { chat:chatter.chat};
