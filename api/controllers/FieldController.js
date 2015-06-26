@@ -36,6 +36,20 @@
     });
   },
 
+  getFields: function(req, res){
+    Field.find().where({
+      or : [
+
+      {
+        origin:'public'
+      }
+        ,  
+        {
+          origin:'private',
+          related_to:req.param('id')
+        }
+        ]}).limit(10).exec(function(err,tabfield){
+  },
   search: function (req,res) {
 
     var word = ToolsService.clean(req.param('word')); // to do: improve search result via creating array that tries all the dif combination of words separated with a blank
