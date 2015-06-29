@@ -4,7 +4,6 @@
  * @description :: Server-side logic for managing sessions
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
-
  module.exports = {
 
   login: function(req,res,next){
@@ -18,7 +17,8 @@
         if (err) return next(err);
 
         if (match) {
-          
+          user.pending_notif = 0;
+          user.save();
           res.status(200).json(user);
         } else {
             // invalid password

@@ -156,6 +156,10 @@ password_reset_token:{
 last_seen:{   //Last opening of notif page
   type:'datetime'
 },
+pending_notif:{
+  type:'int',
+  defaultsTo: 0
+},
 toJSON: function(){
   var obj= this.toObject();
   delete obj.password;

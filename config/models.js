@@ -17,11 +17,7 @@ module.exports.models = {
   * connections (see `config/connections.js`)                                *
   *                                                                          *
   ***************************************************************************/
-<<<<<<< HEAD
    connection: 'mysql',
-=======
-   connection: 'mysql_dev',
->>>>>>> d8a25c91a20fd0008eb122e96df87a4d9ff6a740
 
   /***************************************************************************
   *                                                                          *
