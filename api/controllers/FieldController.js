@@ -36,19 +36,19 @@
     });
   },
 
-  getFields: function(req, res){
-    Field.find().where({
-      or : [
-      {
-        origin:'public'
-      }
-        ,  
-        {
-          origin:'private',
-          related_to:req.param('id')
-        }
-        ]}).limit(10).exec(function(err,tabfield){
-  // },
+  // getFields: function(req, res){
+  //   Field.find().where({
+  //     or : [
+  //     {
+  //       origin:'public'
+  //     }
+  //       ,  
+  //       {
+  //         origin:'private',
+  //         related_to:req.param('id')
+  //       }
+  //       ]}).limit(10).exec(function(err,tabfield){
+  // // },
 
   search: function (req,res) {
 
