@@ -12,7 +12,7 @@
   //Met à jour le last time seen, à base de popopop et tout ça dans ma benzbenzbenz
   updateLts: function(req,res,next){
     var currentTime = new Date();
-    Chatter.update({user:req.param('user'), chat:req.param('chat')}, {lastTimeSeen:currentTime}).exec(function(err, chatter){
+    Chatter.update({user:req.param('user'), chat:req.param('chat')}, {last_time_seen:currentTime}).exec(function(err, chatter){
       return res.status(200).end();
     });
 
@@ -23,7 +23,7 @@
       Chat.find({related:req.param('related')}).exec(function(err, chat){
         Chatter.create({user:req.param('user'), chat:chat.id}).exec(function(err, chatter){
           User.findOne(req.param('user')).exec(function(err,user){
-            sails.sockets.emit(connexion.socketId,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
+            sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
           });
 
         });
@@ -53,7 +53,7 @@
   //           User.find(usersID).exec(function(err, bigUsers){
 
   //             var smallUsers = _.chain(users).ToolsService.pluckMany( "first_name", "picture", "id").value();
-  //             chats.push({chat : chat , lastTime: chatter.lastTimeSeen, users : smallUsers});
+  //             chats.push({chat : chat , lastTime: chatter.last_time_seen, users : smallUsers});
 
 
 
@@ -94,7 +94,7 @@
   //         if(err){
   //           return res.status(406).end();         
   //         }
-  //         chats.push({chat : chat , lastTime : chatter.lastTimeSeen});
+  //         chats.push({chat : chat , lastTime : chatter.last_time_seen});
   //       });
 
   //     }, function(err){

@@ -17,7 +17,7 @@ module.exports = {
       type: 'datetime',
       required : true
     },
-    nbPlayer: {
+    nb_player: {
       type: 'integer',
       required : true
     },
@@ -29,7 +29,7 @@ module.exports = {
       type: 'integer',
       required: true
     },
-    friendCanInvite: {   //FRIEND CAN INVITE FRIEND
+    friend_can_invite: {   //FRIEND CAN INVITE FRIEND
       type: 'boolean',
       required: true
     },
@@ -50,7 +50,7 @@ module.exports = {
       references: 'user',
       on: 'id'
     },
-    confirmedPlayers: {
+    confirmed_players: {
       type: 'integer',
       defaultsTo: 1
     }

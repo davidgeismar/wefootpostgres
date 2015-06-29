@@ -2,7 +2,7 @@ module.exports = {
 
   attributes: {
   	
-  	socketId: {
+  	socket_id: {
   		type: 'string',
   		primaryKey: true
   	},

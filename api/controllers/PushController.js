@@ -8,7 +8,7 @@
  module.exports = {
 
  	create: function(req,res) {
- 		Push.find(req.param('pushId')).exec(function(err,push){
+ 		Push.find(req.param('push_id')).exec(function(err,push){
  			if(err) { console.log(err); return res.status(400).end();}
  			if(push.length==0){
  				Push.create(req.params.all(),function(err){

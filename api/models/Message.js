@@ -19,7 +19,7 @@ module.exports = {
       type:'integer'
     },
 
-    senderId: {
+    sender_id: {
     	type: 'integer',
       required: true
     },

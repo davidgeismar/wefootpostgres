@@ -28,13 +28,13 @@ module.exports = {
  						var users = new Array();
  						users =_.pluck(req.param('receivers'), 'id');
  						//NO NEED
- 						// users.push(req.param('senderId'));
+ 						// users.push(req.param('sender_id'));
  						console.log("users");
  						console.log(users);
  						Connexion.find({user:users}).exec(function(err, connexions){
  							if(connexions){
  								async.each(connexions,function(connexion,callback){
- 									sails.sockets.emit(connexion.socketId,'newMessage',{senderId: req.param('senderId'),messagestr:message.messagestr, chat:req.param('chat'), createdAt:message.createdAt});
+ 									sails.sockets.emit(connexion.socket_id,'newMessage',{sender_id: req.param('sender_id'),messagestr:message.messagestr, chat:req.param('chat'), createdAt:message.createdAt});
  									callback();
  								}
  								,function(err){
