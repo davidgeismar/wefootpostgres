@@ -40,6 +40,8 @@
 ################################################
 
 config/local.js
+config/models.js
+config/connections.js
 
 
 
@@ -98,10 +100,6 @@ lib-cov
 *.pid
 npm-debug.log
 
-
-/config/local.js
-/config/connections.js
-/config/models.js
 
 
 

@@ -64,7 +64,7 @@ module.exports.routes = {
 
   'GET /getAllChats/:id': 'ChatController.getAllChats',
 
-  'GET /getFootByUser/:player/:skip': 'FootController.getFootByUser',
+  'GET /getFootByUser/:player': 'FootController.getFootByUser',
 
   'GET /getGrade/:noteur/:note': 'NotationController.getGrade',
 
