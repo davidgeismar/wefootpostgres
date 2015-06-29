@@ -82,7 +82,9 @@ module.exports.routes = {
 
   'GET /user/toConfirm/:user/:id': 'UserController.toConfirm',
 
-  'GET /chat/getUnseenMessages/:id': 'ChatController.getUnseenMessages'
+  'GET /chat/getUnseenMessages/:id': 'ChatController.getUnseenMessages',
+
+  'GET /getFields/:id' : 'FieldController.getFields'
 
   /***************************************************************************
   *                                                                          *
