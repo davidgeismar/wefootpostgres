@@ -24,7 +24,7 @@
                   console.log(err);
                 Connexion.findOne({user:result.chevre}).exec(function(err, connexion){
                   if(connexion){
-                    sails.sockets.emit(connexion.socketId,'notif',actu);
+                    sails.sockets.emit(connexion.socket_id,'notif',actu);
                   }
                 });
 
@@ -45,7 +45,7 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
       Connexion.findOne({user:result.homme}).exec(function(err, connexion){
         if(connexion){
 
-          sails.sockets.emit(connexion.socketId,'notif',actu);
+          sails.sockets.emit(connexion.socket_id,'notif',actu);
         }
       });
 
@@ -75,7 +75,7 @@ Foot.find().exec(function(err, foots){
             console.log(err);
           Connexion.findOne({user:player.user}).exec(function(err, connexion){
             if(connexion){
-              sails.sockets.emit(connexion.socketId,'notif',actu);
+              sails.sockets.emit(connexion.socket_id,'notif',actu);
             }
           });
 
@@ -110,7 +110,7 @@ Foot.find().exec(function(err, foots){
               console.log(err);
             Connexion.findOne({user:player.user}).exec(function(err, connexion){
               if(connexion){
-                sails.sockets.emit(connexion.socketId,'notif',actu);
+                sails.sockets.emit(connexion.socket_id,'notif',actu);
               }
             });
 
