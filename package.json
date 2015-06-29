@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "apn": "~1.7.4",
     "async": "~1.2.0",
     "bcrypt": "~0.8.3",
     "easyimage": "~2.0.3",
