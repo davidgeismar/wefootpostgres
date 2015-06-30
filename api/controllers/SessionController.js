@@ -31,13 +31,6 @@
   });
   },
 
-  create: function(req,res) {
-    Session.create(req.params.all(),function(err){
-      if(err) { console.log(err); return res.status(400).end();}
-      return res.status(200).end();
-    });
-  },
-
   isConnected: function(req,res){ //When user restart the app
      var jwt = require('jsonwebtoken');   
        if(req.param('token')!=='undefined'){                                              //Checking auth is not null
@@ -49,13 +42,6 @@
           else res.status(200).end();
         });
       }
-  },
-
-  delete: function(req,res){
-    Session.destroy({uuid: req.param('uuid')},function(err){
-      if(err) {console.log(err); return res.status(400).end();}
-      else return res.status(200).end();
-    });
   }
   
 };

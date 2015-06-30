@@ -253,20 +253,20 @@ removeFavorite: function(req,res){
 });
 },
 
-    checkConnect: function(req,res){   // FIX BUGS HERE
-     var jwt = require('jsonwebtoken');   
-     var auth = req.headers["authorization"];
-       if(typeof auth !=='undefined'){                                              //Checking auth is not null
-        jwt.verify(auth,'123Tarbahh',function (err,decoded) {     // Decode token
-          if(err) return res.status(406).end();
-          if(decoded.id && decoded.id==req.param('id')){     // Check if token matches users token  
-            res.status(200).end();    
-          }
-          else res.status(406).end();
-        });
-      }
-      else res.status(406).end();
-    },
+    // checkConnect: function(req,res){   // FIX BUGS HERE
+    //  var jwt = require('jsonwebtoken');   
+    //  var auth = req.headers["authorization"];
+    //    if(typeof auth !=='undefined'){                                              //Checking auth is not null
+    //     jwt.verify(auth,'123Tarbahh',function (err,decoded) {     // Decode token
+    //       if(err) return res.status(406).end();
+    //       if(decoded.id && decoded.id==req.param('id')){     // Check if token matches users token  
+    //         res.status(200).end();    
+    //       }
+    //       else res.status(406).end();
+    //     });
+    //   }
+    //   else res.status(406).end();
+    // },
 
     updatedAta: function(req,res){
       var jwt = require('jsonwebtoken');   
