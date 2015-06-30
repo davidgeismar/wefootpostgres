@@ -18,10 +18,10 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'mysql',
+    connection: 'mysql_dev',
     migrate: 'alter'
   },
 
-  port: 1337
+  port: 9000
 
 };

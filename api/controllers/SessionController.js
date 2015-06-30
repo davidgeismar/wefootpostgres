@@ -40,9 +40,11 @@
 
   isConnected: function(req,res){ //When user restart the app
      var jwt = require('jsonwebtoken');   
-       if(req.param('token')!=='undefined'){                                              //Checking auth is not null
+       if(req.param('token')!=='undefined'){                                           //Checking auth is not null
         jwt.verify(req.param('token'),'123Tarbahh',function (err,decoded) {     // Decode token
           if(err) return res.status(406).end();
+          console.log('hello');
+          console.log(decoded);
           if(decoded.id && decoded.id==req.param('id')){     // Check if token matches users token  
             res.status(200).json(decoded);    
           }
