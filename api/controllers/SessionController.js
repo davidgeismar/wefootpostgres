@@ -17,8 +17,6 @@
         if (err) return next(err);
 
         if (match) {
-          user.pending_notif = 0;
-          user.save();
           res.status(200).json(user);
         } else {
             // invalid password
@@ -41,15 +39,16 @@
   },
 
   isConnected: function(req,res){ //When user restart the app
-    console.log('called at least');
-    Session.findOne({uuid: req.param('uuid')},function(err,session){
-      console.log(session);
-      if(err) {console.log(err); return res.status(400).end();}
-      if(session)
-        return res.status(200).json({userId : session.user});
-      else 
-        return res.status(200).json({userId: 0});
-    });
+     var jwt = require('jsonwebtoken');   
+       if(req.param('token')!=='undefined'){                                              //Checking auth is not null
+        jwt.verify(req.param('token'),'123Tarbahh',function (err,decoded) {     // Decode token
+          if(err) return res.status(406).end();
+          if(decoded.id && decoded.id==req.param('id')){     // Check if token matches users token  
+            res.status(200).json(decoded);    
+          }
+          else res.status(200).end();
+        });
+      }
   },
 
   delete: function(req,res){

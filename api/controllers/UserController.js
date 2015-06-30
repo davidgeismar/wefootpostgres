@@ -320,22 +320,14 @@ removeFavorite: function(req,res){
           });
         }
         else if(user.facebook_id){   // USER CREATED
-          user.pending_notif = 0;
-          user.save(function(err){
-            if(err) return res.status(400).end();
-            res.status(200);
-            res.json(user);
-          });
+          res.status(200);
+          res.json(user);
         }
         else if(user.facebook_id==null){   // JOIN TO AN EXISTING USER
         User.update(user.id,{facebook_id: req.param('id')},function(error,user1){  // TODO Faille ici on peut pirater si le token n'est pas défini, vérifier qu'il est bon.
           if(err) return res.status(404);
           if(user1) { 
-            user.pending_notif = 0;
-            user.save(function(err){
-              if(err) return res.status(400).end();
-              res.status(200); res.json(user);
-            });
+            res.status(200); res.json(user);
           }
           else return res.status(406).end();
         });
