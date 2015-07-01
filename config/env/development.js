@@ -19,7 +19,7 @@ module.exports = {
 
   models: {
     connection: 'mysql_dev',
-    migrate: 'alter'
+    migrate: 'safe'
   },
 
   port: 9000
