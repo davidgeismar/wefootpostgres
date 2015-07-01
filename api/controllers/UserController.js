@@ -109,19 +109,27 @@
         res.json(user);
       });     
     },
+
     addFriend: function (req,res) {
-      var finish = false;
-      result = {}; 
-      if(req.param('user1') && req.param('user2')){
-        Friendship.create({user1: req.param('user1'), user2: req.param('user2')},function(err,user){
+      result = {};
+      if(req.param('facebook_id') && req.param('user1')){
+        User.findOne({facebook_id:req.param('facebook_id')}).exec(function(err,user){
+        Friendship.create({user1: req.param('user1'), user2: user.id},function(err,friendship){
+          if(err) return res.status(400).end();
+          delete user.token;
+          return res.status(200).json(user);
+        });
+        });
+      }
+      else if(req.param('user1') && req.param('user2')){
+        Friendship.create({user1: req.param('user1'), user2: req.param('user2')},function(err,friendship){
           if(err) return res.status(400).end();
             User.findOne(req.param('user2'),function(err,user){
               if(err) return res.status(400).end();
               if(!user) return res.status(200);
               else{ 
                 delete user.token;
-                finish = true;
-                res.status(200).json(user);
+                return res.status(200).json(user);
               }
             });
         });
