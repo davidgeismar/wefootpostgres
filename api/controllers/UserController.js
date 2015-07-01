@@ -180,6 +180,7 @@
         });
 },
 addFavorite: function(req,res){
+  console.log(req.params.all());
   Friendship.findOne().where({
     or:[{
      user1: req.param('id1'),
@@ -419,6 +420,8 @@ toConfirm: function(req,res){
     });
   });
 }
+
+
 
 
 
