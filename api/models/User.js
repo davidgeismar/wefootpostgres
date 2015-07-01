@@ -54,7 +54,6 @@ beforeCreate: function (attrs, next) {
 
 //permet de recrypter le MDP après modification
 beforeUpdate: [ function(attrs, next) {
-
   if (!attrs.password) {
     next();
   }
@@ -88,11 +87,14 @@ beforeUpdate: [ function(attrs, next) {
 
 // },
 
-// afterCreate: function(attrs,next) {
+// afterUpdate: function(user,next) {
 //   var jwt = require('jsonwebtoken');
-//   var tok = jwt.sign(attrs,'123Tarbahh');
-//   User.update(attrs.id,{token:tok}).exec(function(error,user) {  
-//   });
+//   var tok = jwt.sign(user,'123Tarbahh');
+//   console.log(user.token);
+//   user.token = tok;
+//   user.save();
+//   // User.update(attrs.id,{token:tok}).exec(function(error,user) {  
+//   // });
 //   next();
 // },
 
