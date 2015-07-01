@@ -38,10 +38,10 @@
           if(err) return res.status(406).end();
           console.log('hello');
           console.log(decoded);
-          if(decoded.id && decoded.id==req.param('id')){     // Check if token matches users token  
+          if(decoded.id)     // Check if token matches users token  
             res.status(200).json(decoded);    
-          }
-          else res.status(200).end();
+          else 
+            res.status(200).end();
         });
       }
   }
