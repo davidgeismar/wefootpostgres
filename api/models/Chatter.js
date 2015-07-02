@@ -25,7 +25,7 @@ module.exports = {
  	},
  	deactivate:{
  		type:'boolean',
- 		DefaultsTo:false
+ 		defaultsTo:false
  	}
  	
   }
