@@ -14,8 +14,8 @@
 
 
  	sails.on('lifted', function() {
- 		Connexion.query('TRUNCATE TABLE connexion');
- 	});
+ 		// Connexion.query('TRUNCATE TABLE connexion');
 
+ 	});
  	cb();
  };
