@@ -27,7 +27,7 @@ module.exports = {
 
   // port: 80,
   models: {
-    connection: 'mysql',
+    connection: 'postgres',
     migrate: 'safe'
   },
 
