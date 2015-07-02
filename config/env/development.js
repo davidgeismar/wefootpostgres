@@ -17,11 +17,20 @@
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
 
+// <<<<<<< HEAD
+  models: {
+    connection: 'mysql_dev',
+    migrate: 'safe'
+  },
+
+  port: 9000
+// =======
 //   models: {
-//     connection: 'mysql_dev',
+//     connection: 'mysql',
 //     migrate: 'alter'
 //   },
 
-//   port: 9000
+//   port: 1337
+// >>>>>>> 0aa5b715ccc83b771ffa1835a3714aab9e16a9a6
 
 // };
