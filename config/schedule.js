@@ -60,38 +60,38 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 
       //Check end foot, trigger vote for each player
       //Every 4 hours
-      "0 */4 * * *": function (){
+      "0 */4 * * *": function ()
+      {
 
         var nowMinus4h = moment().subtract(4, 'hours').format('YYYY-MM-DD HH:MM:SS');
         var nowMinus8h = moment().subtract(8, 'hours').format('YYYY-MM-DD HH:MM:SS');
 
-// { date: { '>': nowMinus8h, '<': nowMinus4h }}
-Foot.find().exec(function(err, foots){
-  async.each(foots, function(foot, callback){
-    Player.find({foot:foot.id}).exec(function(err, players){
-      async.each(players, function(player, callback2){
-        Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
-          if(err)
-            console.log(err);
-          Connexion.findOne({user:player.user}).exec(function(err, connexion){
-            if(connexion){
-              sails.sockets.emit(connexion.socket_id,'notif',actu);
-            }
+        Foot.find({ date: { '>': nowMinus8h, '<': nowMinus4h }}).exec(function(err, foots){
+          async.each(foots, function(foot, callback){
+            Player.find({foot:foot.id}).exec(function(err, players){
+              async.each(players, function(player, callback2){
+                Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
+                  if(err)
+                    console.log(err);
+                  Connexion.findOne({user:player.user}).exec(function(err, connexion){
+                    if(connexion){
+                      sails.sockets.emit(connexion.socket_id,'notif',actu);
+                    }
+                  });
+
+                });
+                callback2();
+              },function(err){
+
+              });
+
+            });
+            callback();
+          }, function(err){
           });
-
         });
-        callback2();
-      },function(err){
 
-      });
-
-    });
-    callback();
-  }, function(err){
-  });
-});
-
-},
+      },
 
 
 //SEND PUSH TO WARN USER ABOUT COMMING FOOT
@@ -108,7 +108,7 @@ Foot.find().exec(function(err, foots){
           Actu.create({user:player.user, related_user:player.user, typ:'3hoursBefore', related_stuff:foot.id}).exec(function(err,actu){
             if(err)
               console.log(err);
-            Connexion.findOne({user:player.user}).exec(function(err, connexion){
+            Push.findOne({user:player.user}).exec(function(err, connexion){
               if(connexion){
                 sails.sockets.emit(connexion.socket_id,'notif',actu);
               }

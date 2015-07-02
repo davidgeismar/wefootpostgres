@@ -29,7 +29,12 @@
         });
       });
     }
+  },
 
+  deactivateFromChat: function(req, res){
+    Chatter.update({chat:req.param('chat'), user:req.param('user')},{deactivate:true}).exec(function(err,chatter){
+      return res.status(200).end();
+    });
   }
 
   //get all chats for a given user

@@ -22,6 +22,10 @@ module.exports = {
  	},
  	last_time_seen:{
  		type:'datetime'
+ 	},
+ 	deactivate:{
+ 		type:'boolean',
+ 		DefaultsTo:false
  	}
  	
   }
