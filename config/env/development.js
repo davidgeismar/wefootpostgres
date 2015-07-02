@@ -10,7 +10,7 @@
  *
  */
 
-// module.exports = {
+module.exports = {
 
   /***************************************************************************
    * Set the default database connection for models in the development       *
@@ -33,4 +33,4 @@
 //   port: 1337
 // >>>>>>> 0aa5b715ccc83b771ffa1835a3714aab9e16a9a6
 
-// };
+};
