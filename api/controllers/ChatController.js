@@ -105,6 +105,7 @@ module.exports = {
 
 getUnseenMessages: function (req, res, next){
   var unseenMessages = new Array();
+  var lastTimeUpdated = req.param('ltu');
   Chatter.find({user:req.param('id')}).exec(function(err,chatters){
     if(err){
       return res.status(406).end();         

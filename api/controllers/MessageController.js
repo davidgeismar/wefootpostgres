@@ -39,17 +39,11 @@ module.exports = {
  								}
  								,function(err){
  									return res.status(200).end();
-
  								});
  							}
  						});
-
  					});
  			}
-
  		});
-
-
 }
-
 }
