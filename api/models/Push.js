@@ -16,6 +16,9 @@ module.exports = {
 
 		user:{
 			model:'user'
+		},
+		is_ios:{
+			type:'boolean'
 		}
 		
 	}
