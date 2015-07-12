@@ -84,7 +84,15 @@ module.exports.routes = {
 
   'GET /chat/getUnseenMessages/:id': 'ChatController.getUnseenMessages',
 
-  'GET /field/near/:lat/:long':'FieldController.near'
+  'GET /field/near/:lat/:long':'FieldController.near',
+
+  '/pay/registerCard': 'PaiementController.registerCard',
+
+  '/pay/getCards': 'PaiementController.getCards',
+
+  '/pay/preauthorize': 'PaiementController.preauthorize',
+
+  '/pay/transferMoney': 'PaiementController.transferMoney'
 
   // 'GET /getFields/:id' : 'FieldController.getFields'
 

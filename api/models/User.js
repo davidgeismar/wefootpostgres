@@ -146,6 +146,15 @@ picture: {
   type:'string',
   defaultsTo: 'img/profil_default.jpg'
 },
+birthday: {
+  type: 'date'
+},
+mangoId: {
+  type: 'integer'
+},
+telephone: {
+  type: 'string'
+},
 
 // chats: {
 //   collection: 'chat',

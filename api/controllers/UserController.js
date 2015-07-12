@@ -24,9 +24,9 @@
   },
 
   update: function(req,res,next){
-    User.update({id: req.param('id')},req.params.all(),function(err){
+    User.update({id: req.param('id')},req.params.all(),function(err,user){
       if(err) return res.status(400).end();
-      res.status(200).end();
+      res.status(200).json(user[0]);
     });
   },
 
@@ -36,6 +36,7 @@
       if(!user) return res.status(200).end();
       delete user.token;
       delete user.password_reset_token;
+      delete user.mangoId;
       return res.status(200).json(user);
     })
   },

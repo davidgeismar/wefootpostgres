@@ -10,7 +10,7 @@
  *
  */
 
-// module.exports = {
+module.exports = {
 
   /***************************************************************************
    * Set the default database connection for models in the development       *
@@ -19,11 +19,11 @@
 
 // <<<<<<< HEAD
   models: {
-    connection: 'mysql_dev',
-    migrate: 'safe'
+    connection: 'mysql',
+    migrate: 'alter'
   },
 
-  port: 9000
+  port: 1337
 // =======
 //   models: {
 //     connection: 'mysql',
@@ -33,4 +33,4 @@
 //   port: 1337
 // >>>>>>> 0aa5b715ccc83b771ffa1835a3714aab9e16a9a6
 
-// };
+};
