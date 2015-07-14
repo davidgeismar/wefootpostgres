@@ -20,7 +20,7 @@
  * http://sailsjs.org/#/documentation/concepts/Routes/RouteTargetSyntax.html
  */
 
-module.exports.routes = {
+ module.exports.routes = {
 
   /***************************************************************************
   *                                                                          *
@@ -41,7 +41,7 @@ module.exports.routes = {
   'GET /foot/get/:id': 'FootController.get',
 
   'GET /search/:word': 'UserController.search',
-    
+
   'GET /field/search/:id/:word': 'FieldController.search',
 
   '/addFriend': 'UserController.addFriend',
@@ -82,7 +82,11 @@ module.exports.routes = {
 
   'GET /user/toConfirm/:user/:id': 'UserController.toConfirm',
 
+  'GET /chat/getNewChats/:id/:ltu': 'ChatController.getNewChats',
+
   'GET /chat/getUnseenMessages/:id/:ltu': 'ChatController.getUnseenMessages',
+
+  'GET /chat/getNewChatters/:id/:ltu': 'ChatController.getNewChatters',
 
   'GET /field/near/:lat/:long':'FieldController.near'
 

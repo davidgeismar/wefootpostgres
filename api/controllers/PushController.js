@@ -44,8 +44,10 @@
 
  				var androidTokens = _.pluck(_.filter(pushes, function(push){ return !push.is_ios}), 'push_id');
  				var iosTokens = _.pluck(_.filter(pushes, function(push){ return push.is_ios}), 'push_id');
- 				PushService.sendIosPush(pushText, iosTokens, user.pending_notif);
- 				PushService.sendAndroidPush(pushText, androidTokens);
+ 				if(iosTokens)
+ 					PushService.sendIosPush(pushText, iosTokens, user.pending_notif);
+ 				if(androidTokens)
+ 					PushService.sendAndroidPush(pushText, androidTokens);
 
  				return res.status(200).end();
 
