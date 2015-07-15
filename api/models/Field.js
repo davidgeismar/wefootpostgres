@@ -73,6 +73,10 @@ cleanname: {
 telephone: {
   type: 'string'
 },
+mail:{
+  type: 'string',
+  email: true
+},
     //IF ORIGIN = PRIVATE related_to = user, else related_to = center
     related_to:{
       type: 'integer'
@@ -82,6 +86,13 @@ telephone: {
     },
     longi:{
       type:'double'
+    },
+    partner:{
+      type: 'boolean'
+    },
+    api_ref:{
+      type: 'string',    //Function in ResaService for the field
+      defaultsTo: false
     }
   }
 };

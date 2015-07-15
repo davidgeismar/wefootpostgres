@@ -24,9 +24,9 @@
   },
 
   update: function(req,res,next){
-    User.update({id: req.param('id')},req.params.all(),function(err){
+    User.update({id: req.param('id')},req.params.all(),function(err,user){
       if(err) return res.status(400).end();
-      res.status(200).end();
+      res.status(200).json(user[0]);
     });
   },
 
@@ -36,6 +36,7 @@
       if(!user) return res.status(200).end();
       delete user.token;
       delete user.password_reset_token;
+      delete user.mangoId;
       return res.status(200).json(user);
     })
   },
@@ -47,8 +48,7 @@
         jwt.verify(auth,'123Tarbahh',function (err,decoded) {     // Decode token
           if(err) return next(err);
           if(decoded.id && decoded.id==req.param('id')){     // Check if token matches users token         
-            res.status(200);
-            res.json(decoded);
+            res.status(200).json(decoded);
           }
           else res.status(403).end();
         });
@@ -65,7 +65,7 @@
         if (err) return res.serverError(err);
         var url = path.join(__dirname,'../../.tmp/public/images/profils/'+req.body.userId+'.jpg'); 
         easyimg.info(url).then(function(file){  //RESIZING IMAGES
-            var min = Math.min(file.width,file.height);
+          var min = Math.min(file.width,file.height);
           easyimg.crop({
             src:url,dst:url,cropwidth: min,cropheight: min
           }).then(function(file2){
@@ -91,63 +91,63 @@
         //  IF ERROR Return and send 500 error with error
         //console.log(files);
       });
-    },
+},
 
-    index: function (req,res) {
-      res.status(403).end();
-    },
+index: function (req,res) {
+  res.status(403).end();
+},
 
-    search: function (req,res) {
-      var word = ToolsService.clean(req.param('word'));
-      User.find().where({
-        full_name: {
-          'contains': word 
-        }  
-      }).limit(10).exec(function(err,user){
-        if(err) return res.status(404).end();
-        res.status(200);
-        res.json(user);
-      });     
-    },
+search: function (req,res) {
+  var word = ToolsService.clean(req.param('word'));
+  User.find().where({
+    full_name: {
+      'contains': word 
+    }  
+  }).limit(10).exec(function(err,user){
+    if(err) return res.status(404).end();
+    res.status(200);
+    res.json(user);
+  });     
+},
 
-    addFriend: function (req,res) {
-      result = {};
-      if(req.param('facebook_id') && req.param('user1')){
-        User.findOne({facebook_id:req.param('facebook_id')}).exec(function(err,user){
-        Friendship.create({user1: req.param('user1'), user2: user.id},function(err,friendship){
-          if(err) return res.status(400).end();
+addFriend: function (req,res) {
+  result = {};
+  if(req.param('facebook_id') && req.param('user1')){
+    User.findOne({facebook_id:req.param('facebook_id')}).exec(function(err,user){
+      Friendship.create({user1: req.param('user1'), user2: user.id},function(err,friendship){
+        if(err) return res.status(400).end();
+        delete user.token;
+        return res.status(200).json(user);
+      });
+    });
+  }
+  else if(req.param('user1') && req.param('user2')){
+    Friendship.create({user1: req.param('user1'), user2: req.param('user2')},function(err,friendship){
+      if(err) return res.status(400).end();
+      User.findOne(req.param('user2'),function(err,user){
+        if(err) return res.status(400).end();
+        if(!user) return res.status(200);
+        else{ 
           delete user.token;
           return res.status(200).json(user);
-        });
-        });
-      }
-      else if(req.param('user1') && req.param('user2')){
-        Friendship.create({user1: req.param('user1'), user2: req.param('user2')},function(err,friendship){
-          if(err) return res.status(400).end();
-            User.findOne(req.param('user2'),function(err,user){
-              if(err) return res.status(400).end();
-              if(!user) return res.status(200);
-              else{ 
-                delete user.token;
-                return res.status(200).json(user);
-              }
-            });
-        });
-      }
-      else res.status(400).end();
-    },
-    getAllFriends: function (req,res){ 
-      var statuts = [];
-      var results = [];
-      var toSend = [];
-      Friendship.find().where({
-        or:[{
-         user1: req.param('id') },
-         { user2: req.param('id')
-       }]
-     }).skip(req.param('skip')).exec(function(err,friendships){
-      if(err) res.status(400).end();
-      else{ 
+        }
+      });
+    });
+  }
+  else res.status(400).end();
+},
+getAllFriends: function (req,res){ 
+  var statuts = [];
+  var results = [];
+  var toSend = [];
+  Friendship.find().where({
+    or:[{
+     user1: req.param('id') },
+     { user2: req.param('id')
+   }]
+ }).skip(req.param('skip')).exec(function(err,friendships){
+  if(err) res.status(400).end();
+  else{ 
               _.each(friendships, function(friendship){       // Loop to get the ids of friends    
                 if(friendship.user1 == req.param('id')){
                   results.push(friendship.user2);
@@ -172,8 +172,8 @@
                   delete user.token;
                   callback();
                 },function(){
-                res.status(200).json([users,toSend]);
-               }); 
+                  res.status(200).json([users,toSend]);
+                }); 
               }
             });
           }
@@ -185,8 +185,8 @@ addFavorite: function(req,res){
     or:[{
      user1: req.param('id1'),
      user2: req.param('id2')
-    },
-    {
+   },
+   {
      user1: req.param('id2'),
      user2: req.param('id1')
    }]             
@@ -227,8 +227,8 @@ removeFavorite: function(req,res){
     or:[{
      user1: req.param('id1'),
      user2: req.param('id2')
-    },
-    {
+   },
+   {
      user1: req.param('id2'),
      user2: req.param('id1')
    }]         
@@ -302,50 +302,46 @@ removeFavorite: function(req,res){
           });
         }
       });
-    //       }
-    //       else res.status(403).end();
-    //     });
-    //   }
-    //   else res.status(403).end();
-    // }
   },
+
 
   facebookConnect: function(req,res){
     var http = require('http');
     var fs = require('fs');
     var jwt = require('jsonwebtoken');
-    if(req.param('email')){
-      User.findOneByEmail(req.param('email'),function(err,user){
+    if(req.param('facebook_id')){
+      User.findOne({facebook_id:req.param('facebook_id')},function(err,user){
         if(err) return res.status(404).end();
         if(!user){
+          if(!req.param('email')){
+            req.param('email') = "default@facebook.com";
+          }
           User.create(req.params.all(), function userCreated(err, user){   // CREATE ACCOUNT
             if(err){ console.log(err); return res.status(400).end();}    
             var tok = jwt.sign(user,'123Tarbahh');
             var name = ToolsService.clean(user.first_name)+ToolsService.clean(user.last_name);
             User.update(user.id,{token:tok, full_name:name,picture: 'https://graph.facebook.com/'+user.facebook_id+'/picture?width=400&height=400'}).exec(function(error,user) {   // TODO Use After Create to be faster
-              res.status(200);
-              res.json(user[0]);
+              res.status(200).json(user[0]);
             });
           });
         }
         else if(user.facebook_id){   // USER CREATED
-          res.status(200);
-          res.json(user);
+          res.status(200).json(user);
         }
-        else if(user.facebook_id==null){   // JOIN TO AN EXISTING USER
-        User.update(user.id,{facebook_id: req.param('id')},function(error,user1){  // TODO Faille ici on peut pirater si le token n'est pas défini, vérifier qu'il est bon.
-          if(err) return res.status(404);
-          if(user1) { 
-            res.status(200); res.json(user);
-          }
-          else return res.status(406).end();
-        });
-      }
+      //   else if(user.facebook_id==null){   // JOIN TO AN EXISTING USER
+      //   User.update(user.id,{facebook_id: req.param('id')},function(error,user1){  // TODO Faille ici on peut pirater si le token n'est pas défini, vérifier qu'il est bon.
+      //     if(err) return res.status(404);
+      //     if(user1) { 
+      //       res.status(200); res.json(user);
+      //     }
+      //     else return res.status(406).end();
+      //   });
+      // }
       else return res.status(406).end();
     });
 }
   else{   // CHECK USER WITHOUT EMAIL
-    res.status(406).send('Votre email ne peut être récuperé, inscrivez vous normalement avant de joindre votre compte.');
+    res.status(406).send('Error getting facebook profile');
   }
 },
 
@@ -357,8 +353,8 @@ resetPassword: function(req,res){
       return res.status(406).end();
     }
     if(user && !user.facebook_id){
-    user.generatepassword_reset_token();
-    user.sendPasswordResetEmail();
+      user.generatepassword_reset_token();
+      user.sendPasswordResetEmail();
       return res.status(200).end();
     }
     else{
@@ -384,12 +380,12 @@ newPassword: function(req,res){
         }
         return res.status(200);
 
-  
+
+      });
+
+    }
+
   });
-
-}
-
-});
 },
 
 updateSeen: function(req,res){
