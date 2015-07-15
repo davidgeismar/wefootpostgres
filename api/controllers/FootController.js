@@ -85,7 +85,7 @@ module.exports = {
           if(info.field) res.json(info).status(200).end();
         });
       });
-      Foot.query('SELECT f.date ,t.name,t.id,t.picture,t.city,t.zip_code,t.address,t.telephone FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
+      Foot.query('SELECT f.date ,t.name,t.id,t.picture,t.city,t.zip_code,t.address,t.telephone,t.api_ref,t.partner FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
         if(err) return res.status(400).end();
         if(!field) return res.status(200).end();
         //Careful, the date in field[0] belongs to the foot

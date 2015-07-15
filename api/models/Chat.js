@@ -25,8 +25,6 @@ module.exports = {
         type:'string'
       },
 
-    //MANY USERS FOR MANY CHATS
-
     related: {
       type: 'int'
     },
