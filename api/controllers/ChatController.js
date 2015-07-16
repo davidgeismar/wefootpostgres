@@ -20,8 +20,7 @@ module.exports = {
       return res.status(406).end();         
     }
     async.each(req.param('users'),function(user,callback){
-      Chatter.create({user:user,chat:chat.id}, function chatterCreated(err, chatter){});
-      callback();
+      Chatter.create({user:user,chat:chat.id}, function chatterCreated(err, chatter){ callback();});
     }, function(err){
       if(err){
         console.log(err);
@@ -31,9 +30,9 @@ module.exports = {
           var smallUsers = shrinkUsers(bigUsers);
           Connexion.find({user:req.param('users')}).exec(function(err, connexions){
             if(connexions){
-              async.each(connexions,function(connexion,callback){
+              async.each(connexions,function(connexion,callback2){
                 sails.sockets.emit(connexion.socket_id,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
-                callback();
+                callback2();
               }
               ,function(err){
                 return res.status(200).end();
@@ -45,6 +44,35 @@ module.exports = {
     });
   });
 },
+
+  //get all chats for a given user
+  getChat: function (req, res, next){
+    var related = req.param('related');
+    Chat.findOne({related:related}).populate('messages').exec(function(err,chat){
+      if(err){
+        console.log(err);
+        return res.status(406).end();         
+      }
+      Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
+        var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
+        Chatter.update(currentChatter.id,{deactivate:0});
+        var usersID = _.pluck(usersChatters, 'user');
+        console.log(usersID);
+
+        User.find(usersID).exec(function(err, bigUsers){
+          if(err){
+            console.log(err);
+            return res.status(406).end();         
+          }
+          var smallUsers = shrinkUsers(bigUsers);
+          return res.status(200).json({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: chatter.last_time_seen, users : smallUsers});
+        });
+      });
+
+    });
+
+
+  },
 
   //get all chats for a given user
   getAllChats: function (req, res, next){
@@ -133,7 +161,6 @@ getNewChats: function (req, res){
 },
 
 getNewChatters: function (req, res, next){
-  var newChatters = [];
   var lastTimeUpdated = req.param('ltu');
   var chats = req.param('chats');
 
@@ -142,9 +169,14 @@ getNewChatters: function (req, res, next){
       console.log(err);
       return res.status(406).end();         
     }
-
-      return res.status(200).json(chatters);
+    var usersId = _.pluck(chatters, 'user');
+    User.find(usersId).exec(function(err, users){
+      var smallUsers = shrinkUsers(users);
+      return res.status(200).json(smallUsers);
     });
+
+
+  });
 },
 
 

@@ -94,7 +94,9 @@
 
   '/pay/preauthorize': 'PaiementController.preauthorize',
 
-  '/pay/transferMoney': 'PaiementController.transferMoney'
+  '/pay/transferMoney': 'PaiementController.transferMoney',
+
+  '/chat/getChat/:id/:related' : 'ChatController.getChat'
 
 
   // 'GET /getFields/:id' : 'FieldController.getFields'
