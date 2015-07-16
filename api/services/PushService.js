@@ -31,7 +31,6 @@ sendIosPush: function(text, tokens, pendingNotifs){
     body : text
   };
 
-  // note.device = device;
   var options = {
     gateway: 'gateway.sandbox.push.apple.com',
     errorCallback: function(error){
