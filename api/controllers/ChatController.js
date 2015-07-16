@@ -142,14 +142,8 @@ getNewChatters: function (req, res, next){
       console.log(err);
       return res.status(406).end();         
     }
-    async.each(chatters,function(chatter,callback){
-      Message.find({ chat:chatter.chat, createdAt: { '>=': lastTimeUpdated}}).exec(function(err, messages){
-        if(messages)
-          unseenMessages.push({chat:chatter.chat, messages:messages});
-      })
-      callback();
-    },function(err){
-      return res.status(200).json(unseenMessages);
+
+      return res.status(200).json(chatters);
     });
   });
 },
