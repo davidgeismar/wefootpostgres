@@ -55,7 +55,7 @@ module.exports = {
       }
       Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
         var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
-        Chatter.update(currentChatter.id,{deactivate:0});
+        Chatter.update(currentChatter.id,{deactivate:false});
         var usersID = _.pluck(usersChatters, 'user');
         console.log(usersID);
 
