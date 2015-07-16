@@ -100,7 +100,7 @@ getNewChats: function (req, res){
   var newChats = [];
   var lastTimeUpdated = req.param('ltu');
 
-  Chatter.find({ user:req.param('id'), createdAt: { '>=': lastTimeUpdated}}).exec(function(err, chats){
+  Chatter.find({ user:req.param('id'), createdAt: { '>=': lastTimeUpdated}}).exec(function(err, chatters){
     if(err){
       console.log(err);
       return res.status(406).end();  
