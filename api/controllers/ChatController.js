@@ -65,7 +65,7 @@ module.exports = {
             return res.status(406).end();         
           }
           var smallUsers = shrinkUsers(bigUsers);
-          return res.status(200).json({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: chatter.last_time_seen, users : smallUsers});
+          return res.status(200).json({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: moment(), users : smallUsers});
         });
       });
 
