@@ -96,7 +96,9 @@
 
   '/pay/transferMoney': 'PaiementController.transferMoney',
 
-  '/chat/getChat/:id/:related' : 'ChatController.getChat',
+  'GET /chat/getChat/:id/:related' : 'ChatController.getChat',
+
+  'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes'
 
 
 

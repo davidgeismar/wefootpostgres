@@ -63,10 +63,10 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
       "0 */4 * * *": function ()
       {
 
-        var nowMinus4h = moment().subtract(4, 'hours').format('YYYY-MM-DD HH:MM:SS');
-        var nowMinus8h = moment().subtract(8, 'hours').format('YYYY-MM-DD HH:MM:SS');
+        var nowPlus4h = moment().add(4, 'hours').format();
+        var nowPlus8h = moment().add(8, 'hours').format();
 
-        Foot.find({ date: { '>': nowMinus8h, '<': nowMinus4h }}).exec(function(err, foots){
+        Foot.find({ date: { '<': nowPlus8h, '>': nowPlus4h }}).exec(function(err, foots){
           async.each(foots, function(foot, callback){
             Player.find({foot:foot.id}).exec(function(err, players){
               async.each(players, function(player, callback2){
@@ -78,7 +78,6 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
                       sails.sockets.emit(connexion.socket_id,'notif',actu);
                     }
                   });
-
                 });
                 callback2();
               },function(err){
@@ -95,38 +94,43 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 
 
 //SEND PUSH TO WARN USER ABOUT COMMING FOOT
-'*/10 * * * *' : function (){
-  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format('YYYY-MM-DD HH:MM:SS');
-  var nowMinus3h = moment().subtract(3, 'hours').format('YYYY-MM-DD HH:MM:SS');
+'*/10 * * * *' : function ()
+{
+  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
+  var nowMinus3h = moment().subtract(3, 'hours').format();
 
 
   Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
 
     async.each(foots, function(foot, callback){
       Player.find({foot:foot.id}).exec(function(err, players){
-        async.each(players, function(player, callback2){
-          Actu.create({user:player.user, related_user:player.user, typ:'3hoursBefore', related_stuff:foot.id}).exec(function(err,actu){
-            if(err)
-              console.log(err);
-            Push.findOne({user:player.user}).exec(function(err, connexion){
-              if(connexion){
-                sails.sockets.emit(connexion.socket_id,'notif',actu);
-              }
-            });
-
-          });
-          callback2();
-        },function(err){
-
+        //We send pushes
+        var usersId = _.pluck(players, 'user');
+        Push.find({user:usersId}).exec(function(err, pushes){
+          if(pushes){
+            PushService.sendPush(pushes);
+          }
         });
+       //We create actu and send it by socket
+       async.each(players, function(player, callback2){
+        Actu.create({user:player.user, related_user:player.user, typ:'3hoursBefore', related_stuff:foot.id}).exec(function(err,actu){
+          if(err)
+            console.log(err);
+          Connexion.findOne({user:player.user}).exec(function(err, connexion){
+            if(connexion){
+              sails.sockets.emit(connexion.socket_id,'notif',actu);
+            }
+            callback2();
+          });
+        });
+      },function(err){
 
       });
-      callback();
+       callback();
+     });
     }, function(err){
     });
   });
-
-
 }
 
 

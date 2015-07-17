@@ -27,11 +27,6 @@ module.exports = {
 			type:'int',
 			required:true
 		}
-		// ,
-		// nbVotes:{
-		// 	type:'int',
-		// 	required:true
-		// }
 
   }
 };
