@@ -54,11 +54,13 @@ module.exports = {
         return res.status(406).end();         
       }
       Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
+              if(err){
+        console.log(err);
+        return res.status(406).end();         
+      }
         var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
-        // console.log(currentChatter);
         currentChatter.deactivate = false;
         currentChatter.save();
-        // Chatter.update(currentChatter.id,{deactivate:false});
         var usersID = _.pluck(usersChatters, 'user');
         console.log(usersID);
 
