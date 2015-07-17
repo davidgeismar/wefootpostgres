@@ -96,6 +96,7 @@ getFields:function (req,res){
     or : [
     {
       origin:'public'}
+      ,
       {
         origin:'private',
         related_to:req.param('id')
