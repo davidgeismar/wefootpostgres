@@ -8,6 +8,7 @@
  var async = require('async');
  var merge = require('merge');
  var moment = require('moment');
+ 
  var shrinkUsers = function(users){
   return _.map(users, function(obj) { return _.pick(obj, 'first_name','last_name' ,'picture', 'id'); });
 };

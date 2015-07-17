@@ -41,13 +41,8 @@
  				if(err){console.log(err); return res.status(400).end();}
  				user.pending_notif++;
  				user.save();
-
- 				var androidTokens = _.pluck(_.filter(pushes, function(push){ return !push.is_ios}), 'push_id');
- 				var iosTokens = _.pluck(_.filter(pushes, function(push){ return push.is_ios}), 'push_id');
- 				if(iosTokens)
- 					PushService.sendIosPush(pushText, iosTokens, user.pending_notif);
- 				if(androidTokens)
- 					PushService.sendAndroidPush(pushText, androidTokens);
+ 				
+ 				PushService.sendPush(pushes);
 
  				return res.status(200).end();
 

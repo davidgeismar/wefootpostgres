@@ -47,6 +47,17 @@ sendIosPush: function(text, tokens, pendingNotifs){
   var apnsConnection = new apn.Connection(options);
   apnsConnection.pushNotification(note, tokens);
 
+},
+
+sendPush:function(pushes){
+
+  var androidTokens = _.pluck(_.filter(pushes, function(push){ return !push.is_ios}), 'push_id');
+  var iosTokens = _.pluck(_.filter(pushes, function(push){ return push.is_ios}), 'push_id');
+  if(iosTokens)
+    PushService.sendIosPush(pushText, iosTokens, user.pending_notif);
+  if(androidTokens)
+    PushService.sendAndroidPush(pushText, androidTokens);
+
 }
 
 };
