@@ -42,6 +42,7 @@
     var lat = req.param('lat');
     var longi = req.param('long');
     var word = ToolsService.clean(req.param('word')); // to do: improve search result via creating array that tries all the dif combination of words separated with a blank
+      var results = [];
     Field.find().where({
       or : [
 
