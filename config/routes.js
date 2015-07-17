@@ -42,7 +42,9 @@
 
   'GET /search/:word': 'UserController.search',
 
-  'GET /field/search/:id/:word': 'FieldController.search',
+  'GET /field/searchFields/?id=:id&lat=:lat&long=:long&word=:word': 'FieldController.searchFields',
+
+  'GET /field/getFields/?id=:id&lat=:lat&long=:long':'FieldController.getFields',
 
   '/addFriend': 'UserController.addFriend',
   
@@ -86,8 +88,6 @@
 
   'GET /chat/getNewChatters/:id/:ltu': 'ChatController.getNewChatters',
 
-  'GET /field/near/:lat/:long':'FieldController.near',
-
   '/pay/registerCard': 'PaiementController.registerCard',
 
   '/pay/getCards': 'PaiementController.getCards',
@@ -96,7 +96,8 @@
 
   '/pay/transferMoney': 'PaiementController.transferMoney',
 
-  '/chat/getChat/:id/:related' : 'ChatController.getChat'
+  '/chat/getChat/:id/:related' : 'ChatController.getChat',
+
 
 
   // 'GET /getFields/:id' : 'FieldController.getFields'
