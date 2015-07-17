@@ -92,11 +92,10 @@ getFields:function (req,res){
   var lat = req.param('lat');
   var longi = req.param('long');
   var results = [];
-  Field.where({
+  Field.find().where({
     or : [
     {
       origin:'public'}
-      ,  
       {
         origin:'private',
         related_to:req.param('id')
