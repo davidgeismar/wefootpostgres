@@ -53,5 +53,12 @@ module.exports = {
 				else{ callback(false); return }; //Not available field
 			});
 		});
+	},
+
+	classic_create: function(resa,callback){
+		Reservation.create({date:resa.date,terrain:resa.terrain}, function reservationCreated(err,reservation){
+			if(err) throw err;
+			callback(reservation);
+		});
 	}
 }
