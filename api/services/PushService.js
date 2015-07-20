@@ -74,8 +74,8 @@ sendPush:function(pushes, pushText){
           PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
         }
       });
-    });
-}
+    }
+});
 }
 
 };
