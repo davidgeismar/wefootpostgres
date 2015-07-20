@@ -81,15 +81,12 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
                 });
                 callback2();
               },function(err){
-
               });
-
             });
             callback();
           }, function(err){
           });
         });
-
       },
 
 

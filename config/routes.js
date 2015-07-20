@@ -44,7 +44,11 @@
 
   'GET /field/searchFields/?id=:id&lat=:lat&long=:long&word=:word': 'FieldController.searchFields',
 
-  'GET /field/getFields/?id=:id&lat=:lat&long=:long':'FieldController.getFields',
+  'GET /field/getFields/?id=:id&lat=:lat&long=:long':'FieldController.searchFields',
+
+  'GET /field/search/:id/:word': 'FieldController.searchFields', //DEPRECATED
+
+  'GET /field/near/:lat/:long':'FieldController.searchFields', //DEPRECATED
 
   '/addFriend': 'UserController.addFriend',
   
@@ -99,10 +103,6 @@
   'GET /chat/getChat/:id/:related' : 'ChatController.getChat',
 
   'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes'
-
-
-
-  // 'GET /getFields/:id' : 'FieldController.getFields'
 
   /***************************************************************************
   *                                                                          *

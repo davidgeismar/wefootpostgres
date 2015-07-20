@@ -31,8 +31,7 @@
  	},
 
  	sendPush: function(req,res){
- 		var pushText = req.param('text');
- 		
+ 		var pushText = req.param('texte');
  		Push.find({user: req.param('user')},function(err,pushes){
 
  			if(err){console.log(err); return res.status(400).end();}
