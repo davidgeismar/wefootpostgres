@@ -32,20 +32,12 @@
 
  	sendPush: function(req,res){
  		var pushText = req.param('texte');
+ 		var user = req.param('user');
  		Push.find({user: req.param('user')},function(err,pushes){
-
  			if(err){console.log(err); return res.status(400).end();}
  			if(pushes.length==0) return res.status(200).end();
- 			User.findOne({id: req.param('user')},function(err,user){
- 				if(err){console.log(err); return res.status(400).end();}
- 				user.pending_notif++;
- 				user.save();
- 				
- 				PushService.sendPush(pushes);
-
- 				return res.status(200).end();
-
- 			});
+ 			PushService.sendPush(pushes, pushText);
+ 			return res.status(200).end();
  		});
  	},
 

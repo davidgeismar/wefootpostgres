@@ -105,7 +105,7 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
         var usersId = _.pluck(players, 'user');
         Push.find({user:usersId}).exec(function(err, pushes){
           if(pushes){
-            PushService.sendPush(pushes);
+            PushService.sendPush(pushes, "Votre rencontre démarre dans 3h, ne soyez pas en retard");
           }
         });
        //We create actu and send it by socket
