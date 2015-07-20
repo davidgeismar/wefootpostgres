@@ -58,10 +58,13 @@ sendPush:function(pushes, pushText){
     if(err){console.log(err); return res.status(400).end();}
     if(users.length>0){
       users.forEach(function(user){
+        userPushes = _.filter(pushes, function(push){console.log(push.user+ " et "+user.id);push.user == user.id});
         console.log(user);
+
+        console.log(pushes);
         user.pending_notif++;
         user.save();
-        userPushes = _.filter(pushes, function(push){push.user == user.id});
+        
         console.log(userPushes);
         androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
         console.log(androidPushes);
