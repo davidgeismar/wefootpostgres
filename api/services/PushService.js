@@ -51,6 +51,7 @@ sendIosPush: function(text, tokens, pendingNotifs){
 },
 
 sendPush:function(pushes, pushText){
+  console.log(pushes);
   var userPushes = [];
   var androidPushes = [];
   var iosPushes = [];
@@ -60,12 +61,15 @@ sendPush:function(pushes, pushText){
       user.pending_notif++;
       user.save();
       userPushes = _.filter(pushes, function(push){push.user == user.id});
+      console.log(userPushes);
       androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
+      console.log(androidPushes);
       iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
-      if(androidPushes){
+      console.log(iosPushes);
+      if(androidPushes.length!=0){
         PushService.sendAndroidPush(pushText, androidPushes);
       }
-      if(iosPushes){
+      if(iosPushes.length!=0){
         PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
       }
     });
