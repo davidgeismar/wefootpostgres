@@ -22,7 +22,8 @@ sender.send(message, tokens, function (err, result) {
 },
 
 sendIosPush: function(text, tokens, pendingNotifs){
-
+  console.log("push tokens");
+  console.log(tokens);
   var apn = require('apn');
   var note = new apn.Notification();
   note.badge = pendingNotifs;
@@ -50,14 +51,17 @@ sendIosPush: function(text, tokens, pendingNotifs){
 },
 
 sendPush:function(pushes, pushText){
+  var userPushes = [];
+  var androidPushes = [];
+  var iosPushes = [];
   User.find(_.pluck(pushes,'user'),function(err,users){
     if(err){console.log(err); return res.status(400).end();}
     _.each(users, function(user){ 
       user.pending_notif++;
       user.save();
-      var userPushes = _.filter(pushes, function(push){push.user == user.id});
-      var androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
-      var iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
+      userPushes = _.filter(pushes, function(push){push.user == user.id});
+      androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
+      iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
       if(androidPushes){
         PushService.sendAndroidPush(pushText, androidPushes);
       }
