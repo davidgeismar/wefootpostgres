@@ -302,21 +302,22 @@ removeFavorite: function(req,res){
           });
         }
       });
-  },
+    },
 
 
-  facebookConnect: function(req,res){
-    var http = require('http');
-    var fs = require('fs');
-    var jwt = require('jsonwebtoken');
-    if(req.param('facebook_id')){
-      User.findOne({facebook_id:req.param('facebook_id')},function(err,user){
-        if(err) return res.status(404).end();
-        if(!user){
-          if(!req.param('email')){
-            req.param('email') = "default@facebook.com";
-          }
-          User.create(req.params.all(), function userCreated(err, user){   // CREATE ACCOUNT
+    facebookConnect: function(req,res){
+      var jwt = require('jsonwebtoken');
+      if(req.param('facebook_id')){
+        User.findOne({facebook_id:req.param('facebook_id')},function(err,user){
+          if(err) return res.status(404).end();
+          if(!user)
+          {
+            if(!req.param('email')){
+              var email = req.param('fbtoken')+"@facebook.com";
+            }
+            else
+              var email = req.param('email');
+          User.create({email:email, first_name:req.param('first_name'), last_name:req.param('last_name'), facebook_id:req.param('facebook_id'), fbtoken:req.param('fbtoken')}, function userCreated(err, user){   // CREATE ACCOUNT
             if(err){ console.log(err); return res.status(400).end();}    
             var tok = jwt.sign(user,'123Tarbahh');
             var name = ToolsService.clean(user.first_name)+ToolsService.clean(user.last_name);
@@ -328,8 +329,8 @@ removeFavorite: function(req,res){
         else if(user.facebook_id){   // USER CREATED
           res.status(200).json(user);
         }
-      else return res.status(406).end();
-    });
+        else return res.status(406).end();
+      });
 }
   else{   // CHECK USER WITHOUT EMAIL
     res.status(406).send('Error getting facebook profile');

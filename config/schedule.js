@@ -95,13 +95,14 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 {
   console.log("debug schedule");
   var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
-  var nowMinus3h = moment().subtract(3, 'hours').format();
+  var nowMinus3h = moment().subtract(6, 'hours').format();
 
 
   Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
     if(err)
       console.log(err);
-    console.log("ici");
+    console.log("ici foots");
+    console.log(foots);
     async.each(foots, function(foot, callback){
       Player.find({foot:foot.id}).exec(function(err, players){
         //We send pushes
@@ -123,12 +124,12 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
             callback2();
           });
         });
+
       },function(err){
         callback();
       });
-
+               
      });
-    }, function(err){
     });
   });
 }
