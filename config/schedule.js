@@ -94,8 +94,8 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 '* * * * *' : function ()
 {
   console.log("debug schedule");
-  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
-  var nowMinus3h = moment().subtract(6, 'hours').format();
+  var nowMinus3h10min = moment().subtract(6, 'hours').subtract(10, 'minutes').format();
+  var nowMinus3h = moment().subtract(3, 'hours').format();
 
 
   Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
