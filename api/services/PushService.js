@@ -21,7 +21,7 @@ sender.send(message, tokens, function (err, result) {
 });
 },
 
-sendIosPush: function(text, tokens, userId){
+sendIosPush: function(text, tokens, pendingNotifs){
 
   var apn = require('apn');
   var note = new apn.Notification();
