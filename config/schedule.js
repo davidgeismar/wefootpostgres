@@ -99,7 +99,9 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 
 
   Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
-
+    if(err)
+      console.log(err);
+    console.log("ici");
     async.each(foots, function(foot, callback){
       Player.find({foot:foot.id}).exec(function(err, players){
         //We send pushes
