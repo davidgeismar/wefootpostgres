@@ -1,14 +1,14 @@
 module.exports = {
 
-  sendAndroidPush: function(text, tokens){
-    var gcm = require('node-gcm');
-    var sender = new gcm.Sender('AIzaSyD4wa4B3NBNKaKIPr8Mykh9Q_eA4BIObCI');
-    var message = new gcm.Message({
-      collapseKey: 'demo',
-      delayWhileIdle: true,
-      timeToLive: 3,
-      data: {
-        key1: text
+sendAndroidPush: function(text, tokens){
+  var gcm = require('node-gcm');
+  var sender = new gcm.Sender('AIzaSyD4wa4B3NBNKaKIPr8Mykh9Q_eA4BIObCI');
+  var message = new gcm.Message({
+    collapseKey: 'demo',
+    delayWhileIdle: true,
+    timeToLive: 3,
+    data: {
+      key1: text
         // ,
         // key2: 'message2'
       }
@@ -21,7 +21,8 @@ sender.send(message, tokens, function (err, result) {
 });
 },
 
-sendIosPush: function(text, tokens, pendingNotifs){
+sendIosPush: function(text, tokens, userId){
+
   var apn = require('apn');
   var note = new apn.Notification();
   note.badge = pendingNotifs;
@@ -46,18 +47,25 @@ sendIosPush: function(text, tokens, pendingNotifs){
 
   var apnsConnection = new apn.Connection(options);
   apnsConnection.pushNotification(note, tokens);
-
 },
 
-sendPush:function(pushes, pushText, pendingNotifs){
-
-  var androidTokens = _.pluck(_.filter(pushes, function(push){ return !push.is_ios}), 'push_id');
-  var iosTokens = _.pluck(_.filter(pushes, function(push){ return push.is_ios}), 'push_id');
-  if(iosTokens)
-    PushService.sendIosPush(pushText, iosTokens, pendingNotifs);
-  if(androidTokens)
-    PushService.sendAndroidPush(pushText, androidTokens);
-
+sendPush:function(pushes, pushText){
+  User.find(_.pluck(pushes,'user'),function(err,users){
+    if(err){console.log(err); return res.status(400).end();}
+    _.each(users, function(user){ 
+      user.pending_notif++;
+      user.save();
+      var userPushes = _.filter(pushes, function(push){push.user == user.id});
+      var androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
+      var iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
+      if(androidPushes){
+        PushService.sendAndroidPush(pushText, androidPushes);
+      }
+      if(iosPushes){
+        PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
+      }
+    });
+  });
 }
 
 };
