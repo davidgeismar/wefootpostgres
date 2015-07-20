@@ -1,14 +1,14 @@
 module.exports = {
 
-sendAndroidPush: function(text, tokens){
-  var gcm = require('node-gcm');
-  var sender = new gcm.Sender('AIzaSyD4wa4B3NBNKaKIPr8Mykh9Q_eA4BIObCI');
-  var message = new gcm.Message({
-    collapseKey: 'demo',
-    delayWhileIdle: true,
-    timeToLive: 3,
-    data: {
-      key1: text
+  sendAndroidPush: function(text, tokens){
+    var gcm = require('node-gcm');
+    var sender = new gcm.Sender('AIzaSyD4wa4B3NBNKaKIPr8Mykh9Q_eA4BIObCI');
+    var message = new gcm.Message({
+      collapseKey: 'demo',
+      delayWhileIdle: true,
+      timeToLive: 3,
+      data: {
+        key1: text
         // ,
         // key2: 'message2'
       }
@@ -51,29 +51,31 @@ sendIosPush: function(text, tokens, pendingNotifs){
 },
 
 sendPush:function(pushes, pushText){
-  console.log(pushes);
   var userPushes = [];
   var androidPushes = [];
   var iosPushes = [];
   User.find(_.pluck(pushes,'user'),function(err,users){
     if(err){console.log(err); return res.status(400).end();}
-    _.each(users, function(user){ 
-      user.pending_notif++;
-      user.save();
-      userPushes = _.filter(pushes, function(push){push.user == user.id});
-      console.log(userPushes);
-      androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
-      console.log(androidPushes);
-      iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
-      console.log(iosPushes);
-      if(androidPushes.length!=0){
-        PushService.sendAndroidPush(pushText, androidPushes);
-      }
-      if(iosPushes.length!=0){
-        PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
-      }
+    if(users.length>0){
+      users.forEach(function(user){
+        console.log(user);
+        user.pending_notif++;
+        user.save();
+        userPushes = _.filter(pushes, function(push){push.user == user.id});
+        console.log(userPushes);
+        androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
+        console.log(androidPushes);
+        iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
+        console.log(iosPushes);
+        if(androidPushes.length!=0){
+          PushService.sendAndroidPush(pushText, androidPushes);
+        }
+        if(iosPushes.length!=0){
+          PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
+        }
+      });
     });
-  });
+}
 }
 
 };
