@@ -49,12 +49,12 @@ sendIosPush: function(text, tokens, pendingNotifs){
 
 },
 
-sendPush:function(pushes){
+sendPush:function(pushes, pushText, pendingNotifs){
 
   var androidTokens = _.pluck(_.filter(pushes, function(push){ return !push.is_ios}), 'push_id');
   var iosTokens = _.pluck(_.filter(pushes, function(push){ return push.is_ios}), 'push_id');
   if(iosTokens)
-    PushService.sendIosPush(pushText, iosTokens, user.pending_notif);
+    PushService.sendIosPush(pushText, iosTokens, pendingNotifs);
   if(androidTokens)
     PushService.sendAndroidPush(pushText, androidTokens);
 
