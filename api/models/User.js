@@ -188,7 +188,6 @@ generatepassword_reset_token: function() {
 },
 
 sendPasswordResetEmail: function() {
-console.log(this.email.toString());
   sails.hooks.email.send(
     "resetPassword",
     {

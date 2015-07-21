@@ -1,0 +1,26 @@
+Connecter un centre sur Google Calendar: 
+
+POUR LE CENTRE:
+
+1. Aller sur https://console.developers.google.com/flows/enableapi?apiid=calendar:  Séléctionner API Project puis continuer.
+
+2. Sur le menu de gauche dans API&Authentification choisir Ecran d'autorisation: Dans adresse e-mail entrer votre identifiant google, et dans nom du produit entrer Wefoot. Enregistrer.
+
+3. Revenir sur API&Authentification et séléctionner Identifiants: Cliquer ensuite sur créer un identifiant client, choisir application installée et cliquer sur créer un identifiant client.$
+
+4. Sur la droite de l'écran cliquer sur télécharger JSON et envoyer le fichier sur contact@wefoot.co.
+
+
+POUR NOUS: 
+{{id_du_centre}} = min sans accent et _ au lieu des espaces
+
+
+1. Enregistrer les crédentials sous {{id_du_centre}}_secret.json dans le dossier credentials.
+
+2. Générer un POST: sur http://{{server}}/reservation/google_calendar_getAuth avec comme paramètres: 
+"name": {{nom_du_centre}}, "secret": "wfGenius1230". Ensuite vous avez 2 minutes pour :
+
+3. Entrer sur le lien de la response, accepter et copier la clé.
+
+4. Générer un post http://{{server}}/reservation/google_calendar_getToken
+"code" : {{clé_copiée}} ,"name": {{id_du_centre}}, "secret": "wfGenius1230".
