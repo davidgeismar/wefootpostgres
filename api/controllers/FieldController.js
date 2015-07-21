@@ -41,100 +41,73 @@
   searchFields: function (req,res) {
     var lat = req.param('lat');
     var longi = req.param('long');
-    var word = ToolsService.clean(req.param('word')); // to do: improve search result via creating array that tries all the dif combination of words separated with a blank
-      var results = [];
-    Field.find().where({
-      or : [
+    var params = {};
+    if(req.param('word')){
+      var word = ToolsService.clean(req.param('word'));
+      params = {
+        or : [
 
-      {
-        cleanname: {'contains': word },
-        origin:'public'}
-        ,      
         {
           cleanname: {'contains': word },
-          origin:'private',
-          related_to:req.param('id')
+          origin:'public'}
+          ,      
+          {
+            cleanname: {'contains': word },
+            origin:'private',
+            related_to:req.param('id')
+          }
+          ]};
         }
-        ]}).exec(function(err,fields){
-          if(err){
-            console.log(err);
-            return res.status(400).end();
-          } 
-          if(fields.length>0){
-            async.each(fields,function(field,callback){
-              var radlat1 = Math.PI * lat/180;
-              var radlat2 = Math.PI * field.lat/180;
-              var radlon1 = Math.PI * longi/180;
-              var radlon2 = Math.PI * field.longi/180;
-              var theta = longi-field.longi;
-              var radtheta = Math.PI * theta/180;
-              var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-              dist = Math.acos(dist);
-              dist = dist * 180/Math.PI;
-              dist = dist * 60 * 1.1515;
-              d = dist * 1.609344 ;
-              d=parseInt(d.toFixed(1)*10)/10;
-              field.distance=d;
-              results.push(field);
-              callback();
-            }, function(err) {
-              results = _.first(_.sortBy(results, 'distance'), 15);
+        else{
+          params = {
+            or : [
+            {
+              origin:'public'}
+              ,
+              {
+                origin:'private',
+                related_to:req.param('id')
+              }
+              ]};
+            }
 
+     // to do: improve search result via creating array that tries all the dif combination of words separated with a blank
+     var results = [];
+     Field.find().where(params).exec(function(err,fields){
+      if(err){
+        console.log(err);
+        return res.status(400).end();
+      } 
+      if(fields.length>0){
+        async.each(fields,function(field,callback){
+          var radlat1 = Math.PI * lat/180;
+          var radlat2 = Math.PI * field.lat/180;
+          var radlon1 = Math.PI * longi/180;
+          var radlon2 = Math.PI * field.longi/180;
+          var theta = longi-field.longi;
+          var radtheta = Math.PI * theta/180;
+          var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+          dist = Math.acos(dist);
+          dist = dist * 180/Math.PI;
+          dist = dist * 60 * 1.1515;
+          d = dist * 1.609344 ;
+          d=parseInt(d.toFixed(1)*10)/10;
+          field.distance=d;
+          results.push(field);
+          callback();
+        }, function(err) {
+
+              // results = _.first(_.sortBy(results, 'distance'), 15);
+              var partners = _.sortBy(_.filter(results, function(result){return result.partner}), 'distance');
+              var noPartners = _.sortBy(_.filter(results, function(result){return !result.partner}), 'distance');
+              results=partners.concat(noPartners);
               res.status(200).json(results);
             });
-          }
-          else
-            res.status(200).end();
-        });    
-},
-
-
-getFields:function (req,res){
-  var lat = req.param('lat');
-  var longi = req.param('long');
-  var results = [];
-  Field.find().where({
-    or : [
-    {
-      origin:'public'}
-      ,
-      {
-        origin:'private',
-        related_to:req.param('id')
-      }
-      ]}).exec(function(err, fields){
-        if(err){
-          console.log(err);
-          return res.status(400).end();
-        } 
-        if(fields.length>0){
-          async.each(fields,function(field,callback){
-            var radlat1 = Math.PI * lat/180;
-            var radlat2 = Math.PI * field.lat/180;
-            var radlon1 = Math.PI * longi/180;
-            var radlon2 = Math.PI * field.longi/180;
-            var theta = longi-field.longi;
-            var radtheta = Math.PI * theta/180;
-            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-            dist = Math.acos(dist);
-            dist = dist * 180/Math.PI;
-            dist = dist * 60 * 1.1515;
-            d = dist * 1.609344 ;
-            d=parseInt(d.toFixed(1)*10)/10;
-            field.distance=d;
-            results.push(field);
-            callback();
-          }, function(err) {
-            results = _.first(_.sortBy(results, 'distance'), 30);
-
-            res.status(200).json(results);
-          });
-        }
-        else
-          res.status(200).end();
-      });
-
 }
+else
+  res.status(200).end();
+});    
+},
 
 
 

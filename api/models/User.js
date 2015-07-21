@@ -111,6 +111,7 @@ facebook_id: {
 },
 email: {
  type: 'string',
+ unique:true,
  required: true
 },
 password:{

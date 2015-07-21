@@ -31,27 +31,13 @@
  	},
 
  	sendPush: function(req,res){
- 		var pushText = req.param('text');
- 		
- 		Push.find({user: req.param('user')},function(err,pushes){
-
+ 		var pushText = req.param('texte');
+ 		var user = req.param('user');
+ 		Push.find({user: user},function(err,pushes){
  			if(err){console.log(err); return res.status(400).end();}
  			if(pushes.length==0) return res.status(200).end();
- 			User.findOne({id: req.param('user')},function(err,user){
- 				if(err){console.log(err); return res.status(400).end();}
- 				user.pending_notif++;
- 				user.save();
-
- 				var androidTokens = _.pluck(_.filter(pushes, function(push){ return !push.is_ios}), 'push_id');
- 				var iosTokens = _.pluck(_.filter(pushes, function(push){ return push.is_ios}), 'push_id');
- 				if(iosTokens)
- 					PushService.sendIosPush(pushText, iosTokens, user.pending_notif);
- 				if(androidTokens)
- 					PushService.sendAndroidPush(pushText, androidTokens);
-
- 				return res.status(200).end();
-
- 			});
+ 			PushService.sendPush(pushes, pushText);
+ 			return res.status(200).end();
  		});
  	},
 

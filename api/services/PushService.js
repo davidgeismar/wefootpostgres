@@ -22,6 +22,8 @@ sender.send(message, tokens, function (err, result) {
 },
 
 sendIosPush: function(text, tokens, pendingNotifs){
+  console.log("push tokens");
+  console.log(tokens);
   var apn = require('apn');
   var note = new apn.Notification();
   note.badge = pendingNotifs;
@@ -46,7 +48,30 @@ sendIosPush: function(text, tokens, pendingNotifs){
 
   var apnsConnection = new apn.Connection(options);
   apnsConnection.pushNotification(note, tokens);
+},
 
+sendPush:function(pushes, pushText){
+  var userPushes = [];
+  var androidPushes = [];
+  var iosPushes = [];
+  User.find(_.pluck(pushes,'user'),function(err,users){
+    if(err){console.log(err); return res.status(400).end();}
+    if(users.length>0){
+      users.forEach(function(user){
+        userPushes = _.filter(pushes, function(push){return push.user == user.id});
+        user.pending_notif++;
+        user.save();
+        androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
+        iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
+        if(androidPushes.length!=0){
+          PushService.sendAndroidPush(pushText, androidPushes);
+        }
+        if(iosPushes.length!=0){
+          PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
+        }
+      });
+    }
+});
 }
 
 };
