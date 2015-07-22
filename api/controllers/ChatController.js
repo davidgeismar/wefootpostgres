@@ -46,7 +46,7 @@ module.exports = {
   });
 },
 
-  //get all chats for a given user
+  //get a chat for a given user
   getChat: function (req, res, next){
     var related = req.param('related');
     Chat.findOne({related:related}).populate('messages').exec(function(err,chat){
@@ -55,13 +55,15 @@ module.exports = {
         return res.status(406).end();         
       }
       Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
-              if(err){
-        console.log(err);
-        return res.status(406).end();         
-      }
+        if(err){
+          console.log(err);
+          return res.status(406).end();         
+        }
         var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
-        currentChatter.deactivate = false;
-        currentChatter.save();
+        if(currentChatter){
+          currentChatter.deactivate = false;
+          currentChatter.save();
+        }
         var usersID = _.pluck(usersChatters, 'user');
 
         User.find(usersID).exec(function(err, bigUsers){
@@ -77,7 +79,7 @@ module.exports = {
     });
 
 
-  },
+},
 
   //get all chats for a given user
   getAllChats: function (req, res, next){

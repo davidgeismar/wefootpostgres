@@ -12,24 +12,37 @@ module.exports = {
   beforeCreate: function (attrs, next) {
 
 
-var geocoderProvider = 'google';
-var httpAdapter = 'https';
+    var geocoderProvider = 'google';
+    var httpAdapter = 'https';
 // optionnal
 var extra = {
     apiKey: 'AIzaSyCwDEs1V_woC81ZRweT8uKCvgWOqICR_9M', // for Mapquest, OpenCage, Google Premier
     formatter: null         // 'gpx', 'string', ...
-};
+  };
 
-var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
+  var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
 
 // Using callback
 geocoder.geocode(attrs.address + " " + attrs.zip_code + " "+ attrs.city, function(err, res) {
+  if(res[0].latitude && res[0].longitude){
     attrs.lat = res[0].latitude;
     attrs.longi = res[0].longitude;
+  }
+  else {
+    attrs.lat = 0;
+    attrs.longi = 0;
+  }
+  if(res[0].city)
     attrs.city = res[0].city;
+  if(res[0].streetNumber && res[0].streetName)
     attrs.address = res[0].streetNumber +", " + res[0].streetName;
-    attrs.cleanname = ToolsService.clean(attrs.name)+ToolsService.clean(attrs.city);
-    next();
+  else if(!res[0].streetNumber && res[0].streetName)
+    attrs.address = res[0].streetName;
+  else if(!res[0].streetNumber && !res[0].streetName)
+    attrs.address = res[0].streetNumber +", " + res[0].streetName;
+
+  attrs.cleanname = ToolsService.clean(attrs.name)+ToolsService.clean(attrs.city);
+  next();
 });
 
 
