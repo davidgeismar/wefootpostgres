@@ -20,7 +20,7 @@ module.exports = {
 // <<<<<<< HEAD
   models: {
     connection: 'postgres',
-    migrate: 'alter'
+    migrate: 'drop'
   },
 
   port: 80
