@@ -28,11 +28,16 @@ module.exports = {
       _.each(fields, function(field){
         console.log(field);
         field.cleanname = ToolsService.clean(field.name)+ToolsService.clean(field.city);
-        field.origin = 'public';
-        // field.createdAt = moment().format();
-        // field.updatedAt = moment().format();
-        field.partner = 0;
-        // field.save();
+        //field.origin = 'public';
+        field.createdAt = moment().format();
+        field.updatedAt = moment().format();
+        //field.partner = 0;
+        field.save(function(error) { 
+
+        console.log(error);
+
+     });
+
       });
     });
   
