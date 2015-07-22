@@ -19,16 +19,13 @@
   },
 
   addToChat: function(req, res, next){
-    if(req.param('type')==2){
       Chat.find({related:req.param('related')}).exec(function(err, chat){
         Chatter.create({user:req.param('user'), chat:chat.id}).exec(function(err, chatter){
           User.findOne(req.param('user')).exec(function(err,user){
             sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
           });
-
         });
       });
-    }
   },
 
   deactivateFromChat: function(req, res){

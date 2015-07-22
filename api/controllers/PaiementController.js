@@ -1,9 +1,5 @@
 module.exports = {
 
-	test: function(req,res){
-		PaiementService.connect();
-	},
-
 	getCards: function (req,res) {   //Make it strongly secure
 		try{
 			PaiementService.getCards(req.param('user'),function(cards){

@@ -44,23 +44,6 @@ module.exports = {
     });
   },
     
-    //   addPlayer: function (req,res) {
-    //   if(req.param('foot') && req.param('user')){
-    //     Friendship.create({user1: req.param('user1'), user2: req.param('user2')},function(err,user){
-    //     if(err) return res.status(400).end();
-    //     else{
-    //     User.find(req.param('user2'),function(err,user){
-    //       if(err) return res.status(400).end();
-    //       else{ 
-    //         delete user.token;
-    //         res.status(200).json(user);
-    //       }
-    //     });
-    //     }
-    //   });
-    // }
-    // else res.status(400).end();
-    // },
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
       var moment = require('moment');
       Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:MM:SS')+"' ORDER BY f.date", function(err,foots){
@@ -78,7 +61,7 @@ module.exports = {
         if(!foot || err) return res.status(400).end();
         User.findOne().where({id:foot.created_by}).exec(function(err,user){
           if(err) return res.status(400).end();
-          if(!user) return res.status(200).end();
+          if(!user) return res.status(400).end();
           info.orga = user.id;
           info.orgaName = user.first_name + " "+ user.last_name;
           info.picture = user.picture;
@@ -87,7 +70,7 @@ module.exports = {
       });
       Foot.query('SELECT f.date ,t.name,t.id,t.picture,t.city,t.zip_code,t.address,t.telephone,t.api_ref,t.partner FROM field t INNER JOIN foot f ON f.field = t.id WHERE f.id ='+req.param('id'),function(err,field){
         if(err) return res.status(400).end();
-        if(!field) return res.status(200).end();
+        if(!field) return res.status(400).end();
         //Careful, the date in field[0] belongs to the foot
         info.field = field[0];
         if(info.orgaName) return res.json(info).status(200).end();

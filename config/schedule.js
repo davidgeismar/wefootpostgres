@@ -125,7 +125,7 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
       },function(err){
         callback();
       });
-       
+
      });
     });
   });
