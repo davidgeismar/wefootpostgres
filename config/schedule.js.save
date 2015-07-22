@@ -91,9 +91,12 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 
 
 //SEND PUSH TO WARN USER ABOUT COMMING FOOT
-'*/10 * * * *' : function ()
+'* * * * *' : function ()
 {
-  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
+
+=======
+>>>>>>> 657c6c7a8e719bb7d2e826756f2d314288c93683
+  var nowMinus3h10min = moment().subtract(6, 'hours').subtract(10, 'minutes').format();
   var nowMinus3h = moment().subtract(3, 'hours').format();
 
 
@@ -117,8 +120,7 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
           Connexion.findOne({user:player.user}).exec(function(err, connexion){
             if(connexion){
               sails.sockets.emit(connexion.socket_id,'notif',actu);
-            }
-            callback2();
+                   callback2();
           });
         });
 
