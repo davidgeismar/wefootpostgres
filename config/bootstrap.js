@@ -16,6 +16,7 @@
  	sails.on('lifted', function() {
  		Connexion.query('TRUNCATE TABLE connexion');
 
+ 		// ToolsService.fieldarrange();
  	});
  	cb();
  };

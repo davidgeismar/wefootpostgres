@@ -91,9 +91,9 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 
 
 //SEND PUSH TO WARN USER ABOUT COMMING FOOT
-'* * * * *' : function ()
+'*/10 * * * *' : function ()
 {
-  var nowMinus3h10min = moment().subtract(6, 'hours').subtract(10, 'minutes').format();
+  var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
   var nowMinus3h = moment().subtract(3, 'hours').format();
 
 
@@ -125,7 +125,7 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
       },function(err){
         callback();
       });
-       
+
      });
     });
   });

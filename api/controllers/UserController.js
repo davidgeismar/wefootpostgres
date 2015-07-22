@@ -57,10 +57,11 @@
     },
 
     uploadProfilPic: function  (req, res) {
-      var fs = require('fs');
-      var easyimg = require('easyimage'); 
-      var uploadFile = req.file('file');
-      var path = require('path');
+      if(req.body.userId){
+        var fs = require('fs');
+        var easyimg = require('easyimage'); 
+        var uploadFile = req.file('file');
+        var path = require('path');
       uploadFile.upload({ dirname: '../../.tmp/public/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {  //Here to display the cropped image without restarting the server
         if (err) return res.serverError(err);
         var url = path.join(__dirname,'../../.tmp/public/images/profils/'+req.body.userId+'.jpg'); 
@@ -81,7 +82,7 @@
             User.update(req.body.userId,{picture: 'http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg'},function(err){
               if(err) return res.status(400).end();
               console.log('here');
-              res.status(200).send('http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg');
+              return res.status(200).send('http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg');
             });
           });
         },function(err){console.log(err); res.status(400).end(); });
@@ -91,6 +92,9 @@
         //  IF ERROR Return and send 500 error with error
         //console.log(files);
       });
+}
+else
+  return res.status(400).end();
 },
 
 index: function (req,res) {
@@ -313,7 +317,7 @@ removeFavorite: function(req,res){
           if(!user)
           {
             if(!req.param('email')){
-              var email = req.param('fbtoken')+"@facebook.com";
+              var email = req.param('facebook_id')+"@facebook.com";
             }
             else
               var email = req.param('email');

@@ -29,7 +29,7 @@
 
     uploadFile.upload({ dirname: '../../assets/images/fields' ,saveAs:req.body.fieldId+".jpg"} ,function onUploadComplete (err, file) {        
       if (err) return res.serverError(err);  
-      Field.update(req.body.fieldId, {picture: 'http://localhost:1337/images/fields/'+req.body.fieldId+'.jpg'}, function(err){
+      Field.update(req.body.fieldId, {picture: 'http://62.210.115.66:9000/images/fields/'+req.body.fieldId+'.jpg'}, function(err){
         if(err) return res.status(400);
       });
 
