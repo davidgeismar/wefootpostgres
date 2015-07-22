@@ -29,7 +29,6 @@ module.exports = {
 
 	preauthorize: function(req,res){
 		PaiementService.preauthorize(req.param('mangoId'),req.param('price'),req.param('cardId'),req.param('footId'),function(elem){
-			console.log(elem);
 			if(elem === 0) return res.status(400).end();
 			res.status(200).json(elem);
 		});

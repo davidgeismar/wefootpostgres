@@ -17,13 +17,10 @@ module.exports = {
 //Now the sender can be used to send messages 
 sender.send(message, tokens, function (err, result) {
   if(err) console.error(err);
-  else    console.log(result);
 });
 },
 
 sendIosPush: function(text, tokens, pendingNotifs){
-  console.log("push tokens");
-  console.log(tokens);
   var apn = require('apn');
   var note = new apn.Notification();
   note.badge = pendingNotifs;

@@ -69,18 +69,14 @@
           easyimg.crop({
             src:url,dst:url,cropwidth: min,cropheight: min
           }).then(function(file2){
-            console.log(file2);
             var url2 = path.join(__dirname,'../../assets/images/profils/'+req.body.userId+'.jpg'); //Allow to keep the file after server restart
             fs.readFile(url,function(err,contentPic){
-              console.log(contentPic);
               fs.writeFile(url2,contentPic,function(err){
                 console.log(err);
-                if(!err) console.log('done');
               });
             });
             User.update(req.body.userId,{picture: 'http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg'},function(err){
               if(err) return res.status(400).end();
-              console.log('here');
               res.status(200).send('http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg');
             });
           });
@@ -180,7 +176,6 @@ getAllFriends: function (req,res){
         });
 },
 addFavorite: function(req,res){
-  console.log(req.params.all());
   Friendship.findOne().where({
     or:[{
      user1: req.param('id1'),
@@ -191,7 +186,6 @@ addFavorite: function(req,res){
      user2: req.param('id1')
    }]             
  }).exec(function(err,friendship){
-  console.log(friendship);
   if(err) res.status(400).end();
   if(!friendship) res.status(400).end();
   else{
@@ -390,7 +384,6 @@ getLastNotif: function(req,res){
   .where({user: req.param('id')})
   .where({ createdAt: {'>':last_seen}})
   .exec(function(err,vals){
-    console.log(vals);
     if(err){console.log(err); return res.status(400).end();}
     res.status(200).json(vals);
   });
@@ -403,7 +396,6 @@ toConfirm: function(req,res){
     players = _.pluck(players,'foot');
     Foot.find({created_by: req.param('id'), id: players, date:{'>': moment().format()}},function(err,foot){
       if(err) return res.status(400).end();
-      console.log(foot);
       res.status(200).json(foot);
     });
   });

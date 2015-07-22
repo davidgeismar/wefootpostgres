@@ -47,7 +47,6 @@ module.exports = {
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
       var moment = require('moment');
       Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:MM:SS')+"' ORDER BY f.date", function(err,foots){
-        console.log(foots);
         if(err) return res.status(400).end();
         return res.json(foots).status(200).end();
       });
@@ -158,7 +157,6 @@ module.exports = {
       var moment = require('moment');
       var dateReq = moment(req.param('date')).format('llll').substring(0,17);
       dateReq = dateReq.replace(/,+/g, '');
-      console.log(dateReq);
       Field.find().where({
           cleanname: {
             'contains': ToolsService.clean(req.param('field')) 
@@ -174,8 +172,8 @@ module.exports = {
               }
             }).exec(function(err,foots){
                 if(err) return res.status(400).end();
-                if(foots[0]) console.log(foots[0].date);
-                res.status(200).json(foots);
+                if(foots[0])
+                  res.status(200).json(foots);
             });
         });
     },
