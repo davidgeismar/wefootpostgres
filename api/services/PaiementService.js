@@ -23,8 +23,7 @@ module.exports = {
      		CountryOfResidence: "FR", // Required, default: 'FR'
       		Email: user.email 
     	}, function(err, wallet){
-    		console.log(wallet);
-        	if(err) callback(0);
+        	if(err) { console.log(err); callback(0);}
         	else{
         		User.update({id: user.id},{mangoId: parseInt(wallet.Id)},function(err,user){
         			if(err) throw err;
@@ -85,6 +84,7 @@ module.exports = {
 			SecureMode: 'Default',
 			SecureModeReturnURL: 'http://www.wefoot.co' 
 		},function(err,preauth){
+			console.log(err);
 			if(err) return callback(0);
 			Paiement.create({user:mangoId,foot: footId, preauth_id: preauth.Id,price: price},function(err){
 				if(err) return callback(0);
