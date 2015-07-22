@@ -25,7 +25,6 @@
  				console.log(err);
  				return res.status(406).end();         
  			}
- 			console.log(note);
  			if(note.length == 0){
 
  				Notation.create(req.params.all()).exec(function notationCr(err, noteC){

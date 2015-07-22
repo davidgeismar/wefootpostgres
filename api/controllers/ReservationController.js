@@ -118,18 +118,18 @@ module.exports = {
 		});
 	},
 
-	test: function(req,res){
-		ContactService.smsConfirm(0,0);
-		res.status(200).end();
-	},
-	testInfo: function(req,res){
-		var accountSid = "AC08f1dc44e7932781b9707802715e5acc"; //Test credentials
-		var authToken = "6b926a5252b73e5434daa0dba74f2c7e";
-		var client = require('twilio')(accountSid,authToken);
-		client.sms.messages("SMae7f267c606c438cb96d99099371a748").get(function(err, sms) {
-    		console.log(err);
-    		console.log(sms);
-		});
-	}
+	// test: function(req,res){
+	// 	ContactService.smsConfirm(0,0);
+	// 	res.status(200).end();
+	// },
+	// testInfo: function(req,res){
+	// 	var accountSid = "AC08f1dc44e7932781b9707802715e5acc"; //Test credentials
+	// 	var authToken = "6b926a5252b73e5434daa0dba74f2c7e";
+	// 	var client = require('twilio')(accountSid,authToken);
+	// 	client.sms.messages("SMae7f267c606c438cb96d99099371a748").get(function(err, sms) {
+ //    		console.log(err);
+ //    		console.log(sms);
+	// 	});
+	// }
 
 };

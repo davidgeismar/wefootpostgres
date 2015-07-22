@@ -46,7 +46,6 @@ var resaService =  {
 					return _.contains(reservationTerrain, num.id); 
 				});
 				if(terrainsFree.length>0){
-					console.log(terrainsFree[0]);
 					var prix = ResaService.getPrix(terrainsFree[0],resa.date,function(prix){
 						terrainsFree[0].prix = prix;
 						callback(terrainsFree[0]);

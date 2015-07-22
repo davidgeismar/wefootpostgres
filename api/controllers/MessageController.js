@@ -29,8 +29,6 @@ module.exports = {
  						users =_.pluck(req.param('receivers'), 'id');
  						//NO NEED
  						// users.push(req.param('sender_id'));
- 						console.log("users");
- 						console.log(users);
  						Connexion.find({user:users}).exec(function(err, connexions){
  							if(connexions){
  								async.each(connexions,function(connexion,callback){

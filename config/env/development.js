@@ -19,11 +19,11 @@ module.exports = {
 
 // <<<<<<< HEAD
   models: {
-    connection: 'mysql',
-    migrate: 'alter'
+    connection: 'mysql_dev',
+    migrate: 'safe'
   },
 
-  port: 1337
+  port: 9000
 // =======
 //   models: {
 //     connection: 'mysql',

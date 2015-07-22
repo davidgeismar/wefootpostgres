@@ -65,7 +65,6 @@ module.exports = {
           currentChatter.save();
         }
         var usersID = _.pluck(usersChatters, 'user');
-        console.log(usersID);
 
         User.find(usersID).exec(function(err, bigUsers){
           if(err){
@@ -102,7 +101,6 @@ module.exports = {
             Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
               if(usersChatters){
                 var usersID = _.pluck(usersChatters, 'user');
-                console.log(usersID);
                 User.find(usersID).exec(function(err, bigUsers){
                   if(err){
                     console.log(err);
