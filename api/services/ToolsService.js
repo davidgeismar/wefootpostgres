@@ -26,13 +26,10 @@ module.exports = {
       if(err)
         console.log(err)
       _.each(fields, function(field){
-        console.log(field);
-        field.cleanname = ToolsService.clean(field.name)+ToolsService.clean(field.city);
-        field.origin = 'public';
-        // field.createdAt = moment().format();
-        // field.updatedAt = moment().format();
-        field.partner = 0;
-        // field.save();
+        Field.update(field.id, {cleanname:ToolsService.clean(field.name)+ToolsService.clean(field.city), origin:'public',createdAt:moment().format(), updatedAt:moment().format(), partner:false})
+        .exec(function(err){
+            console.log(err);
+        });
       });
     });
   
