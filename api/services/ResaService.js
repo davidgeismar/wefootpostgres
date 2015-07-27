@@ -58,7 +58,7 @@ var resaService =  {
 	},
 
 	classic_create: function(resa,callback){
-		Reservation.create({date:resa.date,terrain:resa.terrain}, function reservationCreated(err,reservation){
+		Reservation.create({date:resa.date,terrain:resa.terrain, field: resa.field, user: resa.user}, function reservationCreated(err,reservation){
 			if(err) callback(0);
 			else callback(reservation);
 		});
@@ -184,8 +184,9 @@ var resaService =  {
 					console.log('Error fetching event on Gcalendar'+ err);
 					callback(0);
 				}
-				ContactService.mailConfirm(resa);
-				callback();
+				ContactService.mailConfirm(resa,function(){
+					callback();
+				});
 			});
 		});
 	}

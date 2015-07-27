@@ -1,5 +1,6 @@
 var https = require('https');
 var bcrypt = require('bcrypt');
+var atob = require('atob');
 
 var mango = require('mangopay')({
     username: 'geniusraph',
@@ -73,7 +74,7 @@ module.exports = {
 		});
 	},
 
-	preauthorize: function(mangoId,price,cardId,footId,callback){
+	preauthorize: function(mangoId,price,cardId,footId,field,callback){
 		mango.author.create({
 			AuthorId: mangoId,
 			DebitedFunds: {
@@ -86,7 +87,7 @@ module.exports = {
 		},function(err,preauth){
 			console.log(err);
 			if(err) return callback(0);
-			Paiement.create({user:mangoId,foot: footId, preauth_id: preauth.Id,price: price},function(err){
+			Paiement.create({user:mangoId,foot: footId, preauth_id: preauth.Id,price: price,field: field},function(err){
 				if(err) return callback(0);
 				callback();
 			});
@@ -118,6 +119,22 @@ module.exports = {
 				else callback();
 			});
 		});
+	},
+
+	verify: function(req,callback){
+		if(!req.headers['authorization']) var string= " ";//Prevents from 500
+		var string = atob(req.headers['authorization']);
+		var admin = {name: string.substring(0,string.indexOf(':')), password: string.substring(string.indexOf(':')+1,string.length)};
+		if(admin){
+			Admin.findOne({name: admin.name},function(err,user){
+				if(err || !admin || !user) callback(false);
+				else if(admin.password == user.password) 
+					callback(true);
+				else
+					callback(false);
+			});
+		}
+		else callback(false);
 	}
 
 }

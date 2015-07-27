@@ -16,15 +16,26 @@ getNotif: function(req,res){
 },
 getActu: function(req,res){
 	var moment = require('moment');
-	Actu.find({where: { or:[{related_user: req.param('friends'),typ:['footConfirm','newFriend','demandAccepted']},
-		{user:req.param('friends'),typ:['hommeDuMatch','chevreDuMatch','newFriend']}], id: {'>': req.param('skip')}}
-		,sort:'createdAt DESC',limit:30},function(err,actu){
+	var friends = req.param('friends');
+	if(req.param('friends').length == 0) 
+		friends = [0]; //Prevent from sails-mysql bug
+	var query = {where: 
+					{ or:[{related_user: friends,typ:['footConfirm','newFriend','demandAccepted']},
+						{user:friends,typ:['hommeDuMatch','chevreDuMatch','newFriend']},
+						{typ: 'WF'}],
+					 	id: {'>': req.param('skip')}},
+				sort:'createdAt DESC',
+				limit:30};
+	Actu.find(query,function(err,actu){
 			var notMine = _.filter(actu,function(elem){return elem.user!=req.param('user')&&elem.related_user != req.param('user')});
 			var result = _.groupBy(notMine, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
 			res.status(200).json(result);
 		});
 },
 newNotif: function(req,res){
+	if(req.param('typ')&& typ=='WF'){ //Prevents hacking
+		return res.status(406).end();
+	}
 	Actu.create(req.params.all(),function(err,actu){
 		if(err) return res.status(400).end();
 		Connexion.find().where({user: req.param('user')}).exec(function(err,connexions){

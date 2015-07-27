@@ -5,6 +5,7 @@ module.exports = {
 
 	mailConfirm : function(resa,callback){
 		Field.findOne({id: resa.field},function(err,field){
+      if(field.mail){
 	  		sails.hooks.email.send(
     			"Reservation",
     			{
@@ -23,8 +24,11 @@ module.exports = {
     			else
     				callback(field);
     		});
-    	});
-	},
+      }
+      else
+        callback(field);
+    });
+  },
 
 	// smsConfirm : function(resa,field){
 	// 	var accountSid = "AC08f1dc44e7932781b9707802715e5acc"; //Test credentials
