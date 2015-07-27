@@ -9,11 +9,15 @@ module.exports = {
     },
     
     terrain:{
-      type:'integer',
-      foreignKey: true,
-      references: 'terrain',
-      on:'id',
-      required: true
+      type:'integer'
+    },
+
+    field:{
+      type:'integer'
+    },
+
+    user:{
+      type:'integer'
     },
 
   	date:{

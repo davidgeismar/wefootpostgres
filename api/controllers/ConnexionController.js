@@ -6,6 +6,12 @@ setSocket: function(req,res){   //Link a connexion with an user
 			if(err){ console.log(err); res.status(400).end();}
 			res.status(200).end();
 		});
+		User.findOne({id: req.param('id')},function(err,user){
+			if(user && !err){
+				user.nb_connection++;
+				user.save();
+			}
+		});
 	}
 	else{
 		res.status(400).end();

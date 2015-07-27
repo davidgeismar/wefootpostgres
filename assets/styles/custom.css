@@ -1,0 +1,18 @@
+.error-container{
+	text-align: center;
+	color: #ff0000;
+	font-size: 20px;
+}
+.partner-input{
+	width: 50%;
+}
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #fff;
+    cursor: pointer;
+}
+* html .ui-autocomplete {
+    height: 100px;
+}

@@ -1,0 +1,150 @@
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper">
+              <!--state overview start-->
+              <div class="row state-overview">
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol terques">
+                              <i class="fa fa-user"></i>
+                          </div>
+                          <div class="value">
+                              <h1 data-value="<%=figures.user%>" class="count">
+                                  0
+                              </h1>
+                              <p>Users</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol red">
+                              <i class="fa fa-futbol-o"></i>
+                          </div>
+                          <div class="value">
+                              <h1 data-value="<%=figures.foot%>" class="count2">
+                                  0
+                              </h1>
+                              <p>Foot</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol yellow">
+                              <i class="fa fa-shopping-cart"></i>
+                          </div>
+                          <div class="value">
+                              <h1 data-value="<%=figures.resa%>" class=" count3">
+                                  0
+                              </h1>
+                              <p>Reservations</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol blue">
+                              <i class="fa fa-mobile"></i>
+                          </div>
+                          <div class="value">
+                              <h1 data-value="<%=figures.connection%>" class=" count4">
+                                  0
+                              </h1>
+                              <p>Online</p>
+                          </div>
+                      </section>
+                  </div>
+              </div>
+              <!--state overview end-->
+
+              <div class="row">
+                  <div class="col-lg-8">
+                      <!--custom chart start-->
+                      <div class="border-head">
+                          <h3>Nouveaux users</h3>
+                      </div>
+                      <div class="custom-bar-chart">
+                          <ul class="y-axis">
+                              <li><span><%= _.max(_.pluck(usersMonth,'value'))%></span></li>
+                              <li><span><%= Math.round(_.max(_.pluck(usersMonth,'value'))*0.8)%></span></li>
+                              <li><span><%= Math.round(_.max(_.pluck(usersMonth,'value'))*0.6)%></span></li>
+                              <li><span><%= Math.round(_.max(_.pluck(usersMonth,'value'))*0.4)%></span></li>
+                              <li><span><%= Math.round(_.max(_.pluck(usersMonth,'value'))*0.2)%></span></li>
+                              <li><span>0</span></li>
+                          </ul>
+                          <%_.each(usersMonth,function(data){%>
+                            <div class="bar">
+                                <div class="title"><%=moment(data.date).format('MM/YY')%></div>
+                                <div class="value tooltips" data-original-title="<%=data.value%>" data-toggle="tooltip" data-placement="top"><%=Math.round(data.value*100/_.max(_.pluck(usersMonth,'value')))%>%</div>
+                          </div>
+                          <%})%>
+                      </div>
+                      <!--custom chart end-->
+                  </div>
+                  <div class="col-lg-4">
+                      <!--new earning start-->
+                      <div class="panel terques-chart">
+                          <div class="panel-body chart-texture">
+                              <div class="chart">
+                                  <div class="heading">
+                                      <span><%= moment().locale('fr').format('dddd').toUpperCase()%></span>
+                                      <strong><%= usersWeek[usersWeek.length-1].value%></strong>
+                                  </div>
+                                  <div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="[<%= _.pluck(usersWeek,'value')%>]"></div>
+                              </div>
+                          </div>
+                          <div class="chart-tittle">
+                              <span class="title">Nouveaux users <em style="font-size: 12px;"> par jours </em></span>
+                          </div>
+                      </div>
+                      <!--new earning end-->
+
+                      <!--total earning start-->
+                      <div class="panel green-chart">
+                          <div class="panel-body">
+                              <div class="chart">
+                                  <div class="heading">
+                                      <span><%= moment().format('MMMM')%></span>
+                                      <strong><%= moment().format('Do')%> Days</strong>
+                                  </div>
+                                  <div id="barchart" data-value="<%= JSON.stringify(_.pluck(earningDay,'value'))%>"></div>
+                              </div>
+                          </div>
+                          <div class="chart-tittle">
+                              <span class="title">Revenu Total</span>
+                              <span class="value"><% sum = 0; for(var i=0;i<earningDay.length;i++){
+                                    sum+=earningDay[i].value;
+                                }%> <%=Math.round(sum)%>€</span>
+                          </div>
+                      </div>
+                      <!--total earning end-->
+                  </div>
+              </div>
+      
+      <!-- Right Slidebar end -->  
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="/scripts/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="/scripts/jquery.scrollTo.min.js"></script>
+    <script src="/scripts/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="/scripts/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="/scripts/owl.carousel.js" ></script>
+    <script src="/scripts/jquery.customSelect.min.js" ></script>
+    <script src="/scripts/respond.min.js" ></script>
+    <script>
+    if(!window.sessionStorage['oauth'])
+      window.sessionStorage['oauth'] = btoa("<%=admin.name%>:<%=admin.password%>"); 
+    </script>
+
+    <!--right slidebar-->
+    <script src="/scripts/slidebars.min.js"></script>
+
+    <!--common script for all pages-->
+    <script src="/scripts/common-scripts.js"></script>
+
+    <!--script for this page-->
+    <script src="/scripts/sparkline-chart.js"></script>
+    <script src="/scripts/easy-pie-chart.js"></script>
+    <script src="/scripts/count.js"></script>

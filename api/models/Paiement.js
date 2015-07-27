@@ -18,6 +18,19 @@ module.exports = {
 	price: {
 		type: 'string',
 		required: true
+	},
+
+	field: {
+		type: 'string',
+		required: true
+	},
+	alert: {
+		type: 'boolean',
+		defaultsTo: false
+	},
+	paid: {
+		type: 'boolean',
+		defaultsTo: false
 	}
   }
 }

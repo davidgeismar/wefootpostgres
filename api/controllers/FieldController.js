@@ -109,6 +109,12 @@ else
 });    
 },
 
+  getAllFields: function(req,res){
+    Field.find({origin: 'public'},function(err,field){
+      if(err) res.status(400).end();
+      else res.status(200).json(field);
+    });
+  }
 
 
 

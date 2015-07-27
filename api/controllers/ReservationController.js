@@ -89,9 +89,17 @@ module.exports = {
 // },
 
 	create: function (req,res){
-			ResaService[req.param('api_ref')+'_create'](req.params.all(),function(resa){
-				if(resa===0) res.status(400).end();
-				res.status(200).json(resa);
+			ResaService.classic_create(req.params.all(),function(){
+				if(req.param('api_ref')!='classic'){
+					ResaService[req.param('api_ref')+'_create'](req.params.all(),function(resa){
+						if(resa===0) res.status(400).end();
+						res.status(200).json(resa);
+					});
+				}
+				else{
+					if(resa===0) res.status(400).end();
+						res.status(200).json(resa);
+				}
 			});
 	},
 
