@@ -49,21 +49,15 @@ module.exports.policies = {
     // feed : ['isNiceToAnimals', 'hasRabbitFood']
   // }
 
-  // '*':'isLoggedIn',
+  '*':'isLoggedIn',
 
-  // UserController: {
+  UserController: {
+    facebookConnect: true,
+    create: true,
+  },
 
-  //   facebookConnect: true,
-  //   create: true,
-
-
-
-  // },
-
-  // SessionController: {
-
-  //   login: true
-
-  // }
+  SessionController: {
+    login: true
+  },
 
 };

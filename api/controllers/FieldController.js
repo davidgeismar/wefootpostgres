@@ -100,7 +100,7 @@
               // results = _.first(_.sortBy(results, 'distance'), 15);
               var partners = _.sortBy(_.filter(results, function(result){return result.partner}), 'distance');
               var noPartners = _.sortBy(_.filter(results, function(result){return !result.partner}), 'distance');
-              results=partners.concat(noPartners);
+              results=_.first(partners.concat(noPartners),40);
               res.status(200).json(results);
             });
 }
