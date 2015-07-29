@@ -62,7 +62,8 @@ module.exports = {
 				else{
 					for(var j=0;j<paiements.length;j++){
 						var com = _.find(coms, function(com){ return com.field == paiements[j].field});
-						money+=Math.round(parseInt(paiements[j].price)*com.hp*10)/10;
+						if(com)
+							money+=Math.round(parseInt(paiements[j].price)*com.hp*10)/10;
 					}
 					earnings.push({date:date, value: money});
 					callback();
