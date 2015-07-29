@@ -33,7 +33,8 @@ getActu: function(req,res){
 		});
 },
 newNotif: function(req,res){
-	if(req.param('typ')&& typ=='WF'){ //Prevents hacking
+	var typ = req.param('typ');
+	if( typ && typ =='WF'){ //Prevents hacking
 		return res.status(406).end();
 	}
 	Actu.create(req.params.all(),function(err,actu){
