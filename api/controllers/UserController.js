@@ -114,6 +114,7 @@ addFriend: function (req,res) {
   result = {};
   if(req.param('facebook_id') && req.param('user1')){
     User.findOne({facebook_id:req.param('facebook_id')}).exec(function(err,user){
+      if(!user) return res.status(400).end();
       Friendship.create({user1: req.param('user1'), user2: user.id},function(err,friendship){
         if(err) return res.status(400).end();
         delete user.token;
