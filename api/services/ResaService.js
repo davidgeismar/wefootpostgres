@@ -16,12 +16,10 @@ var resaService =  {
 			var PromoDay = _.reject(promotions,function(reservation){
 				return reservation.repetitions % datePremier != 0; 
 			});
-
 			var dateJJ = new Date(date);
 			var PromoDayTerr = _.reject(PromoDay,function(reservation){
 				return( (reservation.heureDebut > dateJJ) && (reservation.heureDebut < dateJJ)); 
 			});
-
 			var promotion = PromoDayTerr[0];
 			// console.log(terrain);
 			if(promotion)
@@ -30,7 +28,6 @@ var resaService =  {
 				callback(terrain.prix);
 			return;
 		});		
-
 	},
 
 	classic : function (resa,callback) {

@@ -93,7 +93,7 @@ module.exports = {
       });
 
     },
-
+    //update player status in foot
     updatePlayer: function(req,res){
       Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
         Foot.findOne({id: req.param('foot')},function(err,foot){
