@@ -13,17 +13,16 @@ var resaService =  {
 		datePremier = premiers[datePremier.getDay()]; //Match a primary number with a day of the week
 		Promotion.find({terrain: terrain.id}, function foundPromotions (err, promotions) {
 			if(err) throw err;
-			var PromoDay = _.reject(promotions,function(reservation){
-				return reservation.repetitions % datePremier != 0; 
+			var PromoDay = _.reject(promotions,function(promo){
+				return promo.repetitions % datePremier != 0; 
 			});
 
-			var dateJJ = new Date(date);
-			var PromoDayTerr = _.reject(PromoDay,function(reservation){
-				return( (reservation.heureDebut > dateJJ) && (reservation.heureDebut < dateJJ)); 
+			var dateJJ = moment(date).format('HH:mm:ss');
+			var PromoDayTerr = _.reject(PromoDay,function(promo){
+				return( (promo.heureDebut > dateJJ) && (promo.heureDebut < dateJJ)); 
 			});
-
-			var promotion = PromoDayTerr[0];
-			// console.log(terrain);
+			if(PromoDayTerr.length && PromoDayTerr.length>0) promotion = PromoDayTerr[0];
+			console.log(PromoDayTerr);
 			if(promotion)
 				callback(promotion.promo*terrain.prix);
 			else

@@ -1,12 +1,166 @@
 <section id="main-content">
   	<section class="wrapper">
   		<h1> Ajouter un partenaire </h1>
-  		<form>
-      		<div class="form-group">
-        		<label>Nom du centre</label>
-        		<input type="texte" id="partner-input" class="form-control partner-input" name="actuTexte" placeholder="Texte">
-     	 	</div>
-	    </form>
+  		<div class="row">
+  			<form class="col-md-6">
+      			<div class="form-group">
+        			<label>Nom du centre</label>
+        			<input type="texte" id="partner-input" class="form-control" name="actuTexte" placeholder="Texte">
+     	 		</div>
+	    	</form>
+	    	<div class="content-field col-md-6 hidden">
+	    		<img src=""/>
+	    		<p></p>
+	    	</div>
+	    </div>
+	    	<form class="next-stage hidden" action="/admin/addPartner" method="POST">
+	    		<input class="id-partner" name="fieldId" type="hidden" value=""/>
+	    		<div class="row">
+	    			<div class="form-group col-md-6">
+        				<label class="col">Nombre de terrain indoor</label>
+        				<input type="number" class="form-control nb-field" name="nbIndoor" placeholder="Texte">
+        			</div>
+        			<div class="form-group col-md-6">
+        				<label class="col">Nombre de terrain outdoor</label>
+        				<input type="number" class="form-control nb-field" name="nbOutdoor" placeholder="Texte">
+     	 			</div>
+     	 		</div>
+     	 		<div class="row">
+     	 			<div class="form-group col-md-6">
+        				<label class="col">Prix Base Indoor</label>
+        				<input type="number" class="form-control nb-field" name="prixIndoor" placeholder="Texte">
+        			</div>
+        			 <div class="form-group col-md-6 partner-prices">
+        				<label class="col">Prix Base Outdoor</label>
+        				<input type="number" class="form-control nb-field" name="prixOutdoor" placeholder="Texte">
+        			</div>
+        		</div>
+	     	 	<div class="row">
+	     	 		<div class="form-group days day1 hidden">
+	     	 		    <div class='form-group row'>
+                        <div class="row">
+                            <div class='form-group col-md-6'>
+                               <label class='col'>Prix Indoor</label>
+                               <input name="prixIndoor1" class="form-control nb-field"/>
+                             </div>
+                            <div class='form-group col-md-6'>
+                                <label class='col'>Prix Outdoor</label>
+                                <input name="prixOutdoor1" class="form-control nb-field"/>
+                            </div>
+                        </div>
+	     	 			</div>
+	     	 			<div class="col">
+        					<input type="checkbox" name="day1" value="2"/> Lundi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day1" value="3"/> Mardi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day1" value="5"/> Mercredi
+        				</div>
+         				<div class="col">
+        					<input type="checkbox" name="day1" value="7"/> Jeudi
+        				</div>
+         				<div class="col">
+        					<input type="checkbox" name="day1" value="11"/> Vendredi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day1" value="13"/> Samedi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day1" value="17"/> Dimanche
+        				</div> 
+        				<div class="col-md-6">     				       				
+        					<p>Debut - Fin</p>
+        					<input class="form-control partner-time" name="time1Start" type="time">
+        					<input class="form-control partner-time" name="time1End" type="time">
+        				</div>
+        			</div>
+                </div>
+                <div class="row">
+        			<div class="form-group days day2 hidden">
+                        <div class="row">
+        				    <div class='form-group col-md-6'>
+        					   <label class='col'>Prix Indoor</label>
+        					   <input name="prixIndoor2" class="form-control nb-field"/>
+	     	 			     </div>
+                            <div class='form-group col-md-6'>
+                                <label class='col'>Prix Outdoor</label>
+                                <input name="prixOutdoor2" class="form-control nb-field"/>
+                            </div>
+                        </div>
+	     	 			<div class="col">
+        					<input type="checkbox" name="day2" value="2"/> Lundi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day2" value="3"/> Mardi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day2" value="5"/> Mercredi
+        				</div>
+         				<div class="col">
+        					<input type="checkbox" name="day2" value="7"/> Jeudi
+        				</div>
+         				<div class="col">
+        					<input type="checkbox" name="day2" value="11"/> Vendredi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day2" value="13"/> Samedi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day2" value="17"/> Dimanche
+        				</div> 
+        				<div class="col-md-6">     				       				
+        					<p>Debut - Fin</p>
+        					<input class="form-control partner-time" name="time2Start" type="time">
+        					<input class="form-control partner-time" name="time2End" type="time">
+        				</div>
+        			</div>
+                </div>
+                <div class="row">
+        			<div class="form-group days day3 hidden">
+                        <div class="row">
+                            <div class='form-group col-md-6'>
+                               <label class='col'>Prix Indoor</label>
+                               <input name="prixIndoor3" class="form-control nb-field"/>
+                             </div>
+                            <div class='form-group col-md-6'>
+                                <label class='col'>Prix Outdoor</label>
+                                <input name="prixOutdoor3" class="form-control nb-field"/>
+                            </div>
+                        </div>
+	     	 			<div class="col">
+        					<input type="checkbox" name="day3" value="2"/> Lundi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day3" value="3"/> Mardi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day3" value="5"/> Mercredi
+        				</div>
+         				<div class="col">
+        					<input type="checkbox" name="day3" value="7"/> Jeudi
+        				</div>
+         				<div class="col">
+        					<input type="checkbox" name="day3" value="11"/> Vendredi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day3" value="13"/> Samedi
+        				</div>
+        				<div class="col">
+        					<input type="checkbox" name="day3" value="17"/> Dimanche
+        				</div> 
+        				<div class="col-md-6">     				       				
+        					<p>Debut - Fin</p>
+        					<input class="form-control partner-time" name="time3Start" type="time">
+        					<input class="form-control partner-time" name="time3End" type="time">
+        				</div>
+        			</div>
+	     	 	</div>
+                <button type="submit" class="btn btn-success">Créer</button>
+	    	</form>
+	    	<button onclick="addPrice()" class="btn btn-primary hidden partner-prices-button"><i class="fa fa-plus-circle"></i> Ajouter un prix</button>
+	    </div>
   	</section>
 </section>
 <script src="/scripts/jquery.js"></script>

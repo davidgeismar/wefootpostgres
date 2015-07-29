@@ -123,7 +123,7 @@ module.exports = {
 
 	verify: function(req,callback){
 		if(!req.headers['authorization']) var string= " ";//Prevents from 500
-		var string = atob(req.headers['authorization']);
+		else var string = atob(req.headers['authorization']);
 		var admin = {name: string.substring(0,string.indexOf(':')), password: string.substring(string.indexOf(':')+1,string.length)};
 		if(admin){
 			Admin.findOne({name: admin.name},function(err,user){

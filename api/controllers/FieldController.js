@@ -114,9 +114,15 @@ else
       if(err) res.status(400).end();
       else res.status(200).json(field);
     });
+  },
+
+  getFieldInfo: function(req,res){
+    console.log(req.param('name'));
+    Field.findOne({name: req.param('name')},function(err,field){
+      if(err || !field) res.status(400).end();
+      else res.status(200).json(field);
+    });
   }
-
-
 
 };
 
