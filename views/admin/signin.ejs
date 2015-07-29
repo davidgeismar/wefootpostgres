@@ -1,0 +1,15 @@
+    <div class="container">
+
+      <form class="form-signin" action="/admin/login">
+        <h2 class="form-signin-heading">Connectez vous</h2>
+        <div class="login-wrap">
+            <input type="text" class="form-control" placeholder="Nom" name="name" autofocus>
+            <input type="password" class="form-control" placeholder="Mot de passe" name="password">
+            <button class="btn btn-lg btn-login btn-block" type="submit">Connexion</button>
+      </form>
+    </div>
+    <% if(flash && flash.err){%>
+      <div class="error-container">
+        <%= flash.err%>
+      </div>
+    <%}%>

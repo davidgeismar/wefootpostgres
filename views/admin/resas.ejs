@@ -1,0 +1,66 @@
+          <section id="main-content">
+            <section class="wrapper"> 
+              <div class="row">
+                  <div class="col-lg-12">
+                      <section class="panel">
+                          <header class="panel-heading">
+                              Gestion des réservations
+                          </header>
+                          <table class="table table-striped table-advance table-hover" id="table">
+                              <thead>
+                              <tr>
+                                  <th><i class="fa"></i> Terrain</th>
+                                  <th class="hidden-phone"><i class="fa"></i>User</th>
+                                  <th><i class="fa fa-money"></i> Prix</th>
+                                  <th><i class="fa fa-eur"></i> Commission</th>
+                                  <th><i class="fa fa-calendar"></i> Date Préauth</th>
+                                  <th><i class="fa fa-calendar"></i> Date Match</th>
+                                  <th><i class=" fa fa-bell"></i> Status</th>
+                                  <th> Action </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <% _.each(resas,function(resa){%>
+                              <tr class="elem<%=resa.foot%>">
+                                  <td><a href="#"><%= resa.fieldName %></a></td>
+                                  <td class="hidden-phone"><%= resa.userInfos %></td>
+                                  <td><%= resa.price %> </td>
+                                  <td><%= resa.com %> </td>
+                                  <td><%=moment(resa.createdAt).locale('fr').format('L')%></td>
+                                  <td><%=moment(resa.date).locale('fr').format('L')%> </td>
+                                  <td><span class="label label-<%=resa.labels.color%> label-mini"><%=resa.labels.mess%></span></td>
+                                  <td>
+                                     <button onclick="paid(<%=resa.foot%>)" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Payé à WF"><i class="fa fa-check"></i></button>
+                                      <button onclick="fixProb(<%=resa.foot%>)" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="Problème réglé"><i class="fa fa-thumbs-o-up"></i></button>
+                                      <button onclick="sigProb(<%=resa.foot%>)" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Signaler un problème"><i class="fa fa-exclamation-triangle"></i></button>
+                                      <button onclick="getMoney(<%=resa.foot%>)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="Procéder au virement"><i class="fa fa-money "></i></button>
+                                  </td>
+                              </tr>
+                              <% }) %>
+                              </tbody>
+                          </table>
+                      </section>
+                  </div>
+              </div>
+            </section>
+          </section>
+
+     <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="/scripts/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="/scripts/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="/scripts/jquery.scrollTo.min.js"></script>
+    <script src="/scripts/jquery.nicescroll.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript" src="/scripts/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="/scripts/DT_bootstrap.js"></script>
+    <script src="/scripts/respond.min.js" ></script>
+
+    <!--right slidebar-->
+    <script src="/scripts/slidebars.min.js"></script>
+
+    <!--dynamic table initialization -->
+    <script src="/scripts/resas.js"></script>
+
+    <!--common script for all pages-->
+    <script src="/scripts/common-scripts.js"></script>

@@ -1,0 +1,38 @@
+.error-container{
+	text-align: center;
+	color: #ff0000;
+	font-size: 20px;
+}
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #fff;
+    cursor: pointer;
+}
+* html .ui-autocomplete {
+    height: 100px;
+}
+.content-field img{
+	width: 60%;
+	margin-left: 20%; 
+	height: auto;
+}
+.nb-field{
+	width: 100px;
+}
+.next-stage{
+	margin-top: 100px;
+	margin-bottom: 30px;
+}
+.partner-time{
+	width: 45%;
+	display: inline-block;
+}
+.days .col{
+	width: 12%;
+	display: inline-block;
+}
+.days{
+	margin-left: 3%;
+}

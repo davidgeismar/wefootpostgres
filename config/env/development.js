@@ -23,14 +23,5 @@ module.exports = {
     migrate: 'safe'
   },
 
-  port: 9000
-// =======
-//   models: {
-//     connection: 'mysql',
-//     migrate: 'alter'
-//   },
-
-//   port: 1337
-// >>>>>>> 0aa5b715ccc83b771ffa1835a3714aab9e16a9a6
-
+  port: 1337
 };

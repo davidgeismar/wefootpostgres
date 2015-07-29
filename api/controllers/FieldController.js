@@ -100,7 +100,7 @@
               // results = _.first(_.sortBy(results, 'distance'), 15);
               var partners = _.sortBy(_.filter(results, function(result){return result.partner}), 'distance');
               var noPartners = _.sortBy(_.filter(results, function(result){return !result.partner}), 'distance');
-              results=partners.concat(noPartners);
+              results=_.first(partners.concat(noPartners),40);
               res.status(200).json(results);
             });
 }
@@ -109,8 +109,20 @@ else
 });    
 },
 
+  getAllFields: function(req,res){
+    Field.find({origin: 'public'},function(err,field){
+      if(err) res.status(400).end();
+      else res.status(200).json(field);
+    });
+  },
 
-
+  getFieldInfo: function(req,res){
+    console.log(req.param('name'));
+    Field.findOne({name: req.param('name')},function(err,field){
+      if(err || !field) res.status(400).end();
+      else res.status(200).json(field);
+    });
+  }
 
 };
 
