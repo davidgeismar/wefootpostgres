@@ -88,19 +88,20 @@ module.exports = {
 	},
 
 	sendNotif: function(req,res){
-		if(req.param('pushTexte') && req.param('pushTexte').length>0 && req.session.admin.id){	
+		if(req.param('pushTexte') && req.param('pushTexte').length>0 && req.session.admin && req.session.admin.id){	
 			Push.find(function(err,push){
 				if(err) res.status(400).end();
 				else PushService.sendPush(push, req.param('pushTexte'));
 				res.redirect('/admin/dashboard/'+req.session.admin.id);
 			});
 		}
-		if(req.param('actuTexte') && req.param('actuTexte') && req.session.admin.id){
+		if(req.param('actuTexte') && req.param('actuTexte') && req.session.admin && req.session.admin.id){
 			Actu.create({typ:'WF', attached_text: req.param('actuTexte')},function(err,actu){
 				if(err) res.status(400).end();
+				else res.redirect('/admin/dashboard/'+req.session.admin.id);
 			});
 		}
-		if(!req.session.admin.id)
+		else if(!req.session.admin)
 			res.status(403).end(); 
 	},
 

@@ -93,7 +93,7 @@ module.exports = {
       if(chatters){
         async.each(chatters,function(chatter,callback){
           Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
-            if(err){
+            if(err || !chat){
               console.log(err);
               return res.status(406).end();         
             }
