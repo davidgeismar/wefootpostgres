@@ -21,7 +21,7 @@ var resaService =  {
 			var PromoDayTerr = _.reject(PromoDay,function(promo){
 				return( (promo.heureDebut > dateJJ) && (promo.heureDebut < dateJJ)); 
 			});
-			if(PromoDayTerr.length && PromoDayTerr.length>0) promotion = PromoDayTerr[0];
+			if(PromoDayTerr.length && PromoDayTerr.length>0) var promotion = PromoDayTerr[0];
 			console.log(PromoDayTerr);
 			if(promotion)
 				callback(promotion.promo*terrain.prix);

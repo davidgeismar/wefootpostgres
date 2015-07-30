@@ -14,7 +14,11 @@
 	    	</div>
 	    </div>
 	    	<form class="next-stage hidden" action="/admin/addPartner" method="POST">
+            <button type="button" class="btn btn-info btn-lg btn-comis" data-toggle="modal" data-target="#modalComis">
+                    Commissions
+            </button>
 	    		<input class="id-partner" name="fieldId" type="hidden" value=""/>
+                <input id="value-comis" name="comis" type="hidden" value=""/>
 	    		<div class="row">
 	    			<div class="form-group col-md-6">
         				<label class="col">Nombre de terrain indoor</label>
@@ -163,6 +167,83 @@
 	    </div>
   	</section>
 </section>
+
+                <!-- MODAL RESERVATION -->
+                    <div class="modal fade" id="modalComis">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Enregistrer les taux de comissions (en %)</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table width="80%" align="center" class="table-comis" >
+                                        <div id="head_nav">
+                                            <tr>
+                                                <th>Horaire</th>
+                                                <th>Lundi</th>
+                                                <th>Mardi</th>
+                                                <th>Mercredi</th>
+                                                <th>Jeudi</th>
+                                                <th>Vendredi</th>
+                                                <th>Samedi</th>
+                                                <th>Dimanche</th>
+                                            </tr>
+                                        </div>  
+                                        <tr>
+                                            <th>8h-12h</th>
+
+                                            <td><input type="number" value="0" data-day="1" data-hour="matin"/></td>
+                                            <td><input type="number" value="0" data-day="2" data-hour="matin"/></td>
+                                            <td><input type="number" value="0" data-day="3" data-hour="matin"/></td>
+                                            <td><input type="number" value="0" data-day="4" data-hour="matin"/></td>
+                                            <td><input type="number" value="0" data-day="5" data-hour="matin"/></td>
+                                            <td><input type="number" value="0" data-day="6" data-hour="matin"/></td>
+                                            <td><input type="number" value="0" data-day="0" data-hour="matin"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>12h-14h</th>
+                                            <td><input type="number" value="0" data-day="1" data-hour="midi"/></td>
+                                            <td><input type="number" value="0" data-day="2" data-hour="midi"/></td>
+                                            <td><input type="number" value="0" data-day="3" data-hour="midi"/></td>
+                                            <td><input type="number" value="0" data-day="4" data-hour="midi"/></td>
+                                            <td><input type="number" value="0" data-day="5" data-hour="midi"/></td>
+                                            <td><input type="number" value="0" data-day="6" data-hour="midi"/></td>
+                                            <td><input type="number" value="0" data-day="0" data-hour="midi"/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>14h-18h</th>
+                                            <td><input type="number" value="0" data-day="1" data-hour="aprem"></input></td>
+                                            <td><input type="number" value="0" data-day="2" data-hour="aprem"></input></td>
+                                            <td><input type="number" value="0" data-day="3" data-hour="aprem"></input></td>
+                                            <td><input type="number" value="0" data-day="4" data-hour="aprem"></input></td>
+                                            <td><input type="number" value="0" data-day="5" data-hour="aprem"></input></td>
+                                            <td><input type="number" value="0" data-day="6" data-hour="aprem"></input></td>
+                                            <td><input type="number" value="0" data-day="0" data-hour="aprem"></input></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>18h-2h</th>
+                                            <td><input type="number" value="0" data-day="1" data-hour="soir"></input></td>
+                                            <td><input type="number" value="0" data-day="2" data-hour="soir"></input></td>
+                                            <td><input type="number" value="0" data-day="3" data-hour="soir"></input></td>
+                                            <td><input type="number" value="0" data-day="4" data-hour="soir"></input></td>
+                                            <td><input type="number" value="0" data-day="5" data-hour="soir"></input></td>
+                                            <td><input type="number" value="0" data-day="6" data-hour="soir"></input></td>
+                                            <td><input type="number" value="0" data-day="0" data-hour="soir"></input></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" data-dismiss="modal" class="btn btn-default">Fermer</button>
+                                <button type="button" id="save-comis" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END MODAL -->
+
 <script src="/scripts/jquery.js"></script>
 <script type="text/javascript" src="/scripts/jquery-ui-1.9.2.custom.min.js"></script>
 <script src="/scripts/bootstrap.min.js"></script>

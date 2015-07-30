@@ -46,6 +46,18 @@ var addPrice = function(){
     }
     else
         alert('Pas plus de 4 prix');
-
-    $('.partner-price').append()
 }
+
+$('#save-comis').click(function(){
+    var hours = ['matin','midi','aprem','soir'];
+    var comis = [];
+    for(var i=0; i<7; i++){
+        var obj = {};
+        for(var j=0; j<4; j++){
+            obj[hours[j]]= parseInt($('[data-day='+i+'][data-hour='+hours[j]+']').val())/100;
+        }
+        comis.push(obj);
+    }
+    $('#value-comis').val(JSON.stringify(comis));
+    $('#modalComis').modal('hide');
+});

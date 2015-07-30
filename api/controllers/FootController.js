@@ -95,16 +95,18 @@ module.exports = {
     },
 
     updatePlayer: function(req,res){
-      Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
-        Foot.findOne({id: req.param('foot')},function(err,foot){
+      Foot.findOne({id: req.param('foot')},function(err,foot){
           if(!foot) return res.status(200).end();
-          foot.confirmed_players = foot.confirmed_players+1;
-          foot.save(function(err){
           if(err) return res.status(400).end();
-          if(player.length == 0) return res.status(400).end();
-          return res.status(200).end();
-          });
-        });
+          if(foot.confirmed_players < foot.nb_player){
+            foot.confirmed_players = foot.confirmed_players+1;
+            foot.save();
+            Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
+              if(err) return res.status(400).end();
+              return res.status(200).end();
+            });
+          }
+          else return res.status(406).end();
       });
     },
 

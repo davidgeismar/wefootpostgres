@@ -4,14 +4,14 @@
 	font-size: 20px;
 }
 .ui-autocomplete {
-    max-height: 100px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background-color: #fff;
-    cursor: pointer;
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-color: #fff;
+	cursor: pointer;
 }
 * html .ui-autocomplete {
-    height: 100px;
+	height: 100px;
 }
 .content-field img{
 	width: 60%;
@@ -22,7 +22,7 @@
 	width: 100px;
 }
 .next-stage{
-	margin-top: 100px;
+	margin-top: 40px;
 	margin-bottom: 30px;
 }
 .partner-time{
@@ -35,4 +35,45 @@
 }
 .days{
 	margin-left: 3%;
+}
+.btn-comis{
+	margin-bottom: 30px;
+}
+.table-comis th{
+	width: 80px;
+}
+
+.table-comis th,td
+{
+	margin: 0;
+	text-align: center;
+	border-collapse: collapse;
+	outline: 1px solid #e3e3e3;
+}
+
+.table-comis td
+{
+	padding: 5px 10px;
+	width: 80px;
+}
+
+.table-comis th
+{
+	background: #666;
+	color: white;
+	padding: 5px 10px;
+}
+
+.table-comis td:hover
+{
+	cursor: pointer;
+	background: #666;
+	color: white;
+}
+.modal.fade .modal-dialog{
+	width: 800px;
+}
+td input{
+	width: 60px;
+	color: #000;
 }

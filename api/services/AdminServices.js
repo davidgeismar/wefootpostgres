@@ -58,16 +58,22 @@ module.exports = {
 		async.each(dates,function(date,callback){
 			var money = 0;
 			Paiement.find({createdAt: {'>=': date, '<': moment(date).add(1,'Day').format("YYYY-MM-DD")}},function(err,paiements){
-				if(err) callback(err);
-				else{
-					for(var j=0;j<paiements.length;j++){
-						var com = _.find(coms, function(com){ return com.field == paiements[j].field});
-						if(com)
-							money+=Math.round(parseInt(paiements[j].price)*com.hp*10)/10;
+				if(paiements.length==0) callback();
+				_.each(paiements,function(paiement,index){
+					if(err) callback(err);
+					else{
+						Foot.findOne(paiement.foot,function(err,foot){
+							if(err || !foot) callback('err');
+							else{
+								money+= paiement.price*AdminServices.findCommission(coms,paiement.field,foot.date);
+							}
+							if(index == paiements.length-1){
+								earnings.push({date:date, value: money});
+								callback();
+							}
+						});
 					}
-					earnings.push({date:date, value: money});
-					callback();
-				}
+				});
 			});
 		},function(err){
 			if(err) callbackGeneral(0);
@@ -202,10 +208,7 @@ module.exports = {
 				resaData.labels = labels[4] //default
 				Field.findOne({id: resa.field},function(err,field){
 					if(err) callback(err);
-					else if(field){resaData.fieldName = field.name+ " "+ field.telephone;
-						var com = _.find(coms, function(com){ return com.field == resa.field});
-						resaData.com = Math.round(parseInt(resa.price)*com.hp*100)/100;
-					}
+					else if(field) resaData.fieldName = field.name+ " "+ field.telephone;
 					User.findOne({mangoId: resa.user},function(err,user){
 						if(err) callback(err);
 						else if(user) resaData.userInfos = user.first_name+" "+user.last_name+" "+user.telephone;
@@ -222,6 +225,7 @@ module.exports = {
 								if(resa.alert)
 									resaData.statut = 3;
 								resaData.labels = labels[resaData.statut];
+								resaData.com = Math.round(AdminServices.findCommission(coms,resa.field,foot.date)*resa.price*100)/100;
 							}
 							data.push(resaData);
 							callback();
@@ -244,7 +248,16 @@ module.exports = {
 		for(var i=0; i<parseInt(req.param('nbOutdoor')); i++){
 			fields.push({field: req.param('fieldId'),  indoor: false,  prix: req.param('prixOutdoor')});
 		}
-		Field.update(req.param('fieldId'), {partner : true},function(err){if(err) console.log(err);});
+		var url = path.join(__dirname,'../../comis.json');
+		fs.readFile(url,function(err,data){
+			var data = JSON.parse(data);
+
+			data[req.param('fieldId').toString()] = JSON.parse(req.param('comis'));
+			fs.writeFile(url, JSON.stringify(data),function(err){
+				if(err) console.log(err);
+			});
+		});
+		Field.update(req.param('fieldId'), {partner : true, api_ref: 'classic'},function(err){if(err) console.log(err);});
 		async.each(fields,function(field,callback){
 			Terrain.create(field,function(err,terrain){
 				if(err) {console.log(err); callback()}
@@ -286,6 +299,28 @@ module.exports = {
 				if(err) callbackGeneral(err);
 				else callbackGeneral();
 		});
+	},
+
+	findCommission : function(coms,field,date){
+		var comField = coms[field+''];
+		if(comField){
+			var hours = moment(date).hours();
+			var val;
+			if(hours<= 2)
+				val = "soir";
+			else if(hours<=11)
+				val = "matin";
+			else if(hours<=13)
+				val = "midi";
+			else if(hours<=17)
+				val = "aprem";
+			else 
+				val = "soir";
+			var com = comField[new Date(date).getDay()][val];
+			console.log(com);
+		}
+		else com='ERROR';
+		return com;
 	}
 
 	// getMapData: function(callbackGeneral){

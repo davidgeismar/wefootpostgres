@@ -93,11 +93,14 @@ module.exports = {
       if(chatters){
         async.each(chatters,function(chatter,callback){
           Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
-            if(err || !chat){
+            if(err){
               console.log(err);
               return res.status(406).end();         
             }
-
+            else if(!chat){
+              callback();
+            }
+            else{
             Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
               if(usersChatters){
                 var usersID = _.pluck(usersChatters, 'user');
@@ -115,6 +118,7 @@ module.exports = {
                 callback();
               }
             });
+            }
           });
 
 }, function(err){
