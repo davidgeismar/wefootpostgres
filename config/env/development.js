@@ -18,9 +18,9 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'mysql_dev',
+    connection: 'postgres',
     migrate: 'alter'
   },
 
-  port: 1337
+  port: 80
 };
