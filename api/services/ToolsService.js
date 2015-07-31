@@ -26,6 +26,9 @@ module.exports = {
       if(err)
         console.log(err)
       _.each(fields, function(field){
+
+        console.log(field);
+
         Field.update(field.id, {cleanname:ToolsService.clean(field.name)+ToolsService.clean(field.city), origin:'public',createdAt:moment().format(), updatedAt:moment().format(), partner:false})
         .exec(function(err){
             console.log(err);

@@ -22,7 +22,11 @@
       Chat.find({related:req.param('related')}).exec(function(err, chat){
         Chatter.create({user:req.param('user'), chat:chat.id}).exec(function(err, chatter){
           User.findOne(req.param('user')).exec(function(err,user){
-            sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
+            Connexion.findOne({user: req.param('user')},function(err,connexion){
+              if(err || !connexion)
+                return res.status(400).end();
+              sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
+            });
           });
         });
       });
