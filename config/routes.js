@@ -38,6 +38,8 @@
 
   'GET /user/get/:id': 'UserController.get',
 
+  'GET /user/:id': 'UserController.getWholeUser',
+
   'GET /foot/get/:id': 'FootController.get',
 
   'GET /search/:word': 'UserController.search',
@@ -80,7 +82,7 @@
 
   'GET /getVoters/:footId' : 'VoteController.getVoters',
 
-  'GET /getChatNotif/:id' :'Chat.getChatNotif',
+  // 'GET /getChatNotif/:id' :'Chat.getChatNotif',
 
   '/player/update': 'FootController.updatePlayer',
 
@@ -104,7 +106,9 @@
 
   'GET /chat/getChat/:id/:related' : 'ChatController.getChat',
 
-  'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes'
+  'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes',
+
+  'GET /field/getStudentDiscount/:id' :'FieldController.getStudentDiscount',
 
   /***************************************************************************
   *                                                                          *

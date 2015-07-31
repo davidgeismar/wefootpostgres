@@ -1,24 +1,29 @@
-  module.exports =  function isLoggedIn (req, res, next){   // FIX BUGS HERE
+  module.exports =  function isLoggedIn (req, res, next){  
    var jwt = require('jsonwebtoken');   
    var auth = req.headers["authorization"];
-       if(typeof auth !=='undefined'){                                              //Checking auth is not null
-        jwt.verify(auth,'123Tarbahh',function (err,decoded) {     // Decode token
-          if(err) return next(err);
-          if(!decoded.id || !decoded.id==req.param('id')){
-            console.log(" no autorization ");
-            return res.redirect('/');     // Check if token matches users token  
-                
-          }
-          else {
-            //res.status(200).end();
-            console.log("autorization");
-            next();
-          }
-        });
+
+   if(typeof auth !=='undefined'){                                              
+    jwt.verify(auth,'123Tarbahh',function (err,decoded) {   
+      if(err){
+        console.log("1 not autorized");
+        return res.status(401).end();       
+        next(); 
+      } 
+      if(decoded){
+        next();
+      }
+      else{
+        console.log("2 not autorized");
+        return res.status(401).end();   
+        next();  
       }
 
-      else{ 
-        console.log(" no autorization ");
-        return res.redirect('/');
-      }
-    };
+    });
+  }
+
+  else{ 
+    console.log("3 not autorized");
+    return res.status(401).end(); 
+    next(); 
+  }
+};

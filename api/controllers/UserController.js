@@ -40,6 +40,14 @@
       return res.status(200).json(user);
     })
   },
+
+    getWholeUser: function(req,res){
+    User.findOne(req.param('id'),function(err,user){
+      if(err) return res.status(400).end();
+      if(!user) return res.status(200).end();
+      return res.status(200).json(user);
+    })
+  },
   
   profil: function(req, res, next){
     var jwt = require('jsonwebtoken');   

@@ -215,38 +215,38 @@ getUnseenMessages: function (req, res, next){
  });
 },
 
-getChatNotif : function (req, res){
+// getChatNotif : function (req, res){
 
-  var chats = [];
+//   var chats = [];
 
-  Chatter.find({id:req.param('id')}).exec(function(err,chatters){
+//   Chatter.find({id:req.param('id')}).exec(function(err,chatters){
 
-    if(err){
-      return res.status(406).end();         
-    }
-    if(chatters){
-      async.each(chatters,function(chatter,callback){
+//     if(err){
+//       return res.status(406).end();         
+//     }
+//     if(chatters){
+//       async.each(chatters,function(chatter,callback){
 
-        Chat.findOne({id:chatter.chat}).exec(function(err,chat){
-          if(err){
-            return res.status(406).end();         
-          }
-          chats.push({chat : chat , lastTime : chatter.last_time_seen});
-        });
+//         Chat.findOne({id:chatter.chat}).exec(function(err,chat){
+//           if(err){
+//             return res.status(406).end();         
+//           }
+//           chats.push({chat : chat , lastTime : chatter.last_time_seen});
+//         });
 
-      }, function(err){
-        if(err){
-          console.log(err);
-        }
-        else {
-          return res.status(200).json(chats);
-        }
-      });
-    }
-    else return res.status(200).end();
-  });
+//       }, function(err){
+//         if(err){
+//           console.log(err);
+//         }
+//         else {
+//           return res.status(200).json(chats);
+//         }
+//       });
+//     }
+//     else return res.status(200).end();
+//   });
 
-}
+// }
 
 };
 

@@ -49,21 +49,118 @@ module.exports.policies = {
     // feed : ['isNiceToAnimals', 'hasRabbitFood']
   // }
 
-  // '*':'isLoggedIn',
+  '*':'isLoggedIn',
 
-  // UserController: {
+  ActuController: {
+    getNotif: 'isLoggedInParam(\'id\')',
+    // getActu,
+    // newNotif
+  },
+  AdminController:{
+    '*':true
+    // ,
+    // index:true,
+    // login:true,
 
-  //   facebookConnect: true,
-  //   create: true,
 
+  },
 
+  ChatController:{
+    // create
+    // getChat
+    getAllChats: 'isLoggedInParam(\'id\')',
+    getNewChats: 'isLoggedInParam(\'id\')',
+    // getNewChatters
+    getUnseenMessages:'isLoggedInParam(\'id\')',
+  },
+  ChatterController:{
+    updateLts: 'isLoggedInParam(\'user\')',
+    // addToChat
+    deactivateFromChat: 'isLoggedInParam(\'user\')'
+  },
+  ConnexionController:{
+    setSocket: 'isLoggedInParam(\'id\')'
+    // delete
+  },  
+  FieldController:{
+    // create
+    // uploadPic
+    // searchFields
+    // getAllFields
+  },
+  FootController:{
+    create: 'isLoggedInParam(\'created_by\')',
+    update:'isFootOwner',
+    getFootByUser:'isLoggedInParam(\'player\')',
+    // getInfo
+    // getPlayers
+    updatePlayer:'isLoggedInParam(\'user\')',
+    // getAllPlayers
+    // sendInvits
+    removePlayer: 'isFootOwner',
+    refusePlayer: 'isFootOwner',
+    deleteFoot: 'isFootOwner',
+    // query
+    askToPlay:'isLoggedInParam(\'user\')',
+  },
+  FriendshipController:{
+  deleteFriend: 'isLoggedInParams(\'user1\', \'user2\')'
+  },
 
-  // },
+  MessageController:{
+    create: 'isLoggedInParam(\'sender_id\')',
+  },
 
-  // SessionController: {
+  NotationContoller:{
+    // getGrade
+    grade:'isLoggedInParam(\'noteur\')',
+    // getDetailledGrades
+  },
 
-  //   login: true
+  PaiementController:{
+    // update
+    getCards:'isLoggedInParam(\'user\')',
+    registerCard:'isLoggedInParam(\'user\')',
+    preauthorize:'mangoCheck'
+    // transferMoney
+  },
+  PushController:{
+    // create:'isLoggedInParam(\'user\')'
+  },
+  ReservationController:{
+    // getTerrainsFree:isFootOwner
+    // create
+    // google_calender_getAuth
+    // google_calender_getToken
+  },
 
-  // }
+  UserController: {
+    facebookConnect: true,
+    create: true,
+    update:'isLoggedInParam(\'id\')',
+    // get
+    // getWholeUser
+    // profil
+    // uploadProfilPic
+    // search
+    addFriend:'isLoggedInParams(\'user1\', \'user2\')',
+    getAllFriends:'isLoggedInParam(\'id\')',
+    addFavorite:'isLoggedInParams(\'id1\', \'id2\')',
+    removeFavorite:'isLoggedInParams(\'id1\', \'id2\')',
+    newPassword:true,
+    resetPassword:true,
+    updateSeen:'isLoggedInParam(\'id\')',
+    getLastNotif:'isLoggedInParam(\'id\')'
+    // toConfirm
+
+  },
+  TropheController:{
+    // getNbTrophes
+  },
+  SessionController: {
+    login: true
+    // isConnected
+  },
+
 
 };

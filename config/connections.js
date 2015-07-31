@@ -40,7 +40,7 @@
   * Run: npm install sails-mysql                                             *
   *                                                                          *
   ***************************************************************************/
-  mysql: {
+  mysql_dev: {
     adapter: 'sails-mysql',
     host: 'localhost',
     port:   8889,
@@ -49,9 +49,9 @@
     database: 'wefoot'
   },
   
-  mysql_dev: {
+  mysql: {
     adapter: 'sails-mysql',
-    host: 'localhost',
+    host: '62.210.115.66',
     port:   3306,
     user: 'root',
     password: 'labzeur1230',
