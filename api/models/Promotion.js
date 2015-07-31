@@ -19,7 +19,7 @@ module.exports = {
   		required: true,
   	},
     promo:{
-      type:'double',
+      type:'float',
       required: true,
     },
     terrain:{

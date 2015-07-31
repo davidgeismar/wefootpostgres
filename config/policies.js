@@ -82,9 +82,9 @@ module.exports.policies = {
     deactivateFromChat: 'isLoggedInParam(\'user\')'
   },
   ConnexionController:{
-    setSocket: 'isLoggedInParam(\'id\')',
+    setSocket: 'isLoggedInParam(\'id\')'
     // delete
-  },
+  },  
   FieldController:{
     // create
     // uploadPic
@@ -107,7 +107,7 @@ module.exports.policies = {
     askToPlay:'isLoggedInParam(\'user\')',
   },
   FriendshipController:{
-  deleteFriend: 'isLoggedIn(\'user1\', \'user2\')'
+  deleteFriend: 'isLoggedInParams(\'user1\', \'user2\')'
   },
 
   MessageController:{
@@ -123,8 +123,8 @@ module.exports.policies = {
   PaiementController:{
     // update
     getCards:'isLoggedInParam(\'user\')',
-    registerCard:'isLoggedInParam(\'user\')'
-    // preauthorize
+    registerCard:'isLoggedInParam(\'user\')',
+    preauthorize:'mangoCheck'
     // transferMoney
   },
   PushController:{
@@ -146,10 +146,10 @@ module.exports.policies = {
     // profil
     // uploadProfilPic
     // search
-    addFriend:'isLoggedIn(\'user1\', \'user2\')',
-    getAllFriends:'isLoggedIn(\'user1\', \'user2\')',
-    addFavorite:'isLoggedIn(\'user1\', \'user2\')',
-    removeFavorite:'isLoggedIn(\'user1\', \'user2\')',
+    addFriend:'isLoggedInParams(\'user1\', \'user2\')',
+    getAllFriends:'isLoggedInParam(\'id\')',
+    addFavorite:'isLoggedInParams(\'id1\', \'id2\')',
+    removeFavorite:'isLoggedInParams(\'id1\', \'id2\')',
     newPassword:true,
     resetPassword:true,
     updateSeen:'isLoggedInParam(\'id\')',

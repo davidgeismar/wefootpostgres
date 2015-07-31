@@ -232,6 +232,59 @@ module.exports = {
 				else callbackGeneral(data);
 			});
 		});
+	},
+
+	addPartner: function(req,callbackGeneral){
+		var fields = [];
+		var promos = [];
+		for(var i=0; i<parseInt(req.param('nbIndoor')); i++){
+			fields.push({field: req.param('fieldId'),  indoor: true,  prix: req.param('prixIndoor')});
+		}
+		for(var i=0; i<parseInt(req.param('nbOutdoor')); i++){
+			fields.push({field: req.param('fieldId'),  indoor: false,  prix: req.param('prixOutdoor')});
+		}
+		Field.update(req.param('fieldId'), {partner : true},function(err){if(err) console.log(err);});
+		async.each(fields,function(field,callback){
+			Terrain.create(field,function(err,terrain){
+				if(err) {console.log(err); callback()}
+				else{
+					for(var j=1; j<=3; j++){
+						if(req.param('day'+j) && req.param('day'+j).length>0){
+							var days = req.param('day'+j);
+							var obj = {};
+							obj.repetitions = 1;
+							obj.terrain = terrain.id;
+							if(terrain.indoor) var price = req.param('prixIndoor'+j);
+							else var price = req.param('prixOutdoor'+j);
+							obj.promo = price/parseFloat(terrain.prix);
+							obj.promo = parseFloat(obj.promo);
+
+
+							for(var i = 0; i<days.length; i++){
+								obj.repetitions*= days[i];
+							}
+							obj.repetitions += '';
+						
+							var heureDebut = req.param('time'+j+'Start');
+							var heureFin = req.param('time'+j+'End');
+							obj.heureDebut = moment().set({'hour': parseInt(heureDebut.substring(0,heureDebut.indexOf(':'))),
+															 'minute': parseInt(heureDebut.substring(heureDebut.indexOf(':')+1,heureDebut.length)),
+															 'second': 00}).format();
+							obj.heureFin = moment().set({'hour': parseInt(heureFin.substring(0,heureFin.indexOf(':'))),
+															 'minute': parseInt(heureFin.substring(heureFin.indexOf(':')+1,heureFin.length)),
+															 'second': 00}).format();
+							Promotion.create(obj,function(err){
+								if(err) console.log(err);;
+							});
+						}
+					}
+					callback();
+				}
+			});
+		},function(err){
+				if(err) callbackGeneral(err);
+				else callbackGeneral();
+		});
 	}
 
 	// getMapData: function(callbackGeneral){

@@ -5,24 +5,25 @@
    if(typeof auth !=='undefined'){                                              
     jwt.verify(auth,'123Tarbahh',function (err,decoded) {   
       if(err){
-        return res.redirect('/');       
+        console.log("1 not autorized");
+        return res.status(401).end();       
         next(); 
       } 
       if(decoded){
         next();
-     }
-     else{
-      console.log("not autorized");
-      return res.redirect('/');      
-      next();  
-    }
+      }
+      else{
+        console.log("2 not autorized");
+        return res.status(401).end();   
+        next();  
+      }
 
-  });
+    });
   }
 
   else{ 
-    console.log("not autorized");
-    return res.redirect('/');
+    console.log("3 not autorized");
+    return res.status(401).end(); 
     next(); 
   }
 };

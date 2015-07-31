@@ -114,9 +114,21 @@ else
       if(err) res.status(400).end();
       else res.status(200).json(field);
     });
+  },
+
+  getFieldInfo: function(req,res){
+    Field.findOne({name: req.param('name')},function(err,field){
+      if(err || !field) res.status(400).end();
+      else res.status(200).json(field);
+    });
+  },
+
+  getStudentDiscount:function(req, res){
+    Field.findOne(req.param('id')).exec(function(err,field){
+      if(err) return res.status(400).end();
+      return res.status(200).json(field.student_discount);
+    });
   }
-
-
 
 };
 

@@ -106,6 +106,10 @@ mail:{
     api_ref:{
       type: 'string',    //Function in ResaService for the field
       defaultsTo: false
+    },
+    student_discount:{
+      type:'double',
+      defaultsTo:0
     }
   }
 };

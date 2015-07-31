@@ -51,6 +51,8 @@
   'GET /field/search/:id/:word': 'FieldController.searchFields', //DEPRECATED
 
   'GET /field/near/:lat/:long':'FieldController.searchFields', //DEPRECATED
+  
+  'GET /field/getFieldInfo/:name': 'FieldController.getFieldInfo', 
 
   '/addFriend': 'UserController.addFriend',
   
@@ -104,7 +106,9 @@
 
   'GET /chat/getChat/:id/:related' : 'ChatController.getChat',
 
-  'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes'
+  'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes',
+
+  'GET /field/getStudentDiscount/:id' :'FieldController.getStudentDiscount',
 
   /***************************************************************************
   *                                                                          *

@@ -110,6 +110,19 @@ module.exports = {
 		else{
 			res.view({admin: req.session.admin,layout:'admin/layout-admin.ejs'});		
 		}
+	},
+
+	addPartner: function(req,res){
+		if(req.session.admin && req.session.admin.id){
+			AdminServices.addPartner(req,function(err){
+				if(err){
+					res.redirect('/admin/partner'); 
+				} 
+				res.redirect('/admin/dashboard/'+req.session.admin.id);
+			});
+		}
+		else 
+			res.status(403).end();
 	}
 
 };

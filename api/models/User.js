@@ -176,6 +176,12 @@ nb_connection:{
   type:'int',
   defaultsTo: 0
 },
+last_lat:{
+  type: 'float'
+},
+last_long:{
+  type: 'float'
+},
 
 toJSON: function(){
   var obj= this.toObject();

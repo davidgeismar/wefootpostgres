@@ -10,7 +10,7 @@ var credentials = {}; //Store temp infos for google cal
 module.exports = {
 
 	getTerrainsFree: function(req,res){
-		var resa = {date: req.param('date'), indoor: req.param('indoor'), field: req.param('field')};
+		var resa = {date: moment(req.param('date')).format(), date_fin:moment(req.param('date').format()).add(req.param('duree'), 'minutes').format(), indoor: req.param('indoor'), field: req.param('field'), student_discount:req.param('student')};
 			ResaService[req.param('api_ref')](resa,function(terrain){
 				if(terrain === 0) return res.status(400).end();
 				res.status(200).json(terrain);
@@ -89,17 +89,15 @@ module.exports = {
 // },
 
 	create: function (req,res){
-			ResaService.classic_create(req.params.all(),function(){
+			ResaService.classic_create(req.params.all(),function(resa){
+				if(resa === 0) return res.status(400).end();
 				if(req.param('api_ref')!='classic'){
 					ResaService[req.param('api_ref')+'_create'](req.params.all(),function(resa){
 						if(resa===0) res.status(400).end();
 						res.status(200).json(resa);
 					});
 				}
-				else{
-					if(resa===0) res.status(400).end();
-						res.status(200).json(resa);
-				}
+				else res.status(200).json(resa);
 			});
 	},
 
