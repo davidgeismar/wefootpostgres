@@ -13,26 +13,25 @@ var resaService =  {
 		datePremier = premiers[datePremier.getDay()]; //Match a primary number with a day of the week
 		Promotion.find({terrain: terrain.id}, function foundPromotions (err, promotions) {
 			if(err) throw err;
-			var PromoDay = _.reject(promotions,function(promo){
-				return promo.repetitions % datePremier != 0; 
-			});
-
-			var dateJJ = moment(date).format('HH:mm:ss');
-			var PromoDayTerr = _.reject(PromoDay,function(promo){
-				return( (promo.heureDebut > dateJJ) && (promo.heureDebut < dateJJ)); 
-			});
-			if(PromoDayTerr.length && PromoDayTerr.length>0) 
-				promotion = PromoDayTerr[0];
-			console.log(PromoDayTerr);
-			if(promotion)
-				callback(promotion.promo*terrain.prix);
+			if(promotions.length>0){
+				var PromoDay = _.reject(promotions,function(promo){
+					return promo.repetitions % datePremier != 0; 
+				});
+				var dateJJ = moment(date).format('HH:mm:ss');
+				var PromoDayTerr = _.reject(PromoDay,function(promo){
+					return( (promo.heureDebut > dateJJ) && (promo.heureDebut < dateJJ)); 
+				});
+				if(PromoDayTerr.length && PromoDayTerr.length>0) 
+					callback(PromoDayTerr[0].promo*terrain.prix);
+			}
 			else
 				callback(terrain.prix);
-			return;
 		});		
 	},
 
+
 	classic : function (resa,callback) {
+
 		Terrain.find({field: resa.field,  indoor: resa.indoor }, function foundTerrains (err, terrains) {
 			if(err) callback(0);
 			var terrainsId = _.pluck(terrains,'id');
@@ -45,13 +44,15 @@ var resaService =  {
 					return _.contains(reservationsTerrain, num.id); 
 				});
 				if(terrainsFree.length>0){
+
 					var prix = ResaService.getPrix(terrainsFree[0],resa.date, function(prix){
 						if(resa.student_discount>0)
-							terrainsFree[0].prix = prix*(1-resa.student_discount);
+							terrainsFree[0].prix = prix*(1-resa.student_discount)*resa.duree/60;
 						else
-							terrainsFree[0].prix = prix;
+							terrainsFree[0].prix = prix*resa.duree/60;
 						callback(terrainsFree[0]);
 						return;
+
 					});
 				}
 				else{ callback(false); return }; //Field not available

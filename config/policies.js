@@ -57,15 +57,12 @@ module.exports.policies = {
     // newNotif
   },
   AdminController:{
-    // index
-    // login
-    // dashboard
-    // tables
-    // resas
-    // map
-    // notify
-    // sendNotif
-    // partner
+    '*':true
+    // ,
+    // index:true,
+    // login:true,
+
+
   },
 
   ChatController:{
