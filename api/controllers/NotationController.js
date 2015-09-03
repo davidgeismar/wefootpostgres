@@ -26,8 +26,9 @@
  				return res.status(406).end();         
  			}
  			if(note.length == 0){
-
- 				Notation.create(req.params.all()).exec(function notationCr(err, noteC){
+ 				var params = req.params.all();
+				delete params.id;
+ 				Notation.create(params).exec(function notationCr(err, noteC){
  					return res.status(200).json(noteC);
  				});
  			}

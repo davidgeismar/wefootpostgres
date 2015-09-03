@@ -8,7 +8,9 @@
 module.exports = {
 
   create: function(req, res){
-        Foot.create(req.params.all(), function FootCreated(err, foot){
+      var params = req.params.all(); //An id with undefined appears with postgres. TODO: fix it
+      delete params.id;
+        Foot.create(params, function FootCreated(err, foot){
             if(err){
                 console.log(err);
                 return res.status(406).end();         
@@ -46,9 +48,12 @@ module.exports = {
     
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
       var moment = require('moment');
-      Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:MM:SS')+"' ORDER BY f.date", function(err,foots){
+      console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+      Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:mm:ss')+"' ORDER BY f.date", function(err,foots){
+        console.log(err);
         if(err) return res.status(400).end();
-        return res.json(foots).status(200).end();
+        //Using foot.rows for postgres queries
+        return res.json(foots.rows).status(200).end();
       });
     },
 
@@ -71,7 +76,9 @@ module.exports = {
         if(err) return res.status(400).end();
         if(!field) return res.status(400).end();
         //Careful, the date in field[0] belongs to the foot
-        info.field = field[0];
+        //info.field = field[0]; FOR POSTGRES
+        info.field = field.rows[0]; //FOR POSTGRES
+        console.log(info.field);
         if(info.orgaName) return res.json(info).status(200).end();
       });      
     },

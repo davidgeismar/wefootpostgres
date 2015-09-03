@@ -13,8 +13,9 @@ module.exports = {
  	//TO DO : VERIFIER QUE L'ELECTION N'EST PAS TERMINEE (PEUT ETRE SUR LE FRONT)
 
  	create: function(req, res, next){
-
-    Vote.create(req.params.all(), function VoteCreated(err, vote){
+    var params = req.params.all();
+    delete params.id;
+    Vote.create(params, function VoteCreated(err, vote){
       if(err){
        console.log(err);
        return res.status(406).end();   

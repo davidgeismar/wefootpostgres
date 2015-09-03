@@ -9,7 +9,9 @@
 
   create: function(req, res, next){
     var jwt = require('jsonwebtoken');
-    User.create(req.params.all(), function userCreated(err, user){
+    var params = req.params.all();
+    delete params.id;
+    User.create(params, function userCreated(err, user){
       if(err){
         console.log(err);
         return res.status(406).end();         

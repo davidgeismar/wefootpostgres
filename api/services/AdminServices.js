@@ -9,28 +9,29 @@ module.exports = {
 		
 		allReq.push(function(callback){
 			User.query('SELECT COUNT(*) FROM user',function(err,user){
-				counters.user = user[0]['COUNT(*)'];
+				console.log(user);
+				counters.user = user.rows[0]['count'];// Using rows for postgres
 				callback();
 			});
 		});
 
 		allReq.push(function(callback){
 			Foot.query('SELECT COUNT(*) FROM foot',function(err,foot){
-				counters.foot = foot[0]['COUNT(*)'];
+				counters.foot = foot.rows[0]['count'];
 				callback();
 			});
 		});
 
 		allReq.push(function(callback){
 			Reservation.query('SELECT COUNT(*) FROM reservation',function(err,resa){
-				counters.resa = resa[0]['COUNT(*)'];
+				counters.resa = resa.rows[0]['count'];
 				callback();
 			});			
 		});
 
 		allReq.push(function(callback){
 			Connexion.query('SELECT COUNT(*) FROM connexion',function(err,connection){
-				counters.connection = connection[0]['COUNT(*)'];
+				counters.connection = connection.rows[0]['count'];
 				callback();
 			});
 		});
@@ -136,10 +137,10 @@ module.exports = {
 				var userData = user;
 				Player.query('SELECT COUNT(*) FROM player WHERE user = '+user.id,function(err,nb){
 					if(err) callback(err);
-					else userData.played_foot = nb[0]['COUNT(*)'];
+					else userData.played_foot = nb.rows[0]['count'];
 					Player.query('SELECT COUNT(*) FROM player WHERE user = '+user.id+' AND statut = 3',function(err,nb){
 						if(err) callback(err);
-						else userData.created_foot = nb[0]['COUNT(*)'];
+						else userData.created_foot = nb.rows[0]['count'];
 						Connexion.findOne({user: user.id},function(err,connection){
 							if(err) callback(err);
 							if(connection) userData.connexion = true;

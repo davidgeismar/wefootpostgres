@@ -10,7 +10,9 @@
  module.exports = {
 
   create: function(req, res, next){
-    Field.create(req.params.all(), function FieldCreated(err, field){
+    var params = req.params.all();
+    delete params.id;
+    Field.create(params, function FieldCreated(err, field){
       if(err){
         console.log(err);
         return res.status(406).end();         

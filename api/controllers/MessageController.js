@@ -4,7 +4,9 @@ module.exports = {
 
  	//Création d'un message contenu dans un chat
  	create: function(req, res, next){
- 		Message.create(req.params.all()).exec(function(err, message) {
+ 		var params = req.params.all();
+		delete params.id;
+ 		Message.create(params).exec(function(err, message) {
  			if(err){
  				console.log(err);
  				return res.status(406).end();         

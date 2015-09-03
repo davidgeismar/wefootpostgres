@@ -94,6 +94,15 @@
      password: '9XBYDf_CwYJsozc_WHOHk07gK9',
      database: 'd1dg5dohvl8hho',
      ssl: true
+   },
+
+   postgresTest: {
+      adapter: 'sails-postgresql',
+      host: 'localhost',   
+      port: 5432,
+      user: 'raphaelfettaya',
+      password: '',
+      database: 'wefoot'
    }
 
 

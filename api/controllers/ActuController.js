@@ -37,7 +37,9 @@ newNotif: function(req,res){
 	if( typ && typ =='WF'){ //Prevents hacking
 		return res.status(406).end();
 	}
-	Actu.create(req.params.all(),function(err,actu){
+	var params = req.params.all();
+	delete params.id;
+	Actu.create(params,function(err,actu){
 		if(err) return res.status(400).end();
 		Connexion.find().where({user: req.param('user')}).exec(function(err,connexions){
 			if(err) return res.status(400).end();
