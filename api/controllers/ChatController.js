@@ -31,9 +31,9 @@ module.exports = {
           var smallUsers = shrinkUsers(bigUsers);
           Connexion.find({user:req.param('users')}).exec(function(err, connexions){
             if(connexions){
-              var allSocks = JSON.stringify(sails.sockets.subscribers());
+              // var allSocks = JSON.stringify(sails.sockets.subscribers());
               async.each(connexions,function(connexion,callback2){
-                if(allSocks.indexOf(connexion.socket_id)>-1)
+                // if(allSocks.indexOf(connexion.socket_id)>-1)
                   sails.sockets.emit(connexion.socket_id,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
                 callback2();
               }
