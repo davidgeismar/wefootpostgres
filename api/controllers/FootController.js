@@ -49,7 +49,6 @@ module.exports = {
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
       var moment = require('moment');
       Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:mm:ss')+"' ORDER BY f.date", function(err,foots){
-        console.log(err);
         if(err) return res.status(400).end();
         //Using foot.rows for postgres queries
         return res.json(foots.rows).status(200).end();

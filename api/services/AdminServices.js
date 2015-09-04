@@ -8,16 +8,16 @@ module.exports = {
 		var counters = {};
 		
 		allReq.push(function(callback){
-			User.query('SELECT COUNT(*) FROM user',function(err,user){
-				console.log(user);
-				counters.user = user.rows[0]['count'];// Using rows for postgres
+			User.find(function(err,users){
+				console.log(err);
+				 counters.user = users.length; //Problem couting users with postgres
 				callback();
 			});
 		});
 
 		allReq.push(function(callback){
 			Foot.query('SELECT COUNT(*) FROM foot',function(err,foot){
-				counters.foot = foot.rows[0]['count'];
+				counters.foot = foot.rows[0]['count']; // Using rows for postgres
 				callback();
 			});
 		});
@@ -135,20 +135,24 @@ module.exports = {
 			users = shrinkUsers(users);
 			async.eachLimit(users,50,function(user,callback){
 				var userData = user;
-				Player.query('SELECT COUNT(*) FROM player WHERE user = '+user.id,function(err,nb){
+				Player.query("SELECT COUNT(*) FROM player p WHERE p.user = "+user.id,function(err,nb){
 					if(err) callback(err);
-					else userData.played_foot = nb.rows[0]['count'];
-					Player.query('SELECT COUNT(*) FROM player WHERE user = '+user.id+' AND statut = 3',function(err,nb){
-						if(err) callback(err);
-						else userData.created_foot = nb.rows[0]['count'];
-						Connexion.findOne({user: user.id},function(err,connection){
+					else{ userData.played_foot = nb.rows[0]['count'];
+						Player.query("SELECT COUNT(*) FROM player p WHERE p.user = "+user.id+" AND statut = 3",function(err,nb){
 							if(err) callback(err);
-							if(connection) userData.connexion = true;
-							else userData.connexion = false;
-							data.push(userData);
-							callback();
+							else{ userData.created_foot = nb.rows[0]['count'];
+								Connexion.findOne({user: user.id},function(err,connection){
+									if(err) callback(err);
+									else {
+										if(connection) userData.connexion = true;
+										else userData.connexion = false;
+										data.push(userData);
+										callback();
+									}
+								});
+							}
 						});
-					});
+					}
 				});
 			},function(err){
 				if(err){console.log(err); callbackGeneral(0);}
