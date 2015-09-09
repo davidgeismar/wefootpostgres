@@ -173,13 +173,16 @@ module.exports = {
             Foot.find().where({
               field: fieldsId,
               priv: false,
-              date: {
-                'contains': moment(req.param('date')).format().substring(0,10)
+              date: {   //Changes for Postgres
+                '>=': moment(req.param('date')).hours(0).minutes(0).seconds(0).format(),
+                '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format()
               }
             }).exec(function(err,foots){
                 if(err) return res.status(400).end();
                 if(foots[0])
                   res.status(200).json(foots);
+                else
+                  res.status(200).json([]);
             });
         });
     },

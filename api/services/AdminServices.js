@@ -10,7 +10,7 @@ module.exports = {
 		allReq.push(function(callback){
 			User.find(function(err,users){
 				console.log(err);
-				 counters.user = users.length; //Problem couting users with postgres
+				counters.user = users.length; //Problem couting users with postgres
 				callback();
 			});
 		});

@@ -18,9 +18,9 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'postgres',
+    connection: 'postgresTest',
     migrate: 'safe'
   },
 
-  port: 80
+  port: 1337
 };
