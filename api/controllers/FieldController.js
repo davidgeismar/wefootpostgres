@@ -111,26 +111,46 @@ else
 });    
 },
 
-  getAllFields: function(req,res){
-    Field.find({origin: 'public'},function(err,field){
-      if(err) res.status(400).end();
-      else res.status(200).json(field);
-    });
-  },
+getAllFields: function(req,res){
+  Field.find({origin: 'public'},function(err,field){
+    if(err) res.status(400).end();
+    else res.status(200).json(field);
+  });
+},
 
-  getFieldInfo: function(req,res){
-    Field.findOne({name: req.param('name')},function(err,field){
-      if(err || !field) res.status(400).end();
-      else res.status(200).json(field);
-    });
-  },
+setPicture: function(req,res){
+  Field.find().limit(4000).exec(function(err, fields){
+    if(err)
+      console.log(err)
+    _.each(fields, function(field){
 
-  getStudentDiscount:function(req, res){
-    Field.findOne(req.param('id')).exec(function(err,field){
-      if(err) return res.status(400).end();
-      return res.status(200).json(field.student_discount);
+      console.log(field);
+
+      Field.update(field.id, 
+      {
+            // cleanname:ToolsService.clean(field.name)+ToolsService.clean(field.city), origin:'public',createdAt:moment().format(), updatedAt:moment().format(), partner:false
+            picture:"http://wefoot.herokuapp.com/images/fields/"+field.id+".jpg"
+          })
+      .exec(function(err){
+        console.log(err);
+      });
     });
-  }
+  });
+},
+
+getFieldInfo: function(req,res){
+  Field.findOne({name: req.param('name')},function(err,field){
+    if(err || !field) res.status(400).end();
+    else res.status(200).json(field);
+  });
+},
+
+getStudentDiscount:function(req, res){
+  Field.findOne(req.param('id')).exec(function(err,field){
+    if(err) return res.status(400).end();
+    return res.status(200).json(field.student_discount);
+  });
+}
 
 };
 
