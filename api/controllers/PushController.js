@@ -41,6 +41,12 @@
  		});
  	},
 
+ 	delete: function(req,res){
+ 		Push.destroy({push_id: req.param('push_id')}, function(err){
+ 			return res.status(200).end();
+ 		});
+ 	}
+
 
 
  };
