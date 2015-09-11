@@ -90,16 +90,16 @@ module.exports.policies = {
   },
   FootController:{
     create: 'isLoggedInParam(\'created_by\')',
-    update:'isFootOwner',
+    update:'isFootOwnerParam(\'id\')',
     getFootByUser:'isLoggedInParam(\'player\')',
     // getInfo
     // getPlayers
     updatePlayer:'isLoggedInParam(\'user\')',
     // getAllPlayers
     // sendInvits
-    removePlayer: 'isFootOwner',
-    refusePlayer: 'isFootOwner',
-    deleteFoot: 'isFootOwner',
+    removePlayer: 'isFootOwnerParam(\'foot\')',
+    refusePlayer: 'isFootOwnerParam(\'foot\')',
+    deleteFoot: 'isFootOwnerParam(\'foot\')',
     // query
     askToPlay:'isLoggedInParam(\'user\')',
   },
