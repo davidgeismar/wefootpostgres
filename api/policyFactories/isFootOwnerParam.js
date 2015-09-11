@@ -2,7 +2,6 @@ module.exports = function(param){
 	return function(req, res, next){
 		var jwt = require('jsonwebtoken');   
   	var auth = req.headers["authorization"];
-
   	if(typeof auth !=='undefined'){                                              
   		jwt.verify(auth,'123Tarbahh',function (err,decoded) {   
   			if(err){
@@ -10,7 +9,7 @@ module.exports = function(param){
   				next(); 
   			} 
   			if(decoded){
-  				Foot.find(req.param(param)).exec(function(err, foot){
+  				Foot.findOne(req.param(param)).exec(function(err, foot){
   					if(err){
   						return res.status(401).end();      
   						next();	

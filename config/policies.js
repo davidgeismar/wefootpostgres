@@ -97,7 +97,7 @@ module.exports.policies = {
     updatePlayer:'isLoggedInParam(\'user\')',
     // getAllPlayers
     // sendInvits
-    removePlayer: 'isFootOwnerParam(\'foot\')',
+    removePlayer: 'isLoggedInParam(\'user\')',
     refusePlayer: 'isFootOwnerParam(\'foot\')',
     deleteFoot: 'isFootOwnerParam(\'foot\')',
     // query
