@@ -365,27 +365,24 @@ resetPassword: function(req,res){
 },
 
 newPassword: function(req,res){
-
-
   User.findOne({email:req.param('email'), password_reset_token:req.param('token')}).exec(function(err,user){
     if(err)
       return res.status(406).end();
     if(!user || !user.password_reset_token)
       return res.status(406).end();
     else{
-      User.update({email:req.param('email')}, {password:req.param('password'), password_reset_token:null}).exec(function(err, updatedUser){
-        // return res.status(200).message("Le mot de passe a bien été modifié");
-        if(err){
-          console.log(err);
-          return res.status(406);
-        }
-        return res.status(200);
-
-
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(req.param('password'), salt, function(err, hash) {
+          if (err) return next(err);
+          user.password = hash;
+          user.password_confirmation = hash;
+          user.password_reset_token = null;
+          user.save(function(err){
+            return res.status(200);
+          });
+        });
       });
-
     }
-
   });
 },
 

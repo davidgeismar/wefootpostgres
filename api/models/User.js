@@ -36,7 +36,9 @@ beforeCreate: function (attrs, next) {
   bcrypt.genSalt(10, function(err, salt) {
     if (err) return next(err);
     if(attrs.password){
+      console.log(attrs.password);
       bcrypt.hash(attrs.password, salt, function(err, hash) {
+        console.log(hash);
         if (err) return next(err);
         attrs.password = hash;
         attrs.password_confirmation = hash;
@@ -53,22 +55,7 @@ beforeCreate: function (attrs, next) {
 
 
 //permet de recrypter le MDP après modification
-beforeUpdate: [ function(attrs, next) {
-  if (!attrs.password) {
-    next();
-  }
-  else{
-    bcrypt.genSalt(10, function(err, salt) {
-      bcrypt.hash(attrs.password, salt, function(err, hash) {
-        if (err) return next(err);
-        attrs.password = hash;
-        attrs.password_confirmation = hash;
-        next();
-      });
-    });
-  }
-}
-],
+
 
 
 

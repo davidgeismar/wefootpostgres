@@ -46,8 +46,8 @@ newNotif: function(req,res){
 				if(!connexions[0]) return res.status(200).end(); // Si l'utlisateur n'est pas connecté on envoi rien.
 				_.each(connexions,function(connexion,index){
 					if(index==connexions.length-1){//TO change
-						var allSocks = JSON.stringify(sails.sockets.subscribers());
-						if(allSocks.indexOf(connexion.socket_id)>-1)
+						// var allSocks = JSON.stringify(sails.sockets.subscribers());
+						// if(allSocks.indexOf(connexion.socket_id)>-1)
 							sails.sockets.emit(connexion.socket_id,'notif',actu);   // Envoi un évènement socket.
 					}
 				});
