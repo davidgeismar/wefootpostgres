@@ -94,7 +94,7 @@ module.exports.policies = {
     getFootByUser:'isLoggedInParam(\'player\')',
     // getInfo
     // getPlayers
-    updatePlayer:'isLoggedInParam(\'user\')',
+    // updatePlayer:'isLoggedInParam(\'user\')', TO FIX
     // getAllPlayers
     // sendInvits
     removePlayer: 'isLoggedInParam(\'user\')',
