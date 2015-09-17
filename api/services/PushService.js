@@ -4,17 +4,21 @@ module.exports = {
     var gcm = require('node-gcm');
     var sender = new gcm.Sender('AIzaSyD4wa4B3NBNKaKIPr8Mykh9Q_eA4BIObCI');
     var message = new gcm.Message({
-      collapseKey: 'demo',
-      delayWhileIdle: true,
-      timeToLive: 3,
-      data: {
-        key1: text
-        // ,
-        // key2: 'message2'
-      }
-    });
+    collapseKey: 'demo',
+    priority: 'high',
+    contentAvailable: true,
+    delayWhileIdle: true,
+    timeToLive: 3,
+    data: {
+        key1: 'message1',
+        key2: 'message2'
+    },
+    notification: {
+        title: "WeFoot, le Football connecté",
+        body: text
+    }
+});
 
-//Now the sender can be used to send messages 
 sender.send(message, tokens, function (err, result) {
   if(err) console.error(err);
 });
