@@ -18,7 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'postgresTest',
-    migrate: 'alter'
+    connection: 'postgres',
+    migrate: 'safe'
   }
 };
