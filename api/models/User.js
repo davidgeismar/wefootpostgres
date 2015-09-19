@@ -143,12 +143,6 @@ mangoId: {
 telephone: {
   type: 'string'
 },
-
-// chats: {
-//   collection: 'chat',
-//   via: 'chatters'
-// },
-
 password_reset_token:{
   type:'string'
 },
