@@ -25,10 +25,10 @@ module.exports = {
    * Set the port in the production environment to 80                        *
    ***************************************************************************/
 
-  // port: 80,
+  port: 80,
   models: {
-    connection: 'postgresTest',
-    migrate: 'alter'
+    connection: 'postgres',
+    migrate: 'safe'
   }
   // **************************************************************************
   //  * Set the port in the production environment to 80                        *
