@@ -40,12 +40,13 @@ RequeteTransfert.txt
 ################################################
 
 config/local.js
-config/models.js
+# config/models.js
 config/connections.js
 config/env
 config/bootstrap.js
-config/env/development.js
-config/socket.js
+# config/env/development.js
+# config/socket.js
+# config/session.js
 
 
 
