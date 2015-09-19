@@ -83,12 +83,11 @@
             var url2 = path.join(__dirname,'../../assets/images/profils/'+req.body.userId+'.jpg'); //Allow to keep the file after server restart
             fs.readFile(url,function(err,contentPic){
               fs.writeFile(url2,contentPic,function(err){
-                console.log(err);
               });
             });
-            User.update(req.body.userId,{picture: 'http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg'},function(err){
+            User.update(req.body.userId,{picture: 'http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg'},function(err){
               if(err) return res.status(400).end();
-                res.status(200).send('http://62.210.115.66:9000/images/profils/'+req.body.userId+'.jpg');
+                res.status(200).send('http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg');
             });
           });
         },function(err){console.log(err); res.status(400).end(); });

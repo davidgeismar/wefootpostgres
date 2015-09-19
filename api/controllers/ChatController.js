@@ -56,6 +56,8 @@ module.exports = {
         console.log(err);
         return res.status(406).end();         
       }
+      if(!chat)
+        return res.status(200).end();
       Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
         if(err){
           console.log(err);

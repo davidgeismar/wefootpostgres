@@ -65,14 +65,14 @@
     getFootByUser:'isLoggedInParam(\'player\')',
     // getInfo
     // getPlayers
-    updatePlayer:'isLoggedInParam(\'user\')',
+    // updatePlayer:'isLoggedInParam(\'user\')', TO FIX
     // getAllPlayers
     // sendInvits
     removePlayer: 'isLoggedInParam(\'user\')',
     refusePlayer: 'isFootOwnerParam(\'foot\')',
     deleteFoot: 'isFootOwnerParam(\'foot\')',
     // query
-    askToPlay:'isLoggedInParam(\'user\')',
+    askToPlay:'isLoggedInParam(\'userId\')',
   },
   FriendshipController:{
     deleteFriend: 'isLoggedInParams(\'user1\', \'user2\')'
