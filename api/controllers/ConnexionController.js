@@ -20,15 +20,6 @@ setSocket: function(req,res){   //Link a connexion with an user
 
 	setConnexion: function(req,res){   //Link a connexion with an user
 		res.status(200).end();
-		// if(req.isSocket){
-		// 	Connexion.create({socket_id: sails.sockets.id(req.socket),user: req.param('id')},function(err,sock){
-		// 		if(err){ console.log(err); return res.status(400).end();}
-		// 		return res.status(200).end();
-		// 	});
-		// }
-		// else{
-		// 	return res.status(400).end();
-		// }
 	},
 
 	delete: function(req,res){
