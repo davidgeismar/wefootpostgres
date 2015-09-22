@@ -155,7 +155,10 @@ module.exports = {
     deleteFoot: function(req,res){
       Player.destroy({foot: req.param('foot')},function(err){
         if(err) return res.status(400).end();
-        return res.status(200).end();
+        Foot.update({id:req.param('foot')},{is_canceled: true},function(err,foot){
+          if(err) return res.status(400).end();
+          return res.status(200).end();
+        });
       });
     },
 
