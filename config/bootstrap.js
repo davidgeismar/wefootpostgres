@@ -15,7 +15,9 @@
 
  	sails.on('lifted', function() {
 
-  // Connexion.query('TRUNCATE TABLE connexion');
+  Connexion.destroy(function(err) {
+  	if(err) console.log(err);
+  });
 
 
 
