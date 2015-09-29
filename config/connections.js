@@ -90,8 +90,8 @@
      adapter: 'sails-postgresql',
      url: 'postgres://rycylnbajtinpx:gbaZVTZiscp23YlURuG_YGDPfW@ec2-54-83-18-87.compute-1.amazonaws.com:5432/d24j1kt7fmfa3g',
      port: 5432,
-     user: 'rycylnbajtinpx',
-     password: '9XBYDf_CwYJsozc_WHOHk07gK9',
+     user: process.env.DB_USER,
+     password: process.env.DB_PASSWORD,
      database: 'd1dg5dohvl8hho',
      ssl: true
    },
@@ -100,7 +100,7 @@
       adapter: 'sails-postgresql',
       host: 'localhost',   
       port: 5432,
-      user: 'mac',
+      user: 'raphaelfettaya',
       password: '',
       database: 'wefoot'
    }

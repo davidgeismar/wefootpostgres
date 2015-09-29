@@ -53,6 +53,10 @@ module.exports = {
     confirmed_players: {
       type: 'integer',
       defaultsTo: 1
+    },
+    is_canceled: {
+      type: 'boolean',
+      defaultsTo: false
     }
     // chat:{
     //   model:'chat'

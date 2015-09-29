@@ -66,7 +66,50 @@
       else res.status(403).end();
     },
 
-    uploadProfilPic: function  (req, res) {
+    //WRITE FILE ON TMP FILE, THEN RESIZE IT, AND STORE IN AMAZON S3
+
+    uploadProfilPic: function (req,res) {
+      var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+      var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY
+      var S3_BUCKET = process.env.S3_BUCKET_NAME;
+      var easyimg = require('easyimage'); 
+      var uploadFile = req.file('file');
+      var path = require('path');
+      var aws = require('aws-sdk');
+      var fs = require('fs');
+      aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+      var s3 = new aws.S3();
+      uploadFile.upload({ dirname: '../../.tmp/public/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {  //Here to display the cropped image without restarting the server
+        if (err) return res.serverError(err);
+        var url = path.join(__dirname,'../../.tmp/public/images/profils/'+req.body.userId+'.jpg'); 
+        easyimg.info(url).then(function(file){  //RESIZING IMAGES
+          var min = Math.min(file.width,file.height);
+          easyimg.crop({
+            src:url,dst:url,cropwidth: min,cropheight: min
+          }).then(function(file2){
+            fs.readFile(url,function(err,contentPic){ //GET THE CROPPED IMAGE
+              var params = {
+                Bucket: S3_BUCKET,
+                Key: req.body.userId+".jpg",
+                Body: contentPic,
+                ACL: 'public-read'
+              }
+              s3.putObject(params, function(err,data){
+                if(err) return res.status(200);
+                else return res.status(200);
+              });
+            });
+            User.update(req.body.userId,{picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg'},function(err){
+              if(err) return res.status(400).end();
+                res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
+            });
+          });
+        });
+      });
+    },
+
+    //DEPECATED
+    uploadProfilPicOLD: function  (req, res) {
       if(req.body.userId){
         var fs = require('fs');
         var easyimg = require('easyimage'); 
@@ -85,7 +128,8 @@
               fs.writeFile(url2,contentPic,function(err){
               });
             });
-            User.update(req.body.userId,{picture: 'http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg'},function(err){
+            // http://wefoot.herokuapp.com
+            User.update(req.body.userId,{picture: 'http://localhost:1337/images/profils/'+req.body.userId+'.jpg'},function(err){
               if(err) return res.status(400).end();
               res.status(200).send('http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg');
             });

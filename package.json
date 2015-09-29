@@ -8,6 +8,7 @@
     "apn": "~1.7.4",
     "async": "~1.2.0",
     "atob": "^1.1.2",
+    "aws-sdk": "^2.2.4",
     "basic-auth": "^1.0.3",
     "bcrypt": "~0.8.3",
     "connect-redis": "1.4.5",
