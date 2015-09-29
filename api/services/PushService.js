@@ -15,6 +15,7 @@ module.exports = {
     },
     notification: {
         title: "WeFoot, le Football connecté",
+        icon: "icon",
         body: text
     }
 });

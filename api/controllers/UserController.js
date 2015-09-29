@@ -43,7 +43,7 @@
     })
   },
 
-    getWholeUser: function(req,res){
+  getWholeUser: function(req,res){
     User.findOne(req.param('id'),function(err,user){
       if(err) return res.status(400).end();
       if(!user) return res.status(200).end();
@@ -87,7 +87,7 @@
             });
             User.update(req.body.userId,{picture: 'http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg'},function(err){
               if(err) return res.status(400).end();
-                res.status(200).send('http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg');
+              res.status(200).send('http://wefoot.herokuapp.com/images/profils/'+req.body.userId+'.jpg');
             });
           });
         },function(err){console.log(err); res.status(400).end(); });
@@ -410,6 +410,11 @@ toConfirm: function(req,res){
       res.status(200).json(foot);
     });
   });
+},
+
+addCard : function(req,res){
+  TrelloAPI.addCard(req.param('bug'));
+  res.status(200).end();
 }
 
 

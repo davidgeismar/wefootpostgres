@@ -34,7 +34,7 @@ module.exports = {
               // var allSocks = JSON.stringify(sails.sockets.subscribers());
               async.each(connexions,function(connexion,callback2){
                 // if(allSocks.indexOf(connexion.socket_id)>-1)
-                  sails.sockets.emit(connexion.socket_id,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
+                sails.sockets.emit(connexion.socket_id,'newChat',merge({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, related:chat.related}, {lastTime: null}, { users : smallUsers}));
                 callback2();
               }
               ,function(err){
@@ -45,66 +45,66 @@ module.exports = {
         });
       }
     });
-  });
+});
 },
 
-  //get a chat for a given user
-  getChat: function (req, res, next){
-    var related = req.param('related');
-    Chat.findOne({related:related}).populate('messages').exec(function(err,chat){
+//get a chat for a given user
+getChat: function (req, res, next){
+  var related = req.param('related');
+  Chat.findOne({related:related}).populate('messages').exec(function(err,chat){
+    if(err){
+      console.log(err);
+      return res.status(406).end();         
+    }
+    if(!chat)
+      return res.status(200).end();
+    Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
       if(err){
         console.log(err);
         return res.status(406).end();         
       }
-      if(!chat)
-        return res.status(200).end();
-      Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
+      var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
+      if(currentChatter){
+        currentChatter.deactivate = false;
+        currentChatter.save();
+      }
+      var usersID = _.pluck(usersChatters, 'user');
+
+      User.find(usersID).exec(function(err, bigUsers){
         if(err){
           console.log(err);
           return res.status(406).end();         
         }
-        var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
-        if(currentChatter){
-          currentChatter.deactivate = false;
-          currentChatter.save();
-        }
-        var usersID = _.pluck(usersChatters, 'user');
-
-        User.find(usersID).exec(function(err, bigUsers){
-          if(err){
-            console.log(err);
-            return res.status(406).end();         
-          }
-          var smallUsers = shrinkUsers(bigUsers);
-          return res.status(200).json({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: moment(), users : smallUsers});
-        });
+        var smallUsers = shrinkUsers(bigUsers);
+        return res.status(200).json({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: moment(), users : smallUsers});
       });
-
     });
+
+  });
 
 
 },
 
-  //get all chats for a given user
-  getAllChats: function (req, res, next){
-    var chats = new Array();
+//get all chats for a given user
+getAllChats: function (req, res, next){
+  var chats = new Array();
 
-    Chatter.find({user:req.param('id'), deactivate:0}).exec(function(err,chatters){
-      if(err){
-        console.log(err);
-        return res.status(406).end();         
-      }
-      if(chatters){
-        async.each(chatters,function(chatter,callback){
-          Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
-            if(err){
-              console.log(err);
-              return res.status(406).end();         
-            }
-            else if(!chat){
-              callback();
-            }
-            else{
+  Chatter.find({user:req.param('id'), deactivate:0}).exec(function(err,chatters){
+    if(err){
+      console.log(err);
+      return res.status(406).end();         
+    }
+    if(chatters){
+      async.each(chatters,function(chatter,callback){
+        Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
+          if(err){
+            console.log(err);
+            return res.status(406).end();         
+          }
+          else if(!chat){
+            callback();
+          }
+          else{
             Chatter.find({chat:chatter.chat}).exec(function(err, usersChatters){
               if(usersChatters){
                 var usersID = _.pluck(usersChatters, 'user');
@@ -122,8 +122,8 @@ module.exports = {
                 callback();
               }
             });
-            }
-          });
+          }
+        });
 
 }, function(err){
   if(err){
