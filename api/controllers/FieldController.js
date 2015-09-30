@@ -24,18 +24,40 @@
   },
 
   uploadPic: function  (req, res) {
-    if(req.method === 'GET')
-      return res.json({'status':'GET not allowed'});            
-
+    var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+    var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+    var S3_BUCKET = process.env.S3_BUCKET_NAME;
+    var aws = require('aws-sdk');
+    aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});          
+    var s3 = new aws.S3();
     var uploadFile = req.file('file');
-
-    uploadFile.upload({ dirname: '../../assets/images/fields' ,saveAs:req.body.fieldId+".jpg"} ,function onUploadComplete (err, file) {        
-      if (err) return res.serverError(err);  
-      Field.update(req.body.fieldId, {picture: 'http://62.210.115.66:9000/images/fields/'+req.body.fieldId+'.jpg'}, function(err){
+    var fs = require('fs');
+    var path = require('path');
+    uploadFile.upload({ dirname: '../../.tmp/public/images/fields' ,saveAs:req.body.fieldId+".jpg"} ,function(err, files){
+    var url = path.join(__dirname,'../../.tmp/public/images/fields/'+req.body.fieldId+'.jpg');
+    try{
+      var file = fs.readFileSync(url);
+    }
+    catch(e){
+      console.log(e);
+      var file = '';
+    }
+    var params = {
+                Bucket: S3_BUCKET,
+                Key: "fields/"+req.body.fieldId+".jpg",
+                Body: file,
+                ACL: 'public-read'
+              }; 
+      s3.putObject(params, function(err,data){
+        if(err){
+          console.log(err);
+          return res.status(400);
+        }
+        else res.json({status:200,file:file});
+      });
+      Field.update(req.body.fieldId, {picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/fields/'+req.body.fieldId+'.jpg'}, function(err){
         if(err) return res.status(400);
       });
-
-      res.json({status:200,file:file});
     });
   },
 

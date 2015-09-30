@@ -70,7 +70,7 @@
 
     uploadProfilPic: function (req,res) {
       var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-      var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY
+      var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
       var S3_BUCKET = process.env.S3_BUCKET_NAME;
       var easyimg = require('easyimage'); 
       var uploadFile = req.file('file');
@@ -96,12 +96,11 @@
               }
               s3.putObject(params, function(err,data){
                 if(err) return res.status(200);
-                else return res.status(200);
+                else res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
               });
             });
             User.update(req.body.userId,{picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg'},function(err){
-              if(err) return res.status(400).end();
-                res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
+              if(err) console.log(err);
             });
           });
         });
