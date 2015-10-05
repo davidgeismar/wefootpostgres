@@ -77,6 +77,8 @@
       var path = require('path');
       var aws = require('aws-sdk');
       var fs = require('fs');
+      var bucketUrl = 'https://'+S3_BUCKET+'.s3.amazonaws.com/';
+      var picUrl = req.body.userId+'-'+new Date().getTime()+'.jpg';
       aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
       var s3 = new aws.S3();
       uploadFile.upload({ dirname: '../../.tmp/public/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {  //Here to display the cropped image without restarting the server
@@ -90,17 +92,16 @@
             fs.readFile(url,function(err,contentPic){ //GET THE CROPPED IMAGE
               var params = {
                 Bucket: S3_BUCKET,
-                Key: req.body.userId+".jpg",
+                Key: picUrl,
                 Body: contentPic,
                 ACL: 'public-read'
               }
               s3.putObject(params, function(err,data){
                 if(err) return res.status(400);
-                else { 
-                  console.log(new Date().getTime());
-                  User.update(req.body.userId,{picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg'},function(err){
+                else {
+                  User.update(req.body.userId,{picture: bucketUrl+picUrl},function(err){
                     if(err) return res.status(400);
-                    else return res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
+                    else return res.status(200).send(bucketUrl+picUrl);
                   });
                 }
               });
