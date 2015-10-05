@@ -95,12 +95,15 @@
                 ACL: 'public-read'
               }
               s3.putObject(params, function(err,data){
-                if(err) return res.status(200);
-                else res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
+                if(err) return res.status(400);
+                else { 
+                  console.log(new Date().getTime());
+                  User.update(req.body.userId,{picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg'},function(err){
+                    if(err) return res.status(400);
+                    else return res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
+                  });
+                }
               });
-            });
-            User.update(req.body.userId,{picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg'},function(err){
-              if(err) console.log(err);
             });
           });
         });

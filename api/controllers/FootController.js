@@ -104,10 +104,20 @@ module.exports = {
           if(err) return res.status(400).end();
           if(foot.confirmed_players < foot.nb_player){
             foot.confirmed_players = foot.confirmed_players+1;
-            foot.save();
-            Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
-              if(err) return res.status(400).end();
-              return res.status(200).end();
+            foot.save(function(err){
+              if(err){
+                console.log(err);
+                return res.status(400).end;
+              }
+              Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
+                if(err){
+                  console.log(err);
+                  foot.confirmed_players--;
+                  foot.save();
+                  return res.status(400).end();
+                }
+                return res.status(200).end();
+              });
             });
           }
           else return res.status(406).end();

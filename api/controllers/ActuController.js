@@ -9,7 +9,7 @@
 
 
 getNotif: function(req,res){
-	Actu.find().where({user: req.param('id')}).exec(function(err,actus){
+	Actu.find().where({user: req.param('id')}).limit(15).exec(function(err,actus){
 		if(err) return res.status(400).end();
 		res.json(actus);
 	});
