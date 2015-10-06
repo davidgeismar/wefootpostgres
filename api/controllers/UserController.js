@@ -43,6 +43,15 @@
     })
   },
 
+  getViaFbId: function(req,res){
+    User.find({facebook_id: req.param('users')},function(err,users){
+      if(err) return res.status(400).end();
+      if(users.length == 0 || !req.param('users')) return res.status(200).end();
+      users = _.map(users,function(user){ delete user.token; delete user.password_reset_token; delete user.mangoId; return user;});
+      return res.status(200).json(users);
+    });
+  },
+
   getWholeUser: function(req,res){
     User.findOne(req.param('id'),function(err,user){
       if(err) return res.status(400).end();
@@ -159,10 +168,16 @@ search: function (req,res) {
     full_name: {
       'contains': word 
     }  
-  }).limit(10).exec(function(err,user){
+  }).limit(20).exec(function(err,users){
     if(err) return res.status(404).end();
+    users = _.map(users,function(user){
+      delete user.token;
+      delete user.password;
+      delete password_reset_token;
+      return user;
+    });
     res.status(200);
-    res.json(user);
+    res.json(users);
   });     
 },
 

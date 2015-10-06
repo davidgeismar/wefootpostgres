@@ -187,9 +187,10 @@ module.exports = {
               priv: false,
               date: {   //Changes for Postgres
                 '>=': moment(req.param('date')).hours(0).minutes(0).seconds(0).format(),
-                '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format()
+                '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
               }
             }).exec(function(err,foots){
+                foots = _.filter(foots,function(foot){return foot.nb_player>foot.confirmed_players;}); //Remove complete foots
                 if(err) return res.status(400).end();
                 if(foots[0])
                   res.status(200).json(foots);
