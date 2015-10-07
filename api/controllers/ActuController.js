@@ -23,7 +23,9 @@ getActu: function(req,res){
 					{ or:[{related_user: friends,typ:['footConfirm','newFriend','demandAccepted']},
 						{user:friends,typ:['hommeDuMatch','chevreDuMatch','newFriend']},
 						{typ: 'WF'}],
-					 	id: {'>': req.param('skip')}},
+					 id: {'>': req.param('skip')},
+					 createdAt: {'>': req.param('user').createdAt}, 
+					},
 				sort:'createdAt DESC',
 				limit:30};
 	Actu.find(query,function(err,actu){
