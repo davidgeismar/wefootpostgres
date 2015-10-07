@@ -23,6 +23,25 @@
     });
   },
 
+  deletePrivateField:function(req,res){
+    Field.find({related_to: req.param('related_to')}).exec(function(err,fields){
+      if(fields && fields.length>0){
+        if(_.find(_.pluck(fields,'id'), function(field){return field.id == req.param('id')})){
+          Field.destroy(req.param('id')).exec(function(err){
+            if(err){
+              console.log(err);
+              return res.status(406).end();         
+            }
+            else
+              return res.status(200).end();
+          });
+        }
+        else
+          return res.status(401).end();
+      }
+    });
+  },
+
   uploadPic: function  (req, res) {
     if(req.method === 'GET')
       return res.json({'status':'GET not allowed'});            

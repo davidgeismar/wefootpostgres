@@ -58,6 +58,7 @@
     // uploadPic
     // searchFields
     // getAllFields
+    deletePrivateField: 'isLoggedInParam(\'related_to\')'
   },
   FootController:{
     create: 'isLoggedInParam(\'created_by\')',
