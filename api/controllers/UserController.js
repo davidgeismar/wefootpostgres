@@ -43,6 +43,15 @@
     })
   },
 
+  getViaFbId: function(req,res){
+    User.find({facebook_id: req.param('users')},function(err,users){
+      if(err) return res.status(400).end();
+      if(users.length == 0 || !req.param('users')) return res.status(200).end();
+      users = _.map(users,function(user){ delete user.token; delete user.password_reset_token; delete user.mangoId; return user;});
+      return res.status(200).json(users);
+    });
+  },
+
   getWholeUser: function(req,res){
     User.findOne(req.param('id'),function(err,user){
       if(err) return res.status(400).end();
@@ -70,13 +79,15 @@
 
     uploadProfilPic: function (req,res) {
       var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-      var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY
+      var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
       var S3_BUCKET = process.env.S3_BUCKET_NAME;
       var easyimg = require('easyimage'); 
       var uploadFile = req.file('file');
       var path = require('path');
       var aws = require('aws-sdk');
       var fs = require('fs');
+      var bucketUrl = 'https://'+S3_BUCKET+'.s3.amazonaws.com/';
+      var picUrl = req.body.userId+'-'+new Date().getTime()+'.jpg';
       aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
       var s3 = new aws.S3();
       uploadFile.upload({ dirname: '../../.tmp/public/images/profils' ,saveAs:req.body.userId+".jpg"} ,function onUploadComplete (err, files) {  //Here to display the cropped image without restarting the server
@@ -90,18 +101,19 @@
             fs.readFile(url,function(err,contentPic){ //GET THE CROPPED IMAGE
               var params = {
                 Bucket: S3_BUCKET,
-                Key: req.body.userId+".jpg",
+                Key: picUrl,
                 Body: contentPic,
                 ACL: 'public-read'
               }
               s3.putObject(params, function(err,data){
-                if(err) return res.status(200);
-                else return res.status(200);
+                if(err) return res.status(400);
+                else {
+                  User.update(req.body.userId,{picture: bucketUrl+picUrl},function(err){
+                    if(err) return res.status(400);
+                    else return res.status(200).send(bucketUrl+picUrl);
+                  });
+                }
               });
-            });
-            User.update(req.body.userId,{picture: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg'},function(err){
-              if(err) return res.status(400).end();
-                res.status(200).send('https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.body.userId+'.jpg');
             });
           });
         });
@@ -156,10 +168,16 @@ search: function (req,res) {
     full_name: {
       'contains': word 
     }  
-  }).limit(10).exec(function(err,user){
+  }).limit(20).exec(function(err,users){
     if(err) return res.status(404).end();
+    users = _.map(users,function(user){
+      delete user.token;
+      delete user.password;
+      delete password_reset_token;
+      return user;
+    });
     res.status(200);
-    res.json(user);
+    res.json(users);
   });     
 },
 

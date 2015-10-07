@@ -104,10 +104,19 @@ module.exports = {
           if(err) return res.status(400).end();
           if(foot.confirmed_players < foot.nb_player){
             foot.confirmed_players = foot.confirmed_players+1;
-            foot.save();
-            Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
-              if(err) return res.status(400).end();
-              return res.status(200).end();
+            foot.save(function(err){
+              if(err){
+                console.log(err);
+                return res.status(400).end;
+              }
+              Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
+                if(err){
+                  foot.confirmed_players--;
+                  foot.save();
+                  return res.status(400).end();
+                }
+                return res.status(200).end();
+              });
             });
           }
           else return res.status(406).end();
@@ -178,9 +187,10 @@ module.exports = {
               priv: false,
               date: {   //Changes for Postgres
                 '>=': moment(req.param('date')).hours(0).minutes(0).seconds(0).format(),
-                '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format()
+                '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
               }
             }).exec(function(err,foots){
+                foots = _.filter(foots,function(foot){return foot.nb_player>foot.confirmed_players;}); //Remove complete foots
                 if(err) return res.status(400).end();
                 if(foots[0])
                   res.status(200).json(foots);

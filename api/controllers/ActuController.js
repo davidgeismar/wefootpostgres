@@ -9,7 +9,7 @@
 
 
 getNotif: function(req,res){
-	Actu.find().where({user: req.param('id')}).exec(function(err,actus){
+	Actu.find().where({user: req.param('id')}).limit(15).exec(function(err,actus){
 		if(err) return res.status(400).end();
 		res.json(actus);
 	});
@@ -23,7 +23,9 @@ getActu: function(req,res){
 					{ or:[{related_user: friends,typ:['footConfirm','newFriend','demandAccepted']},
 						{user:friends,typ:['hommeDuMatch','chevreDuMatch','newFriend']},
 						{typ: 'WF'}],
-					 	id: {'>': req.param('skip')}},
+					 id: {'>': req.param('skip')},
+					 createdAt: {'>': req.param('user').createdAt}, 
+					},
 				sort:'createdAt DESC',
 				limit:30};
 	Actu.find(query,function(err,actu){

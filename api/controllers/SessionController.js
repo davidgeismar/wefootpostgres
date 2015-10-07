@@ -13,7 +13,6 @@
      if (err) return next(err);
 
      if (user && user.password) {
-      console.log(user);
       bcrypt.compare(req.param('password'), user.password, function (err, match) {
         if (err) return next(err);
         if (match) {
