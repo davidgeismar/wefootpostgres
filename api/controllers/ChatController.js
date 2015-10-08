@@ -139,11 +139,9 @@ getAllChats: function (req, res, next){
 
 
 getNewChats: function (req, res){
-  var newChats = [];
   var lastTimeUpdated = req.param('ltu');
 
-  Chatter.find({ user:req.param('id'), createdAt: { '>': lastTimeUpdated}}).exec(function(err, chatters){
-    console.log(chatters);
+  Chatter.find({user:req.param('id'), createdAt: { '>': lastTimeUpdated}}).exec(function(err, chatters){
     if(err){
       console.log(err);
       return res.status(406).end();  
@@ -154,7 +152,7 @@ getNewChats: function (req, res){
       Chat.find(chatsId).exec(function(err, chats){
       // _.map(chats, function(obj) { return _.pick(obj, 'id','typ' ,'desc', 'id'); }); {id:chat.id, typ:chat.typ, desc:chat.desc, messages:[], createdAt:chat.createdAt, updatedAt:chat.updatedAt, related:chat.related ,lastTime: null, users : smallUsers});
       _.each(chats, function(element, index) {
-        chats[index] = _.extend(element, {messages: []}, {lastTime: null}, {users: []});
+        chats[index] = _.extend(element, {lastTime: null}, {users: []}, {"messages":[]});
       }); 
       return res.status(200).json(chats);
     });
@@ -169,7 +167,7 @@ getNewChatters: function (req, res, next){
   var chats = req.param('chats');
   var chatters = [];
   async.each(chats, function(chat, callback){
-    Chatter.findOne({ chat:chat, createdAt: { '>': lastTimeUpdated}}).exec(function(err,chatter){
+    Chatter.findOne({ chat:chat, createdAt: { '>': lastTimeUpdated}}).limit(20000).exec(function(err,chatter){
       if(chatter){
         if(err){
           console.log(err);
@@ -177,7 +175,7 @@ getNewChatters: function (req, res, next){
         }
         User.findOne(chatter.user).exec(function(err, user){
           if(user){
-            chatters.push({user:user, chat:chatter.chat});
+            chatters.push({user:{first_name: user.first_name, id:user.id, last_name:user.last_name, picture:user.picture}, chat:chatter.chat});
             callback();
           }
           else
