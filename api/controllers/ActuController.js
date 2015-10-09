@@ -9,7 +9,7 @@
 
 
 getNotif: function(req,res){
-	Actu.find().where({user: req.param('id')}).limit(15).exec(function(err,actus){
+	Actu.find().where({user: req.param('id')}).limit(15).sort('createdAt DESC').exec(function(err,actus){
 		if(err) return res.status(400).end();
 		res.json(actus);
 	});
@@ -20,8 +20,9 @@ getActu: function(req,res){
 	if(req.param('friends').length == 0) 
 		friends = [0]; //Prevent from sails-mysql bug
 	var query = {where: 
-					{ or:[{related_user: friends,typ:['footConfirm','newFriend','demandAccepted']},
-						{user:friends,typ:['hommeDuMatch','chevreDuMatch','newFriend']},
+					{ or:[{related_user: friends,typ:['footConfirm','newFriend','demandAccepted'],user: {'!': req.param('user').id}},
+						{user:friends,typ:['hommeDuMatch','chevreDuMatch']},
+						{user:friends, typ:['newFriend'], related_user: {'!': req.param('user').id}},
 						{typ: 'WF'}],
 					 id: {'>': req.param('skip')},
 					 createdAt: {'>': req.param('user').createdAt}, 
