@@ -132,7 +132,7 @@ favorite_club: {
 },
 picture: {
   type:'string',
-  defaultsTo: 'img/profil_default.jpg'
+  defaultsTo: 'https://wefoot.s3.amazonaws.com/default.svg'
 },
 birthday: {
   type: 'date'
