@@ -9,10 +9,10 @@ module.exports = {
     contentAvailable: true,
     delayWhileIdle: true,
     timeToLive: 3,
-    data: {
-        stateName: stateName,
-        key2: stateParams
-    },
+    // data: {
+    //     stateName: stateName,
+    //     key2: stateParams
+    // },
     notification: {
         title: "WeFoot, le Football connecté",
         icon: "icon",
