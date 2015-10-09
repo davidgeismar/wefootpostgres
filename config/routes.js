@@ -90,11 +90,11 @@
 
   'GET /user/toConfirm/:user/:id': 'UserController.toConfirm',
 
-  'GET /chat/getNewChats/:id/:ltu': 'ChatController.getNewChats',
+  // 'GET /chat/getNewChats/:id/:ltu': 'ChatController.getNewChats',
 
-  'GET /chat/getUnseenMessages/:id/:ltu': 'ChatController.getUnseenMessages',
+  // 'GET /chat/getUnseenMessages/:id/:ltu': 'ChatController.getUnseenMessages',
 
-  'GET /chat/getNewChatters/:id/:ltu': 'ChatController.getNewChatters',
+  // 'GET /chat/getNewChatters/:id/:ltu': 'ChatController.getNewChatters',
 
   '/pay/registerCard': 'PaiementController.registerCard',
 

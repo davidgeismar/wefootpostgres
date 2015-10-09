@@ -10,8 +10,8 @@ module.exports = {
     delayWhileIdle: true,
     timeToLive: 3,
     data: {
-        key1: 'message1',
-        key2: 'message2'
+        stateName: stateName,
+        key2: stateParams
     },
     notification: {
         title: "WeFoot, le Football connecté",
@@ -34,6 +34,8 @@ sendIosPush: function(text, tokens, pendingNotifs){
   note.alert = {
     body : text
   };
+  note.payload = {"stateName":"stateName", "stateParams": "stateParams"};
+
 
   var options = {
     gateway: 'gateway.sandbox.push.apple.com',

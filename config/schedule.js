@@ -6,101 +6,94 @@
 
  module.exports.schedule = {
 
-      //Check end election
-      //Everyday at 2:30AM
-      // "30 2 * * *"
-      "30 2 * * *" : function ()
-      {
-      	var nowMinus3d = moment().subtract(3, 'days').format();
-        var nowMinus4d = moment().subtract(4, 'days').format();
+  //Check end election
+  //Everyday at 2:30AM
+  // "30 2 * * *"
+  "30 2 * * *" : function ()
+  {
+   var nowMinus3d = moment().subtract(3, 'days').format('YYYY-MM-DD HH:mm:ss');
+   var nowMinus4d = moment().subtract(4, 'days').format('YYYY-MM-DD HH:mm:ss');
 
-          // On sélectionne les chevres et hommes des foots qui ont plus de 3 jours 		
-          Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL group by v.chevre, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
-            console.log("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL group by v.chevre, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot");
-            if(results){
-              var allSocks = JSON.stringify(sails.sockets.subscribers());
-              async.each(results, function(result, callback){
-                Trophe.create({foot:result.foot, trophe:0, user:result.chevre, nbVotes:result.maxVotes});
-                Actu.create({user:result.chevre, related_user:result.chevre, typ:'chevreDuMatch', related_stuff:foot.id}).exec(function(err,actu){
-                  if(err)
-                    console.log(err);
-                  Connexion.findOne({user:result.chevre}).exec(function(err, connexion){
-                    if(connexion){
-                      if(allSocks.indexOf(connexion.socket_id)>-1)
-                        sails.sockets.emit(connexion.socket_id,'notif',actu);
-                      callback();
-                    }
+  // On sélectionne les chevres et hommes des foots qui ont plus de 3 jours 		
+  Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL group by v.chevre, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
+    if(results){
+      async.each(results, function(result, callback){
+        Trophe.create({foot:result.foot, trophe:0, user:result.chevre, nbVotes:result.maxVotes});
+        Actu.create({user:result.chevre, related_user:result.chevre, typ:'chevreDuMatch', related_stuff:foot.id}).exec(function(err,actu){
+          if(err)
+            console.log(err);
+          Connexion.findOne({user:result.chevre}).exec(function(err, connexion){
+            if(connexion){
+              sails.sockets.emit(connexion.socket_id,'notif',actu);
+              callback();
+            }
 
-                    else{
-                      callback();
-                    }
-                  });
-
-                });
-
-              }, function(err){
-              });
+            else{
+              callback();
             }
           });
 
-Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL group by v.homme, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
- if(results){
-  var allSocks = JSON.stringify(sails.sockets.subscribers());
-  async.each(results, function(result, callback){
-    Trophe.create({foot:result.foot, trophe:1, user:result.homme, nbVotes:result.maxVotes});
-    Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:foot.id}).exec(function(err,actu){
-      if(err)
-        console.log(err);
-      Connexion.findOne({user:result.homme}).exec(function(err, connexion){
-        if(connexion){
-          if(allSocks.indexOf(connexion.socket_id)>-1)
+        });
+
+      }, function(err){
+      });
+    }
+  });
+
+  Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL group by v.homme, v.foot where f.date <"+nowMinus3d+" and f.date > "+nowMinus4d+") x group by foot",function(err,results){
+   if(results){
+    async.each(results, function(result, callback){
+      Trophe.create({foot:result.foot, trophe:1, user:result.homme, nbVotes:result.maxVotes});
+      Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:foot.id}).exec(function(err,actu){
+        if(err)
+          console.log(err);
+        Connexion.findOne({user:result.homme}).exec(function(err, connexion){
+          if(connexion){
             sails.sockets.emit(connexion.socket_id,'notif',actu);
-          callback();
-        }
-        else
-          callback();
+            callback();
+          }
+          else
+            callback();
+        });
+
       });
 
+    }, function(err){
     });
-
-  }, function(err){
-  });
-}
+  }
 });
 },
 
-      //Check end foot, trigger vote for each player
-      //Every 4 hours
-      "0 */4 * * *": function ()
-      {
+//Check end foot, trigger vote for each player
+//Every 4 hours
+"0 */4 * * *": function ()
+{
 
-        var nowPlus4h = moment().add(4, 'hours').format();
-        var nowPlus8h = moment().add(8, 'hours').format();
+  var nowPlus4h = moment().add(4, 'hours').format();
+  var nowPlus8h = moment().add(8, 'hours').format();
 
-        Foot.find({ date: { '<': nowPlus8h, '>': nowPlus4h }}).exec(function(err, foots){
-          async.each(foots, function(foot, callback){
-            Player.find({foot:foot.id}).exec(function(err, players){
-              var allSocks = JSON.stringify(sails.sockets.subscribers());
-              async.each(players, function(player, callback2){
-                Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
-                  if(err)
-                    console.log(err);
-                  Connexion.findOne({user:player.user}).exec(function(err, connexion){
-                    if(connexion){
-                      if(allSocks.indexOf(connexion.socket_id)>-1)
-                        sails.sockets.emit(connexion.socket_id,'notif',actu);
-                    }
-                  });
-                });
-                callback2();
-              },function(err){
-              });
+  Foot.find({ date: { '<': nowPlus8h, '>': nowPlus4h }}).exec(function(err, foots){
+    async.each(foots, function(foot, callback){
+      Player.find({foot:foot.id}).exec(function(err, players){
+        async.each(players, function(player, callback2){
+          Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
+            if(err)
+              console.log(err);
+            Connexion.findOne({user:player.user}).exec(function(err, connexion){
+              if(connexion){
+                sails.sockets.emit(connexion.socket_id,'notif',actu);
+              }
             });
-            callback();
-          }, function(err){
           });
+          callback2();
+        },function(err){
         });
-      },
+      });
+      callback();
+    }, function(err){
+    });
+  });
+},
 
 
 //SEND PUSH TO WARN USER ABOUT COMMING FOOT
@@ -124,14 +117,12 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
         });
        //We create actu and send it by socket
        async.each(players, function(player, callback2){
-        var allSocks = JSON.stringify(sails.sockets.subscribers());
         Actu.create({user:player.user, related_user:player.user, typ:'3hoursBefore', related_stuff:foot.id}).exec(function(err,actu){
           if(err)
             console.log(err);
           Connexion.findOne({user:player.user}).exec(function(err, connexion){
             if(connexion){
-              if(allSocks.indexOf(connexion.socket_id)>-1)
-                sails.sockets.emit(connexion.socket_id,'notif',actu);
+              sails.sockets.emit(connexion.socket_id,'notif',actu);
             }
             callback2();
           });

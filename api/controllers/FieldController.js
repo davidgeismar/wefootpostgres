@@ -23,6 +23,25 @@
     });
   },
 
+  deletePrivateField:function(req,res){
+    Field.find({related_to: req.param('related_to')}).exec(function(err,fields){
+      if(fields && fields.length>0){
+        if(_.find(_.pluck(fields,'id'), function(field){return field.id == req.param('id')})){
+          Field.destroy(req.param('id')).exec(function(err){
+            if(err){
+              console.log(err);
+              return res.status(406).end();         
+            }
+            else
+              return res.status(200).end();
+          });
+        }
+        else
+          return res.status(401).end();
+      }
+    });
+  },
+
   uploadPic: function  (req, res) {
     var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
     var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;

@@ -10,7 +10,11 @@
 module.exports = {
 
   beforeCreate: function (attrs, next) {
+    if(attrs.city){
     attrs.cleanname = ToolsService.clean(attrs.name)+ToolsService.clean(attrs.city);
+  }
+  else
+    attrs.cleanname = ToolsService.clean(attrs.name);
     next();
   },
 
