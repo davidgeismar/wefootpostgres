@@ -1,6 +1,6 @@
 module.exports = {
 
-  sendAndroidPush: function(text, tokens){
+  sendAndroidPush: function(text, tokens,additionalData){
     var gcm = require('node-gcm');
     var sender = new gcm.Sender('AIzaSyD4wa4B3NBNKaKIPr8Mykh9Q_eA4BIObCI');
     var message = new gcm.Message({
@@ -9,10 +9,7 @@ module.exports = {
     contentAvailable: true,
     delayWhileIdle: true,
     timeToLive: 3,
-    data: {
-        stateName: stateName,
-        key2: stateParams
-    },
+    data: additionalData,
     notification: {
         title: "WeFoot, le Football connecté",
         icon: "icon",
@@ -25,7 +22,7 @@ sender.send(message, tokens, function (err, result) {
 });
 },
 
-sendIosPush: function(text, tokens, pendingNotifs){
+sendIosPush: function(text, tokens, pendingNotifs, additionalData){
   var apn = require('apn');
   var note = new apn.Notification();
   note.badge = pendingNotifs;
@@ -34,7 +31,7 @@ sendIosPush: function(text, tokens, pendingNotifs){
   note.alert = {
     body : text
   };
-  note.payload = {"stateName":"stateName", "stateParams": "stateParams"};
+  note.payload = additionalData;
 
 
   var options = {
@@ -54,7 +51,7 @@ sendIosPush: function(text, tokens, pendingNotifs){
   apnsConnection.pushNotification(note, tokens);
 },
 
-sendPush:function(pushes, pushText){
+sendPush:function(pushes, pushText, additionalData){
   var userPushes = [];
   var androidPushes = [];
   var iosPushes = [];
@@ -68,10 +65,10 @@ sendPush:function(pushes, pushText){
         androidPushes = _.pluck(_.filter(userPushes, function(push){ return !push.is_ios}), 'push_id');
         iosPushes =  _.pluck(_.filter(userPushes, function(push){ return push.is_ios}), 'push_id');
         if(androidPushes.length!=0){
-          PushService.sendAndroidPush(pushText, androidPushes);
+          PushService.sendAndroidPush(pushText, androidPushes,additionalData);
         }
         if(iosPushes.length!=0){
-          PushService.sendIosPush(pushText, iosPushes, user.pending_notif);
+          PushService.sendIosPush(pushText, iosPushes, user.pending_notif,additionalData);
         }
       });
     }
