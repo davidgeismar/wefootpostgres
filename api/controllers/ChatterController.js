@@ -20,23 +20,26 @@
 
   addToChat: function(req, res, next){
     var users = req.param('users');
-    Chat.findOne({related:req.param('related')}).exec(function(err, chat){
-      async.each(users, function(user, callback){
-        Chatter.create({user:user, chat:chat.id}).exec(function(err, chatter){
-          User.findOne(user).exec(function(err,user){
-            Connexion.findOne({user: req.param('user')},function(err,connexion){
-              if(err || !connexion)
-                return res.status(200).end();
-              sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
-              return res.status(200).end();
-              callback();
+    if(users){
+      Chat.findOne({related:req.param('related')}).exec(function(err, chat){
+        async.each(users, function(user, callback){
+          Chatter.create({user:user, chat:chat.id}).exec(function(err, chatter){
+            User.findOne(user).exec(function(err,user){
+              Connexion.findOne({user: req.param('user')},function(err,connexion){
+                if(err || !connexion)
+                  return res.status(400).end();
+                sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
+                callback();
+              });
             });
           });
+        },function(err){
+          return res.status(200).end();
         });
-      },function(err){
-
       });
-    });
+    }
+    else
+      return res.status(400).end();
   },
 
   deactivateFromChat: function(req, res){
