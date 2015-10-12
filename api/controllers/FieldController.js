@@ -26,7 +26,9 @@
   deletePrivateField:function(req,res){
     Field.find({related_to: req.param('related_to')}).exec(function(err,fields){
       if(fields && fields.length>0){
-        if(_.find(_.pluck(fields,'id'), function(field){return field.id == req.param('id')})){
+        console.log(fields);
+        console.log(req.params.all());
+        if(_.find(fields, function(field){return field.id == req.param('id')})){
           Field.destroy(req.param('id')).exec(function(err){
             if(err){
               console.log(err);
