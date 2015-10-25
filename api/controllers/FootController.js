@@ -194,8 +194,8 @@
       var dateReq = moment(req.param('date')).format('llll').substring(0,17);
 
       var lat = req.param('lat');
-      var longi = req.param('long');
-
+      var longi = req.param('lng');
+      console.log(lat)
       dateReq = dateReq.replace(/,+/g, '');
       Field.find().where({
         cleanname: {
@@ -213,9 +213,10 @@
               }
             }).exec(function(err,foots){
               if(err) return res.status(400).end();
+
                 foots = _.filter(foots,function(foot){return foot.nb_player>foot.confirmed_players;}); //Remove complete foots
                 if(foots.length>0){
-                  var footsfield = equiJoin(foots, fields, "field", "id", function(a,b){
+                  var footsfield = equiJoin(fields, foots, "id", "field", function(b,a){
                     return {
                       booked: a.booked,
                       confirmed_players:a.confirmed_players,
@@ -234,9 +235,9 @@
                     };
                   });
 
-
                   ToolsService.distCalc(lat, longi, footsfield, function(results){
-                    res.status(200).json(_.sortBy(results, 'distance'));
+                    var results = _.sortBy(results, 'distance');
+                    res.status(200).json(results);
                   });
                 }
                 else
