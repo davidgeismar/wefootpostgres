@@ -5,49 +5,68 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-module.exports = {
+ var moment = require('moment');
 
-  create: function(req, res){
+ function equiJoin(primary, foreign, primaryKey, foreignKey, select) {
+  var m = primary.length, n = foreign.length, index = [], c = [];
+
+    for (var i = 0; i < m; i++) {     // loop through m items
+      var row = primary[i];
+        index[row[primaryKey]] = row; // create an index for primary table
+      }
+
+    for (var j = 0; j < n; j++) {     // loop through n items
+      var y = foreign[j];
+        var x = index[y[foreignKey]]; // get corresponding row from primary
+        c.push(select(x, y));         // select only the columns you need
+      }
+
+      return c;
+    }
+
+    module.exports = {
+
+      create: function(req, res){
       var params = req.params.all(); //An id with undefined appears with postgres. TODO: fix it
       delete params.id;
-        Foot.create(params, function FootCreated(err, foot){
-            if(err){
-                console.log(err);
-                return res.status(406).end();         
-            }
-            else{
-                var id = foot.id;
-                var orga = req.param('created_by');
-                Player.create({foot: id, user: orga, statut: 3 },function OrganisatorAdded(err,player){
-                  if(err) return res.status(400).end();
-                });
-                async.each(req.param('toInvite'),function(user,callback){
-                  Player.create({foot: id, user: user, statut: 1 },function PlayerAdded(err,player){
-                    if(err) return res.status(400).end();
-                    callback();
-                  });
-                },function(){
-                  return res.status(200).json(foot);
-              });
-            }
-        });
+      Foot.create(params, function FootCreated(err, foot){
+        if(err){
+          console.log(err);
+          return res.status(406).end();         
+        }
+        else{
+          var id = foot.id;
+          var orga = req.param('created_by');
+          Player.create({foot: id, user: orga, statut: 3 },function OrganisatorAdded(err,player){
+            if(err) return res.status(400).end();
+          });
+          async.each(req.param('toInvite'),function(user,callback){
+            Player.create({foot: id, user: user, statut: 1 },function PlayerAdded(err,player){
+              if(err) return res.status(400).end();
+              callback();
+            });
+          },function(){
+            return res.status(200).json(foot);
+          });
+        }
+      });
     },
-  get: function(req,res){
-    Foot.findOne(req.param('id'),function(err,foot){
-      if(err) return res.status(400).end();
-      return res.status(200).json(foot);
-    })
-  },
+    get: function(req,res){
+      Foot.findOne(req.param('id'),function(err,foot){
+        if(err) return res.status(400).end();
+        return res.status(200).json(foot);
+      })
+    },
 
-  update: function(req,res){
-    Foot.update({id: req.param('id')},req.params.all(),function(err){
-      if(err) { console.log(err); return res.status(400).end()};
-      res.status(200).end(); 
-    });
-  },
+    update: function(req,res){
+      Foot.update({id: req.param('id')},req.params.all(),function(err){
+        if(err) { console.log(err); return res.status(400).end()};
+        res.status(200).end(); 
+      });
+    },
     
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
-      var moment = require('moment');
+
       Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:mm:ss')+"' ORDER BY f.date", function(err,foots){
         if(err) return res.status(400).end();
         //Using foot.rows for postgres queries
@@ -100,26 +119,26 @@ module.exports = {
     //update player status in foot
     updatePlayer: function(req,res){
       Foot.findOne({id: req.param('foot')},function(err,foot){
-          if(!foot) return res.status(200).end();
-          if(err) return res.status(400).end();
-          if(foot.confirmed_players < foot.nb_player){
-            foot.confirmed_players = foot.confirmed_players+1;
-            foot.save(function(err){
+        if(!foot) return res.status(200).end();
+        if(err) return res.status(400).end();
+        if(foot.confirmed_players < foot.nb_player){
+          foot.confirmed_players = foot.confirmed_players+1;
+          foot.save(function(err){
+            if(err){
+              console.log(err);
+              return res.status(400).end;
+            }
+            Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
               if(err){
-                console.log(err);
-                return res.status(400).end;
+                foot.confirmed_players--;
+                foot.save();
+                return res.status(400).end();
               }
-              Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
-                if(err){
-                  foot.confirmed_players--;
-                  foot.save();
-                  return res.status(400).end();
-                }
-                return res.status(200).end();
-              });
+              return res.status(200).end();
             });
-          }
-          else return res.status(406).end();
+          });
+        }
+        else return res.status(406).end();
       });
     },
 
@@ -135,7 +154,7 @@ module.exports = {
         Player.create({foot: req.param('id'), user: user, statut: 1 },function PlayerAdded(err,player){
           if(err) return res.status(400).end();
           callback();
-          });
+        });
       },function(){
         return res.status(200).end();
       });
@@ -172,38 +191,64 @@ module.exports = {
     },
 
     query: function(req,res){
-      var moment = require('moment');
       var dateReq = moment(req.param('date')).format('llll').substring(0,17);
+
+      var lat = req.param('lat');
+      var longi = req.param('long');
+
       dateReq = dateReq.replace(/,+/g, '');
       Field.find().where({
-          cleanname: {
-            'contains': ToolsService.clean(req.param('field')) 
-          }  
-        }).exec(function(err,fields){
-            if(err) return res.status(400).end();
-            fieldsId = _.pluck(fields,'id');
-            Foot.find().where({
-              field: fieldsId,
-              priv: false,
+        cleanname: {
+          'contains': ToolsService.clean(req.param('field')) 
+        }  
+      }).exec(function(err,fields){
+        if(err) return res.status(400).end();
+        fieldsId = _.pluck(fields,'id');
+        Foot.find().where({
+          field: fieldsId,
+          priv: false,
               date: {   //Changes for Postgres
                 '>=': moment(req.param('date')).hours(0).minutes(0).seconds(0).format(),
                 '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
               }
             }).exec(function(err,foots){
+              if(err) return res.status(400).end();
                 foots = _.filter(foots,function(foot){return foot.nb_player>foot.confirmed_players;}); //Remove complete foots
-                if(err) return res.status(400).end();
-                if(foots[0])
-                  res.status(200).json(foots);
+                if(foots[0]){
+                  var footsfield = equiJoin(foots, fields, "field", "id", function(a,b){
+                    return {
+                      booked: a.booked,
+                      confirmed_players:a.confirmed_players,
+                      createdAt:a.createdAt,
+                      created_by:a.created_by,
+                      date:a.date,
+                      friend_can_invite:a.friend_can_invite,
+                      id:a.id,
+                      field:a.field,
+                      is_canceled:a.is_canceled,
+                      level:a.level,
+                      nb_player:a.nb_player,
+                      priv:a.priv,
+                      lat:b.lat,
+                      longi:b.longi
+                    };
+                  });
+
+
+                  ToolsService.distCalc(lat, longi, footsfield, function(results){
+                    res.status(200).json(_.sortBy(results, 'distance'));
+                  });
+                }
                 else
                   res.status(200).json([]);
-            });
-        });
-    },
-    askToPlay: function(req,res){
-      Player.create({foot: req.param('foot'),user: req.param('userId'), statut: 0},function(err){
-        if(err) return res.status(400).end();
-        res.status(200).end();
-      });
-    }
+              });
+});
+},
+askToPlay: function(req,res){
+  Player.create({foot: req.param('foot'),user: req.param('userId'), statut: 0},function(err){
+    if(err) return res.status(400).end();
+    res.status(200).end();
+  });
+}
 };
 

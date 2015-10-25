@@ -57,7 +57,7 @@ module.exports = {
     type: 'string',
     email: true
   },
-//IF ORIGIN = PRIVATE related_to = user, else related_to = center
+//IF ORIGIN = PRIVATE related_to = user, else related_to = center, if related_to == 0 field deactivated
 related_to:{
   type: 'integer'
 },

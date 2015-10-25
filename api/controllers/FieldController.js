@@ -28,15 +28,11 @@
       if(fields && fields.length>0){
         console.log(fields);
         console.log(req.params.all());
-        if(_.find(fields, function(field){return field.id == req.param('id')})){
-          Field.destroy(req.param('id')).exec(function(err){
-            if(err){
-              console.log(err);
-              return res.status(406).end();         
-            }
-            else
-              return res.status(200).end();
-          });
+        var currentField = _.find(fields, function(field){return field.id == req.param('id')})
+        if(currentField){
+          currentField.related_to = 0;
+          currentField.save();
+          return res.status(200).end();
         }
         else
           return res.status(401).end();
@@ -55,20 +51,20 @@
     var fs = require('fs');
     var path = require('path');
     uploadFile.upload({ dirname: '../../.tmp/public/images/fields' ,saveAs:req.body.fieldId+".jpg"} ,function(err, files){
-    var url = path.join(__dirname,'../../.tmp/public/images/fields/'+req.body.fieldId+'.jpg');
-    try{
-      var file = fs.readFileSync(url);
-    }
-    catch(e){
-      console.log(e);
-      var file = '';
-    }
-    var params = {
-                Bucket: S3_BUCKET,
-                Key: "fields/"+req.body.fieldId+".jpg",
-                Body: file,
-                ACL: 'public-read'
-              }; 
+      var url = path.join(__dirname,'../../.tmp/public/images/fields/'+req.body.fieldId+'.jpg');
+      try{
+        var file = fs.readFileSync(url);
+      }
+      catch(e){
+        console.log(e);
+        var file = '';
+      }
+      var params = {
+        Bucket: S3_BUCKET,
+        Key: "fields/"+req.body.fieldId+".jpg",
+        Body: file,
+        ACL: 'public-read'
+      }; 
       s3.putObject(params, function(err,data){
         if(err){
           console.log(err);
@@ -91,7 +87,6 @@
       var word = ToolsService.clean(req.param('word'));
       params = {
         or : [
-
         {
           cleanname: {'contains': word },
           origin:'public'}
@@ -124,76 +119,58 @@
         return res.status(400).end();
       } 
       if(fields.length>0){
-        async.each(fields,function(field,callback){
-          var radlat1 = Math.PI * lat/180;
-          var radlat2 = Math.PI * field.lat/180;
-          var radlon1 = Math.PI * longi/180;
-          var radlon2 = Math.PI * field.longi/180;
-          var theta = longi-field.longi;
-          var radtheta = Math.PI * theta/180;
-          var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-          dist = Math.acos(dist);
-          dist = dist * 180/Math.PI;
-          dist = dist * 60 * 1.1515;
-          d = dist * 1.609344 ;
-          d=parseInt(d.toFixed(1)*10)/10;
-          field.distance=d;
-          results.push(field);
-          callback();
-        }, function(err) {
+        ToolsService.distCalc(lat, longi, fields, function(results){
+          var partners = _.sortBy(_.filter(results, function(result){return result.partner}), 'distance');
+          var noPartners = _.sortBy(_.filter(results, function(result){return !result.partner}), 'distance');
+          results=_.first(partners.concat(noPartners),40);
+          res.status(200).json(results);
+        })
+      }
+      else
+        res.status(200).end();
+    });    
+   },
 
-              // results = _.first(_.sortBy(results, 'distance'), 15);
-              var partners = _.sortBy(_.filter(results, function(result){return result.partner}), 'distance');
-              var noPartners = _.sortBy(_.filter(results, function(result){return !result.partner}), 'distance');
-              results=_.first(partners.concat(noPartners),40);
-              res.status(200).json(results);
-            });
-}
-else
-  res.status(200).end();
-});    
-},
+   getAllFields: function(req,res){
+    Field.find({origin: 'public'},function(err,field){
+      if(err) res.status(400).end();
+      else res.status(200).json(field);
+    });
+  },
 
-getAllFields: function(req,res){
-  Field.find({origin: 'public'},function(err,field){
-    if(err) res.status(400).end();
-    else res.status(200).json(field);
-  });
-},
+  setPicture: function(req,res){
+    Field.find().limit(4000).exec(function(err, fields){
+      if(err)
+        console.log(err)
+      _.each(fields, function(field){
 
-setPicture: function(req,res){
-  Field.find().limit(4000).exec(function(err, fields){
-    if(err)
-      console.log(err)
-    _.each(fields, function(field){
+        console.log(field);
 
-      console.log(field);
-
-      Field.update(field.id, 
-      {
+        Field.update(field.id, 
+        {
             // cleanname:ToolsService.clean(field.name)+ToolsService.clean(field.city), origin:'public',createdAt:moment().format(), updatedAt:moment().format(), partner:false
             picture:"http://wefoot.herokuapp.com/images/fields/"+field.id+".jpg"
           })
-      .exec(function(err){
-        console.log(err);
+        .exec(function(err){
+          console.log(err);
+        });
       });
     });
-  });
-},
+  },
 
-getFieldInfo: function(req,res){
-  Field.findOne({name: req.param('name')},function(err,field){
-    if(err || !field) res.status(400).end();
-    else res.status(200).json(field);
-  });
-},
+  getFieldInfo: function(req,res){
+    Field.findOne({name: req.param('name')},function(err,field){
+      if(err || !field) res.status(400).end();
+      else res.status(200).json(field);
+    });
+  },
 
-getStudentDiscount:function(req, res){
-  Field.findOne(req.param('id')).exec(function(err,field){
-    if(err) return res.status(400).end();
-    return res.status(200).json(field.student_discount);
-  });
-}
+  getStudentDiscount:function(req, res){
+    Field.findOne(req.param('id')).exec(function(err,field){
+      if(err) return res.status(400).end();
+      return res.status(200).json(field.student_discount);
+    });
+  }
 
 };
 

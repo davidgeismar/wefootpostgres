@@ -18,29 +18,39 @@
 
   },
 
-  addToChat: function(req, res, next){
-    var users = req.param('users');
-    if(users){
-      Chat.findOne({related:req.param('related')}).exec(function(err, chat){
-        async.each(users, function(user, callback){
-          Chatter.create({user:user, chat:chat.id}).exec(function(err, chatter){
-            User.findOne(user).exec(function(err,user){
-              Connexion.findOne({user: req.param('user')},function(err,connexion){
-                if(err || !connexion)
-                  return res.status(400).end();
-                sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
-                callback();
-              });
-            });
-          });
-        },function(err){
-          return res.status(200).end();
-        });
-      });
-    }
-    else
-      return res.status(400).end();
-  },
+  // addToChat: function(req, res, next){
+  //   var users = req.param('users');
+  //   if(users){
+  //     Chat.findOne({related:req.param('related')}).exec(function(err, chat){
+  //       if(err){ console.log(err); return res.status(400).end();}
+
+
+  //       Chatter.find({chat:chat.id}).exec(function(err,chatters){
+
+
+  //       async.each(users, function(user, callback){
+  //         Chatter.create({user:user, chat:chat.id}).exec(function(err, chatter){
+  //           if(err){ console.log(err); return res.status(400).end();}
+  //           User.findOne(user).exec(function(err,user){
+  //             async.each(chatters, function(chatter, callback2){
+  //             Connexion.findOne({user:chatter.user},function(err,connexion){
+  //               if(err){ console.log(err); return res.status(400).end();}
+  //               if(connexion)
+  //               sails.sockets.emit(connexion.socket_id,'newChatter',{chat:chat.id, user: {id: user.id, first_name: user.first_name, picture : user.picture, last_name:user.last_name } });
+  //               callback2();
+  //             });
+  //           },function(err){
+              
+  //           });
+  //         });
+  //       },function(err){
+  //         return res.status(200).end();
+  //       });
+  //     });
+  //   }
+  //   else
+  //     return res.status(400).end();
+  // },
 
   deactivateFromChat: function(req, res){
     Chatter.update({chat:req.param('chat'), user:req.param('user')},{deactivate:true}).exec(function(err,chatter){

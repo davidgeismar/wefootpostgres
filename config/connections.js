@@ -100,7 +100,7 @@
       adapter: 'sails-postgresql',
       host: 'localhost',   
       port: 5432,
-      user: 'raphaelfettaya',
+      user: 'mac',
       password: '',
       database: 'wefoot'
    }
