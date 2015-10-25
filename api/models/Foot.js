@@ -58,9 +58,6 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false
     }
-    // chat:{
-    //   model:'chat'
-    // }
 
 
   }

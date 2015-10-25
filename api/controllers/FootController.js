@@ -214,7 +214,7 @@
             }).exec(function(err,foots){
               if(err) return res.status(400).end();
                 foots = _.filter(foots,function(foot){return foot.nb_player>foot.confirmed_players;}); //Remove complete foots
-                if(foots[0]){
+                if(foots.length>0){
                   var footsfield = equiJoin(foots, fields, "field", "id", function(a,b){
                     return {
                       booked: a.booked,
