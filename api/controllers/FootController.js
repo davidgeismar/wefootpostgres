@@ -236,8 +236,7 @@
                   });
 
                   ToolsService.distCalc(lat, longi, footsfield, function(results){
-                    var results = _.sortBy(results, 'distance');
-                    res.status(200).json(results);
+                    res.status(200).json(_.sortBy(results, 'distance'));
                   });
                 }
                 else

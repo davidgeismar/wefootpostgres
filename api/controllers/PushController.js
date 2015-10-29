@@ -42,6 +42,22 @@
  		});
  	},
 
+ 	sendChatPush: function(req,res){
+ 		var pushText = req.param('texte');
+ 		var user = req.param('user');
+ 		var additionalData = req.param('data') || {};
+ 		var chat = req.param('chat');
+ 		Chatter.find({chat:chat, deactivate:false}).exec(function(err,chatters){
+ 			var activeChatters = _.pluck(chatters,'user');
+ 			Push.find({user: activeChatters},function(err,pushes){
+ 				if(err){console.log(err); return res.status(400).end();}
+ 				if(pushes.length==0) return res.status(200).end();
+ 				PushService.sendPush(pushes, pushText, additionalData);
+ 				return res.status(200).end();
+ 			});
+ 		});
+ 	},
+
  	delete: function(req,res){
  		Push.destroy({push_id: req.param('push_id')}, function(err){
  			return res.status(200).end();

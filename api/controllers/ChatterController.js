@@ -20,19 +20,19 @@
 
   // addToChat: function(req, res, next){
   //   var users = req.param('users');
+  //   var newChatters = req.param('chatters');
+
   //   if(users){
-  //     Chat.findOne({related:req.param('related')}).exec(function(err, chat){
+  //     Chat.findOne({related:req.param('related')}).populate('message').exec(function(err, chat){
   //       if(err){ console.log(err); return res.status(400).end();}
 
 
-  //       Chatter.find({chat:chat.id}).exec(function(err,chatters){
-
-
   //       async.each(users, function(user, callback){
+
   //         Chatter.create({user:user, chat:chat.id}).exec(function(err, chatter){
   //           if(err){ console.log(err); return res.status(400).end();}
   //           User.findOne(user).exec(function(err,user){
-  //             async.each(chatters, function(chatter, callback2){
+  //             async.each(newChatters, function(chatter, callback2){
   //             Connexion.findOne({user:chatter.user},function(err,connexion){
   //               if(err){ console.log(err); return res.status(400).end();}
   //               if(connexion)
@@ -40,7 +40,10 @@
   //               callback2();
   //             });
   //           },function(err){
-              
+  //             Chatter.find({chat:chat.id}).exec(function(err,chatters){
+  //               async.each(chatters, function(chatter, callback3){
+                
+  //             });
   //           });
   //         });
   //       },function(err){

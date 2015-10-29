@@ -24,17 +24,19 @@ module.exports = {
       desc:{
         type:'string'
       },
+      related: {
+        type: 'integer',
+        foreignKey: true,
+        references: 'foot',
+        on: 'id'  
+      },
+      //MANY MESSAGES FOR ONE CHAT
+      messages: {
+       collection: 'message',
+       via : 'chat'
+     }
 
-    related: {
-      type: 'int'
-    },
-    //MANY MESSAGES FOR ONE CHAT
-    messages: {
-    	collection: 'message',
-    	via : 'chat'
-    }
 
-
-  }
-};
+   }
+ };
 
