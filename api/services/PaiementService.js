@@ -50,13 +50,13 @@ module.exports = {
 		User.findOne({id: user}, function(err,user){
 			if(err) throw err;
 			if(!user.mangoId){
-				callback(0, {});
+				callback(0, user);
 				return;
 			}
 			mango.user.cards({
 				UserId: user.mangoId
 			},function(err,cards){
-				if(err) callback(0, {});
+				if(err) callback(0, user);
 				else callback(cards, user);
 			});
 		});
