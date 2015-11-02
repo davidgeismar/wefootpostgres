@@ -28,7 +28,7 @@ module.exports = {
         	else{
         		User.update({id: user.id},{mangoId: parseInt(wallet.Id)},function(err,user){
         			if(err) throw err;
-        			callback(user);
+        			callback(user[0]);
         		});
         	}
     	});
