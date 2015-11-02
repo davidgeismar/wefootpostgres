@@ -56,7 +56,7 @@
   FieldController:{
     // create
     // uploadPic
-    searchFields: true,
+    getFieldInfo: true,
     getAllFields: true,
     deletePrivateField: 'isLoggedInParam(\'related_to\')'
   },
