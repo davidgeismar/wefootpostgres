@@ -47,17 +47,17 @@ module.exports = {
 	},
 
 	getCards: function(user,callback){
-		User.findOne({id: user.id}, function(err,user){
+		User.findOne({id: user}, function(err,user){
 			if(err) throw err;
 			if(!user.mangoId){
-				callback(0);
+				callback(0, {});
 				return;
 			}
 			mango.user.cards({
 				UserId: user.mangoId
 			},function(err,cards){
-				if(err) callback(0);
-				else callback(cards);
+				if(err) callback(0, {});
+				else callback(cards, user);
 			});
 		});
 	},
