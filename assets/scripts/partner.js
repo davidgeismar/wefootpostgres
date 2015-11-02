@@ -1,8 +1,7 @@
-var serverAdress = "http://localhost:1337";
 var field = {};
 $.ajax({
     method: "GET",
-    url: serverAdress+"/field/getAllFields",
+    url: "../field/getAllFields",
     statusCode: {
         200: function(data){
             $( "#partner-input" ).autocomplete({
@@ -21,7 +20,7 @@ $.ajax({
 var getInfo = function(field){
     $.ajax({
         method: "GET",
-        url: serverAdress+"/field/getFieldInfo/"+field,
+        url: "../field/getFieldInfo/"+field,
         statusCode: {
             200: function(data){
                 field = data;
