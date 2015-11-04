@@ -92,7 +92,7 @@
   PaiementController:{
     // update
     getCards:'isLoggedInParam(\'user\')',
-    registerCard:'isLoggedInParam(\'user\')',
+    registerCard:'isLoggedInParam(\'userId\')',
     preauthorize:'mangoCheck'
     // transferMoney
   },

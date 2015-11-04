@@ -15,16 +15,16 @@ module.exports = {
 
 	getCards: function (req,res) {   //Make it strongly secure
 		try{
-			PaiementService.getCards(req.param('user'),function(cards){
+			PaiementService.getCards(req.param('user'),function(cards,user){
 				if(cards===0){
-					PaiementService.register(req.param('user'), function(user){
+					PaiementService.register(user, function(user){
 						 res.status(200).json([[],user]);
 					});
 				}
 				else if(cards.length==0)
-					res.status(200).json([[],req.param('user')]);
+					res.status(200).json([[], user]);
 				else
-					res.status(200).json([cards,req.param('user')]);
+					res.status(200).json([cards, user]);
 			});
 		}
 		catch(err){
