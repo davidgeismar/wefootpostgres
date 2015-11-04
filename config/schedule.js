@@ -7,14 +7,13 @@
  module.exports.schedule = {
   sailsInContext : true, //If sails is not as global and you want to have it in your task
   tasks : {
-  // "30 2 * * *"
   firstTask : {
-   cron : "*/1 * * * *",
+   cron : "30 2 * * *",
    context : {},
    task : function (context, sails)
    {
-    var nowMinus3d = moment().add(1, 'days').format('YYYY-MM-DD HH:mm:ss');
-    var nowMinus4d = moment().subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss');
+    var nowMinus3d = moment().subtract(3, 'days').format('YYYY-MM-DD HH:mm:ss');
+    var nowMinus4d = moment().subtract(4, 'days').format('YYYY-MM-DD HH:mm:ss');
       // On sélectionne les chevres et hommes des foots qui ont plus de 3 jours     
       Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre",function(err,results){
         if(results){
@@ -73,11 +72,11 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 },
 
 secondTask : {
- cron : "*/10 * * * *",
+ cron : "0 */4 * * *",
  context : {},
  task : function (context, sails)
  {
-  var nowPlus4h = moment().add(2, 'hours').format();
+  var nowPlus4h = moment().add(4, 'hours').format();
   var nowPlus8h = moment().add(8, 'hours').format();
 
   Foot.find({ date: { '<': nowPlus8h, '>': nowPlus4h }}).exec(function(err, foots){
