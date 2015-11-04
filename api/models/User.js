@@ -97,7 +97,7 @@ facebook_id: {
   type: 'int'
 },
 email: {
- type: 'email',
+ type: 'string',
  unique:true,
  required: true
 },
