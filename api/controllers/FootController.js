@@ -37,11 +37,11 @@
         else{
           var id = foot.id;
           var orga = req.param('created_by');
-          Player.create({foot: id, user: orga, statut: 3 },function OrganisatorAdded(err,player){
+          Player.findOrCreate({foot: id, user: orga, statut: 3 },function OrganisatorAdded(err,player){
             if(err) return res.status(400).end();
           });
           async.each(req.param('toInvite'),function(user,callback){
-            Player.create({foot: id, user: user, statut: 1 },function PlayerAdded(err,player){
+            Player.findOrCreate({foot: id, user: user, statut: 1 },function PlayerAdded(err,player){
               if(err) return res.status(400).end();
               callback();
             });
@@ -151,7 +151,7 @@
 
     sendInvits: function(req,res){
       async.each(req.param('toInvite'),function(user,callback){
-        Player.create({foot: req.param('id'), user: user, statut: 1 },function PlayerAdded(err,player){
+        Player.findOrCreate({foot: req.param('id'), user: user, statut: 1 },function PlayerAdded(err,player){
           if(err) return res.status(400).end();
           callback();
         });
@@ -195,7 +195,6 @@
 
       var lat = req.param('lat');
       var longi = req.param('lng');
-      console.log(lat)
       dateReq = dateReq.replace(/,+/g, '');
       Field.find().where({
         cleanname: {
@@ -245,7 +244,7 @@
 });
 },
 askToPlay: function(req,res){
-  Player.create({foot: req.param('foot'),user: req.param('userId'), statut: 0},function(err){
+  Player.findOrCreate({foot: req.param('foot'),user: req.param('userId'), statut: 0},function(err){
     if(err) return res.status(400).end();
     res.status(200).end();
   });
