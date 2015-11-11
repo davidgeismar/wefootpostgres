@@ -48,7 +48,7 @@
     password: 'root',
     database: 'wefoot'
   },
-  
+
   mysql: {
     adapter: 'sails-mysql',
     host: '62.210.115.66',
@@ -98,9 +98,9 @@
 
    postgresLocal: {
       adapter: 'sails-postgresql',
-      host: 'localhost',   
+      host: 'localhost',
       port: 5432,
-      user: 'raphaelfettaya',
+      user: 'davidgeismar',
       password: '',
       database: 'wefoot'
    }
