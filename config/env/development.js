@@ -19,6 +19,6 @@ module.exports = {
 
   models: {
     connection: 'postgresLocal',
-    migrate: 'alter'
+    migrate: 'safe'
   }
 };
