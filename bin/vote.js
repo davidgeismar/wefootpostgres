@@ -59,8 +59,9 @@ process.chdir(__dirname);
     }
   }
 
-  sails.lift(rc('sails'), function() {
+  sails.lift(rc('sails'));
 
+  function vote() {
     var nowMinus4h = moment().subtract(4, 'hours').format();
     var nowMinus8h = moment().subtract(8, 'hours').format();
     Foot.find({ date: { '<': nowMinus8h, '>': nowMinus4h }}).exec(function(err, foots){
@@ -84,8 +85,8 @@ process.chdir(__dirname);
     }, function(err){
     });
    });
+  }
 
-});
   vote();
 
 

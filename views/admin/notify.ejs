@@ -8,7 +8,40 @@
       <div class="form-group">
         <label>Envoyer un push</label>
         <input type="texte" class="form-control" name="pushTexte" placeholder="Texte">
-      </div>
+        <h2>Filtrage</h2>
+        <label>Centre</label>
+        <input type="texte" class="form-control" name="centre" placeholder="Nom du centre">
+        <label>Localisation des cibles</label>
+        <input type="texte" class="form-control" name="centre" placeholder="localisation">
+         <div class="checkbox">
+          <label>
+            <input type="checkbox"> Joueurs ayant effectué une seule réservation dans ce centre au cours du dernier mois ?
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox">Joueurs ayant effectué plus de 3 réservations
+              dans ce centre au cours du dernier mois ?
+          </label>
+        </div>
+         <div class="checkbox">
+          <label>
+            <input type="checkbox"> Joueurs ayant participé à une partie dans ce centre au cours du dernier mois ?
+          </label>
+        </div>
+         <div class="checkbox">
+          <label>
+            <input type="checkbox"> Joueurs ayant participé à plus de 3 parties dans ce centre au cours du dernier mois ?
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"> Joueurs ayant un cercle d’amis > 10
+          </label>
+        </div>
+
+        <h3>Nombre de joueurs touchés : 3000</h3>
+      <div>
       <button type="submit" class="btn btn-primary">Envoyer</button>
          <script src="/scripts/jquery.js"></script>
         <script src="/scripts/bootstrap.min.js"></script>
