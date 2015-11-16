@@ -18,7 +18,7 @@
       }
       if(!user) return res.status(200);
       var tok = jwt.sign(user,'123Tarbahh');
-            User.update(user.id,{token:tok}).exec(function(error,user) {   // TODO Use After Create to be faster
+            User.update(user.id,{token:tok, email:user.email.toLowerCase()}).exec(function(error,user) {   // TODO Use After Create to be faster
               res.status(200);
               res.json(user);
             });

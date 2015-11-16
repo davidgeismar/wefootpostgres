@@ -9,7 +9,7 @@
   login: function(req,res,next){
     var bcrypt = require('bcrypt');
 
-    User.findOneByEmail(req.param('email'), function(err, user){
+    User.findOneByEmail(req.param('email').toLowerCase(), function(err, user){
      if (err) return next(err);
 
      if (user && user.password) {
