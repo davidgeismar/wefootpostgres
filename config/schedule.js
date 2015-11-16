@@ -72,14 +72,13 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 },
 
 secondTask : {
- cron : "0 */4 * * *",
+ cron : "*/1 * * * *",
  context : {},
  task : function (context, sails)
  {
-  var nowPlus4h = moment().add(4, 'hours').format();
-  var nowPlus8h = moment().add(8, 'hours').format();
-
-  Foot.find({ date: { '<': nowPlus8h, '>': nowPlus4h }}).exec(function(err, foots){
+  var nowMinus4h = moment().subtract(4, 'hours').format();
+  var nowMinus8h = moment().subtract(8, 'hours').format();
+  Foot.find({ date: { '<': nowMinus8h, '>': nowMinus4h }}).exec(function(err, foots){
     async.each(foots, function(foot, callback){
       Player.find({foot:foot.id, or: [{statut:2},{statut:3}]}).exec(function(err, players){
         async.each(players, function(player, callback2){
