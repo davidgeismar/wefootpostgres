@@ -58,39 +58,36 @@ process.chdir(__dirname);
       rc = function () { return {}; };
     }
   }
-
-  sails.lift(rc('sails'), function() {
-
-    var nowMinus4h = moment().subtract(4, 'hours').format();
-    var nowMinus8h = moment().subtract(8, 'hours').format();
-    Foot.find({ date: { '<': nowMinus8h, '>': nowMinus4h }}).exec(function(err, foots){
-     async.each(foots, function(foot, callback){
-      Player.find({foot:foot.id, or: [{statut:2},{statut:3}]}).exec(function(err, players){
-       async.each(players, function(player, callback2){
-        Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
-         if(err)
-          console.log(err); 
-        Connexion.findOne({user:player.user}).exec(function(err, connexion){
-          if(connexion){
-           sails.sockets.emit(connexion.socket_id,'notif',actu);
-         }
-       });
-      });
-        callback2();
-      },function(err){
-      });
-     });
-      callback();
-    }, function(err){
-    });
-   });
-
-});
-  vote();
+	function vote() {
+		var nowMinus4h = moment().subtract(4, 'hours').format();
+		var nowMinus8h = moment().subtract(8, 'hours').format();
+		Foot.find({ date: { '<': nowMinus8h, '>': nowMinus4h }}).exec(function(err, foots){
+			async.each(foots, function(foot, callback){
+				Player.find({foot:foot.id, or: [{statut:2},{statut:3}]}).exec(function(err, players){
+					async.each(players, function(player, callback2){
+						Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
+							if(err)
+								console.log(err); 
+							Connexion.findOne({user:player.user}).exec(function(err, connexion){
+								if(connexion){
+									sails.sockets.emit(connexion.socket_id,'notif',actu);
+								}
+							});
+						});
+						callback2();
+					},function(err){
+					});
+				});
+				callback();
+			}, function(err){
+			});
+		});
+	}
 
 
   // Start server
+  sails.lift(rc('sails'));
   
+  vote();
 })();
-
-// process.exit();
+process.exit();
