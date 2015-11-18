@@ -25,6 +25,16 @@
           });
   },
 
+  checkEmail:function(req,res){
+    User.findOne({email:req.param('email')}).exec(function(err,user){
+      if(err){ console.log(err); return res.status(400).end() ;}
+      if(user)
+        res.status(200).json({exists:true});
+      else
+        res.status(200).json({exists:false});
+    });
+  },
+
   update: function(req,res,next){
     User.update({id: req.param('id')},req.params.all(),function(err,user){
       if(err) return res.status(400).end();
@@ -118,7 +128,7 @@
           });
         });
       });
-    },
+},
 
     //DEPECATED
     uploadProfilPicOLD: function  (req, res) {
@@ -377,16 +387,22 @@ removeFavorite: function(req,res){
 
     facebookConnect: function(req,res){
       var jwt = require('jsonwebtoken');
-      if(req.param('facebook_id')){
-        User.findOne({facebook_id:req.param('facebook_id')},function(err,user){
-          if(err) return res.status(404).end();
-          if(!user)
-          {
-            if(!req.param('email')){
-              var email = req.param('facebook_id')+"@facebook.com";
-            }
-            else
-              var email = req.param('email');
+      if(req.param('facebook_id') && req.param('email')){
+        User.findOne({email:req.param('email'), facebook_id:null}).exec(function(err,user){
+          if(user){
+            User.update(user.id,{facebook_id:req.param('facebook_id'), fbtoken:req.param('fbtoken')});
+            return res.status(200).json(user);
+          }
+          else {
+            User.findOne({facebook_id:req.param('facebook_id')},function(err,user){
+              if(err) return res.status(404).end();
+              if(!user)
+              {
+                if(!req.param('email')){
+                  var email = req.param('facebook_id')+"@facebook.com";
+                }
+                else
+                  var email = req.param('email');
           User.create({email:email, first_name:req.param('first_name'), last_name:req.param('last_name'), facebook_id:req.param('facebook_id'), fbtoken:req.param('fbtoken')}, function userCreated(err, user){   // CREATE ACCOUNT
             if(err){ console.log(err); return res.status(400).end();}    
             var tok = jwt.sign(user,'123Tarbahh');
@@ -401,6 +417,8 @@ removeFavorite: function(req,res){
         }
         else return res.status(406).end();
       });
+}
+});
 }
   else{   // CHECK USER WITHOUT EMAIL
     res.status(406).send('Error getting facebook profile');

@@ -1,2 +1,4 @@
 web:  export NODE_ENV=production; sails lift -—prod
 vote: node vote.js
+endvote: node endvote.js
+threehoursbefore: node threehoursbefore.js
