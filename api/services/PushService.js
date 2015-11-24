@@ -35,7 +35,7 @@ sendIosPush: function(text, tokens, pendingNotifs, additionalData){
 
 
   var options = {
-    gateway: 'gateway.sandbox.push.apple.com',
+    gateway: 'gateway.push.apple.com',
     errorCallback: function(error){
       console.log('push error', error);
     },
