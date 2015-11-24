@@ -138,7 +138,7 @@
   * transport should be disabled.                                            *
   *                                                                          *
   ***************************************************************************/
-  transports: ["polling", "websocket"],
+  transports: ["polling"],
   origins: '*:*',
 
 };
