@@ -42,6 +42,7 @@ sendIosPush: function(text, tokens, pendingNotifs, additionalData){
     cert: 'PushNewsCert.pem',
     key:  'PushNewsKey.pem',
     passphrase: 'lemonde',
+    production: true,
     port: 2195,
     enhanced: true,
     cacheLength: 100
