@@ -194,6 +194,17 @@
 
       var lat = req.param('lat');
       var longi = req.param('lng');
+      var hours = 0;
+      var minutes = 0;
+      var seconds = 0;
+
+      //For today return just the foot of the day
+      if(moment(req.param('date')).dayOfYear() == moment().dayOfYear()){
+        hours = moment().hours();
+        minutes = moment().minutes();
+        seconds = moment().seconds();
+      }
+
       dateReq = dateReq.replace(/,+/g, '');
       Field.find().where({
         cleanname: {
@@ -206,7 +217,7 @@
           field: fieldsId,
           priv: false,
               date: {   //Changes for Postgres
-                '>=': moment(req.param('date')).hours(0).minutes(0).seconds(0).format(),
+                '>=': moment(req.param('date')).hours(hours).minutes(minutes).seconds(seconds).format(),
                 '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
               }
             }).exec(function(err,foots){
