@@ -398,20 +398,16 @@ removeFavorite: function(req,res){
               if(err) return res.status(404).end();
               if(!user)
               {
-                if(!req.param('email')){
-                  var email = req.param('facebook_id')+"@facebook.com";
-                }
-                else
-                  var email = req.param('email');
-          User.create({email:email, first_name:req.param('first_name'), last_name:req.param('last_name'), facebook_id:req.param('facebook_id'), fbtoken:req.param('fbtoken')}, function userCreated(err, user){   // CREATE ACCOUNT
-            if(err){ console.log(err); return res.status(400).end();}    
-            var tok = jwt.sign(user,'123Tarbahh');
-            var name = ToolsService.clean(user.first_name)+ToolsService.clean(user.last_name);
-            User.update(user.id,{token:tok, full_name:name,picture: 'https://graph.facebook.com/'+user.facebook_id+'/picture?width=400&height=400'}).exec(function(error,user) {   // TODO Use After Create to be faster
-              res.status(200).json(user[0]);
-            });
-          });
-        }
+                var email = req.param('email');
+                User.create({email:email, first_name:req.param('first_name'), last_name:req.param('last_name'), facebook_id:req.param('facebook_id'), fbtoken:req.param('fbtoken')}, function userCreated(err, user){   // CREATE ACCOUNT
+                  if(err){ console.log(err); return res.status(400).end();}    
+                  var tok = jwt.sign(user,'123Tarbahh');
+                  var name = ToolsService.clean(user.first_name)+ToolsService.clean(user.last_name);
+                  User.update(user.id,{token:tok, full_name:name,picture: 'https://graph.facebook.com/'+user.facebook_id+'/picture?width=400&height=400'}).exec(function(error,user) {   // TODO Use After Create to be faster
+                    res.status(200).json(user[0]);
+                  });
+                });
+              }
         else if(user.facebook_id){   // USER CREATED
           res.status(200).json(user);
         }

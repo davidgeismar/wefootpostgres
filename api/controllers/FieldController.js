@@ -120,8 +120,8 @@
       } 
       if(fields.length>0){
         ToolsService.distCalc(lat, longi, fields, function(results){
-          var partners = _.sortBy(_.filter(results, function(result){return result.partner}), 'distance');
-          var noPartners = _.sortBy(_.filter(results, function(result){return !result.partner}), 'distance');
+          var partners = _.sortBy(_.filter(results, function(result){return (result.partner && result.distance<=30)}), 'distance');
+          var noPartners = _.sortBy(_.filter(results, function(result){return (!result.partner || (result.partner && result.distance>30))}), 'distance');
           results=_.first(partners.concat(noPartners),40);
           res.status(200).json(results);
         })
