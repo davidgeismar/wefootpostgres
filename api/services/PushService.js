@@ -35,13 +35,14 @@ sendIosPush: function(text, tokens, pendingNotifs, additionalData){
 
 
   var options = {
-    gateway: 'gateway.sandbox.push.apple.com',
+    gateway: 'gateway.push.apple.com',
     errorCallback: function(error){
       console.log('push error', error);
     },
     cert: 'PushNewsCert.pem',
     key:  'PushNewsKey.pem',
     passphrase: 'lemonde',
+    production: true,
     port: 2195,
     enhanced: true,
     cacheLength: 100

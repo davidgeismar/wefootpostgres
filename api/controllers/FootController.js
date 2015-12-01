@@ -66,8 +66,7 @@
     },
     
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
-
-      Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:mm:ss')+"' ORDER BY f.date", function(err,foots){
+      Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:mm:ss')+"' AND f.is_canceled <> TRUE ORDER BY f.date", function(err,foots){
         if(err) return res.status(400).end();
         //Using foot.rows for postgres queries
         return res.json(foots.rows).status(200).end();
@@ -195,6 +194,17 @@
 
       var lat = req.param('lat');
       var longi = req.param('lng');
+      var hours = 0;
+      var minutes = 0;
+      var seconds = 0;
+
+      //For today return just the foot of the day
+      if(moment(req.param('date')).dayOfYear() == moment().dayOfYear()){
+        hours = moment().hours();
+        minutes = moment().minutes();
+        seconds = moment().seconds();
+      }
+
       dateReq = dateReq.replace(/,+/g, '');
       Field.find().where({
         cleanname: {
@@ -207,7 +217,7 @@
           field: fieldsId,
           priv: false,
               date: {   //Changes for Postgres
-                '>=': moment(req.param('date')).hours(0).minutes(0).seconds(0).format(),
+                '>=': moment(req.param('date')).hours(hours).minutes(minutes).seconds(seconds).format(),
                 '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
               }
             }).exec(function(err,foots){
