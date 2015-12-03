@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#! /app/bin/node
 
 var async = require('async');
 var moment = require('moment');
@@ -39,34 +39,44 @@ process.chdir(__dirname);
   // Start server
   sails.lift(rc('sails'), function(){
 
-    function vote() {
-      console.log("voting time");
-      var nowMinus2h = moment().subtract(2, 'hours').format();
+    function threehoursbefore() {
+      var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
       var nowMinus3h = moment().subtract(3, 'hours').format();
-      Foot.find({ date: { '<': nowMinus2h, '>': nowMinus3h }}).exec(function(err, foots){
+      Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
+        if(err)
+          console.log(err);
         async.each(foots, function(foot, callback){
-          Player.find({foot:foot.id, or: [{statut:2},{statut:3}]}).exec(function(err, players){
-            async.each(players, function(player, callback2){
-              Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
-                if(err)
-                  console.log(err); 
-                Connexion.findOne({user:player.user}).exec(function(err, connexion){
-                  if(connexion){
-                    sails.sockets.emit(connexion.socket_id,'notif',actu);
-                  }
-                });
-              });
-              callback2();
-            },function(err){
-            });
+          Player.find({foot:foot.id}).exec(function(err, players){
+        //We send pushes
+        var usersId = _.pluck(players, 'user');
+        Push.find({user:usersId}).exec(function(err, pushes){
+          if(pushes){
+            PushService.sendPush(pushes, "Votre rencontre démarre dans 3h, ne soyez pas en retard");
+          }
+        });
+       //We create actu and send it by socket
+       async.each(players, function(player, callback2){
+        Actu.create({user:player.user, related_user:player.user, typ:'3hoursBefore', related_stuff:foot.id}).exec(function(err,actu){
+          if(err)
+            console.log(err);
+          Connexion.findOne({user:player.user}).exec(function(err, connexion){
+            if(connexion){
+              sails.sockets.emit(connexion.socket_id,'notif',actu);
+            }
+            callback2();
           });
-          callback();
-        }, function(err){
+        });
+
+      },function(err){
+        callback();
+      });
+
+     });
+        },function(err){
           process.exit();
         });
-      });
-    }
-    vote();
-  });
+});
+}
+threehoursbefore();
+});
 })();
-// process.exit();
