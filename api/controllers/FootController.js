@@ -216,10 +216,11 @@
         Foot.find().where({
           field: fieldsId,
           priv: false,
-              date: {   //Changes for Postgres
-                '>=': moment(req.param('date')).hours(hours).minutes(minutes).seconds(seconds).format(),
-                '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
-              }
+          date: {   //Changes for Postgres
+            '>=': moment(req.param('date')).hours(hours).minutes(minutes).seconds(seconds).format(),
+            '<=': moment(req.param('date')).add(1, 'days').hours(0).minutes(0).seconds(0).format(),
+          },
+          is_canceled: false
             }).exec(function(err,foots){
               if(err) return res.status(400).end();
 
