@@ -44,29 +44,32 @@ process.chdir(__dirname);
       var nowMinus2h = moment().subtract(2, 'hours').format();
       var nowMinus3h = moment().subtract(3, 'hours').format();
       Foot.find({ date: { '<': nowMinus2h, '>': nowMinus3h }}).exec(function(err, foots){
-        async.each(foots, function(foot, callback){
-          Player.find({foot:foot.id, or: [{statut:2},{statut:3}]}).exec(function(err, players){
-            async.each(players, function(player, callback2){
-              Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
-                if(err)
-                  console.log(err); 
-                Connexion.findOne({user:player.user}).exec(function(err, connexion){
-                  if(connexion){
-                    sails.sockets.emit(connexion.socket_id,'notif',actu);
-                  }
+        if(foots.length>0){
+          async.each(foots, function(foot, callback){
+            Player.find({foot:foot.id, statut:[2,3]}).exec(function(err, players){
+              if(players.length>0){
+                async.each(players, function(player, callback2){
+                  Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
+                    if(err)
+                      console.log(err); 
+                    Connexion.findOne({user:player.user}).exec(function(err, connexion){
+                      if(connexion){
+                        sails.sockets.emit(connexion.socket_id,'notif',actu);
+                      }
+                    });
+                  });
+                  callback2();
+                },function(err){
                 });
-              });
-              callback2();
-            },function(err){
+              }
             });
+            callback();
+          }, function(err){
+            process.exit();
           });
-          callback();
-        }, function(err){
-          process.exit();
-        });
+        }
       });
-    }
-    vote();
-  });
+}
+vote();
+});
 })();
-// process.exit();

@@ -40,9 +40,9 @@ process.chdir(__dirname);
   sails.lift(rc('sails'), function(){
 
     function threehoursbefore() {
-      var nowMinus3h10min = moment().subtract(3, 'hours').subtract(10, 'minutes').format();
-      var nowMinus3h = moment().subtract(3, 'hours').format();
-      Foot.find({ date: { '>': nowMinus3h10min, '<': nowMinus3h }}).exec(function(err, foots){
+      var nowPlus3h10min = moment().add(3, 'hours').add(10, 'minutes').format();
+      var nowPlus3h = moment().add(3, 'hours').format();
+      Foot.find({ date: { '>': nowPlus3h10min, '<': nowPlus3h }}).exec(function(err, foots){
         if(err)
           console.log(err);
         async.each(foots, function(foot, callback){

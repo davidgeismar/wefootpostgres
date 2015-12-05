@@ -218,18 +218,34 @@ addFriend: function (req,res) {
   }
   else res.status(400).end();
 },
-getAllFriends: function (req,res){ 
-  var statuts = [];
-  var results = [];
-  var toSend = [];
-  Friendship.find().where({
+
+isFriendWith: function(req,res){
+  Friendship.findOne().where({
     or:[{
-     user1: req.param('id') },
-     { user2: req.param('id')
-   }]
- }).skip(req.param('skip')).exec(function(err,friendships){
-  if(err) res.status(400).end();
-  else{ 
+     user1: req.param('user1'), user2: req.param('user2') },
+     { user1: req.param('user2'), user2: req.param('user1')}]}).exec(function(err,friendship){
+      if(err) {console.log(err); return res.status(400).end();}
+      if(friendship){
+        return res.status(200).json(true);
+      }
+      else
+        return res.status(200).json(false);
+    });
+
+   },
+
+   getAllFriends: function (req,res){ 
+    var statuts = [];
+    var results = [];
+    var toSend = [];
+    Friendship.find().where({
+      or:[{
+       user1: req.param('id') },
+       { user2: req.param('id')
+     }]
+   }).skip(req.param('skip')).exec(function(err,friendships){
+    if(err) res.status(400).end();
+    else{ 
               _.each(friendships, function(friendship){       // Loop to get the ids of friends    
                 if(friendship.user1 == req.param('id')){
                   results.push(friendship.user2);

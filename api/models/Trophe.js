@@ -24,7 +24,7 @@ module.exports = {
 		},
 		//0 = chevre, 1 = homme
 		trophe:{
-			type:'int',
+			type:'integer',
 			required:true
 		}
 

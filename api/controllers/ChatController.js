@@ -89,7 +89,7 @@ getChat: function (req, res, next){
 getAllChats: function (req, res, next){
   var chats = new Array();
 
-  Chatter.find({user:req.param('id'), deactivate:0}).exec(function(err,chatters){
+  Chatter.find({user:req.param('id'), deactivate:false}).exec(function(err,chatters){
     if(err){
       console.log(err);
       return res.status(406).end();         
