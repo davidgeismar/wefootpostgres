@@ -138,8 +138,8 @@
   * transport should be disabled.                                            *
   *                                                                          *
   ***************************************************************************/
-  transports: ["polling"],
-  "polling duration": 10, 
+  transports: ["xhr-polling"],
+  "polling duration": 20, 
   origins: '*:*'
 
 };
