@@ -80,7 +80,7 @@ secondTask : {
   var nowMinus8h = moment().subtract(8, 'hours').format();
   Foot.find({ date: { '<': nowMinus8h, '>': nowMinus4h }}).exec(function(err, foots){
     async.each(foots, function(foot, callback){
-      Player.find({foot:foot.id, or: [{statut:2},{statut:3}]}).exec(function(err, players){
+      Player.find({foot:foot.id, statut: [2, 3]}).exec(function(err, players){
         async.each(players, function(player, callback2){
           Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
             if(err)
