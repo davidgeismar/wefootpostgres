@@ -44,9 +44,10 @@ process.chdir(__dirname);
       var nowMinus2h = moment().subtract(2, 'hours').format();
       var nowMinus3h = moment().subtract(3, 'hours').format();
       Foot.find({ date: { '<': nowMinus2h, '>': nowMinus3h }}).exec(function(err, foots){
+        console.log(foots);
         if(foots.length>0){
           async.each(foots, function(foot, callback){
-            Player.find({foot:foot.id, statut:[2,3]}).exec(function(err, players){
+            Player.find({foot:foot.id, statut:[2,3]}).exec(function(err, players){              
               if(players.length>0){
                 async.each(players, function(player, callback2){
                   Actu.create({user:player.user, related_user:foot.created_by, typ:'endGame', related_stuff:foot.id}).exec(function(err,actu){
@@ -56,14 +57,14 @@ process.chdir(__dirname);
                       if(connexion){
                         sails.sockets.emit(connexion.socket_id,'notif',actu);
                       }
+                      callback2();
                     });
                   });
-                  callback2();
                 },function(err){
+                  callback();
                 });
               }
             });
-            callback();
           }, function(err){
             process.exit();
           });
