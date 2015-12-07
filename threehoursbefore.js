@@ -42,7 +42,7 @@ process.chdir(__dirname);
     function threehoursbefore() {
       var nowPlus3h10min = moment().add(3, 'hours').add(10, 'minutes').format();
       var nowPlus3h = moment().add(3, 'hours').format();
-      Foot.find({ date: { '>': nowPlus3h10min, '<': nowPlus3h }}).exec(function(err, foots){
+      Foot.find({ date: { '<': nowPlus3h10min, '>': nowPlus3h }}).exec(function(err, foots){
         if(err)
           console.log(err);
         async.each(foots, function(foot, callback){
