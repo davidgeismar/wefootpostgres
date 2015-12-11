@@ -110,6 +110,12 @@
 
   'GET /field/getStudentDiscount/:id' :'FieldController.getStudentDiscount',
 
+  '/askVote':'UserController.askVote',
+
+  '/sendTrophees':'UserController.endVote',
+
+  '/threeHours':'UserController.threeHoursBeforeMatch'
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
