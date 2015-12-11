@@ -78,10 +78,10 @@
       Foot.findOne().where({
         id: req.param('id')
       }).exec(function(err,foot){
-        if(!foot || err) return res.status(400).end();
+        if(!foot || err){ console.log(err); return res.status(400).end();}
         User.findOne().where({id:foot.created_by}).exec(function(err,user){
-          if(err) return res.status(400).end();
-          if(!user) return res.status(400).end();
+          if(err) { console.log(err); return res.status(400).end();}
+          if(!user) { console.log(err); return res.status(400).end();}
           info.orga = user.id;
           info.orgaName = user.first_name + " "+ user.last_name;
           info.picture = user.picture;
