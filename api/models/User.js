@@ -181,6 +181,17 @@ generatepassword_reset_token: function() {
 },
 
 sendPasswordResetEmail: function() {
+  sails.config.hooks['sails-hook-email'].configKey =  {
+    service: 'Gmail',
+    auth: {
+      user: 'ruben.sebbane@gmail.com',
+      pass: '1991Boss?!'
+    },
+    templateDir: path.join(__dirname, '../../views/emailTemplates'),
+    from: 'ruben.sebbane@gmail.com',
+    testMode: false
+  };
+  
   sails.hooks.email.send(
     "resetPassword",
     {
