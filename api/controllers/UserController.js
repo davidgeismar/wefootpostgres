@@ -8,6 +8,7 @@
 var moment = require('moment');
 var async = require('async');
 
+
  module.exports = {
 
   create: function(req, res, next){
@@ -461,6 +462,7 @@ resetPassword: function(req,res){
 },
 
 newPassword: function(req,res){
+  var bcrypt = require('bcrypt');
   User.findOne({email:req.param('email'), password_reset_token:req.param('token')}).exec(function(err,user){
     if(err)
       return res.status(406).end();
