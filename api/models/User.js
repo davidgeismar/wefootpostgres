@@ -181,6 +181,7 @@ generatepassword_reset_token: function() {
 },
 
 sendPasswordResetEmail: function() {
+  var path = require('path');
   sails.config.email = {
     service: 'Gmail',
     auth: {

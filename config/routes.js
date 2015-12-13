@@ -110,7 +110,7 @@
 
   'GET /field/getStudentDiscount/:id' :'FieldController.getStudentDiscount',
 
-  '/askVote':'UserController.askVote',
+  '/askVote':'UserController.beginVote',
 
   '/sendTrophees':'UserController.endVote',
 
