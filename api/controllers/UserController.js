@@ -476,7 +476,7 @@ newPassword: function(req,res){
           user.password_confirmation = hash;
           user.password_reset_token = null;
           user.save(function(err){
-            return res.status(200);
+            return res.status(200).end();
           });
         });
       });
