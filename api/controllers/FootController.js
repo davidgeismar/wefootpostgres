@@ -128,11 +128,11 @@
               return res.status(400).end;
             }
             Player.update({user: req.param('user'),foot: req.param('foot')},{statut:2},function(err,player){
-              if(err){
-                foot.confirmed_players--;
-                foot.save();
-                return res.status(400).end();
-              }
+              // if(err){
+              //   foot.confirmed_players--;
+              //   foot.save();
+              //   return res.status(400).end();
+              // }
               return res.status(200).end();
             });
           });
@@ -160,11 +160,14 @@
     },
 
     removePlayer: function(req,res){
-      Player.destroy({foot: req.param('foot'), user: req.param('user')},function(err){
+      if(!req.param('foot') || !req.param('user'))
+        return res.status(400).end();
+      Player.destroy({foot: req.param('foot'), user: req.param('user')},function(err, player){
         if(err) return res.status(400).end();
         Foot.findOne({id: req.param('foot')},function(err,foot){
           if(err) return res.status(400).end();
-          foot.confirmed_players = foot.confirmed_players-1;
+          if(player[0].statut == 2)
+            foot.confirmed_players = foot.confirmed_players-1;
           foot.save();
           return res.status(200).end();
         });

@@ -559,7 +559,6 @@ beginVote: function(req,res){
   var nowMinus2h = moment().subtract(2, 'hours').format();
   var nowMinus3h = moment().subtract(3, 'hours').format();
   Foot.find({ date: { '<': nowMinus2h, '>': nowMinus3h }}).exec(function(err, foots){
-    console.log(foots);
     if(foots.length>0){
       async.each(foots, function(foot, callback){
         Player.find({foot:foot.id, statut:[2,3]}).exec(function(err, players){              
@@ -595,7 +594,6 @@ endVote : function(req,res){
   Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre",function(err,results){
     if(results){
       var results = results.rows;
-      console.log(results);
       async.each(results, function(result, callback){
         Trophe.create({foot:result.foot, trophe:0, user:result.chevre}).exec(function(err,tr){
           console.log(err);
@@ -627,7 +625,6 @@ endVote : function(req,res){
 Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.homme, v.foot) x group by foot, homme",function(err,results){
  if(results){
   var results = results.rows;
-  console.log(results);
   async.each(results, function(result, callback){
     Trophe.create({foot:result.foot, trophe:1, user:result.homme});
     Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:result.foot}).exec(function(err,actu){
