@@ -14,11 +14,11 @@ module.exports = {
         title: "WeFoot, le Football connecté",
         icon: "icon",
         body: text
-    }
+   }
 });
 
 sender.send(message, tokens, function (err, result) {
-  if(err) console.error(err);
+  if(err) console.log(err);
 });
 },
 
@@ -50,6 +50,17 @@ sendIosPush: function(text, tokens, pendingNotifs, additionalData){
 
   var apnsConnection = new apn.Connection(options);
   apnsConnection.pushNotification(note, tokens);
+
+  apnsConnection.on('transmissionError', function(errCode, notification, device) {
+    console.error("Notification caused error: " + errCode + " for device ", device, notification);
+  });
+
+  apnsConnection.on('disconnected', function() {
+    console.log("Disconnected from APNS");
+  });
+
+  apnsConnection.on('socketError', console.error);
+
 },
 
 sendPush:function(pushes, pushText, additionalData){
