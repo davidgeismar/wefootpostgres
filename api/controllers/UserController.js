@@ -249,7 +249,7 @@ isFriendWith: function(req,res){
        user1: req.param('id') },
        { user2: req.param('id')
      }]
-   }).skip(req.param('skip')).exec(function(err,friendships){
+   }).skip(req.param('skip')).limit(20000).exec(function(err,friendships){
     if(err) res.status(400).end();
     else{ 
               _.each(friendships, function(friendship){       // Loop to get the ids of friends    
@@ -268,7 +268,7 @@ isFriendWith: function(req,res){
                     statuts.push({stat: 0,friendship: friendship.id});
                 }
               });
-            User.find().where({id:results}).limit(20).exec(function(err,users){   // Find users contained in results
+            User.find().where({id:results}).limit(200).exec(function(err,users){   // Find users contained in results
               if(err) res.status(400).end();
               else{
                 async.each(users, function(user,callback){      // Remove token from json
