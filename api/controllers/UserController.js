@@ -521,8 +521,9 @@ threeHoursBeforeMatch: function(req,res){
   Foot.find({ date: { '<': nowPlus3h10min, '>': nowPlus3h }}).exec(function(err, foots){
     if(err)
       console.log(err);
-    async.each(foots, function(foot, callback){
-      Player.find({foot:foot.id}).exec(function(err, players){
+    if(foots.length > 0){
+      async.each(foots, function(foot, callback){
+        Player.find({foot:foot.id}).exec(function(err, players){
       //We send pushes
       var usersId = _.pluck(players, 'user');
       Push.find({user:usersId}).exec(function(err, pushes){
@@ -548,9 +549,12 @@ threeHoursBeforeMatch: function(req,res){
       });
 
     });
-    },function(err){
-      process.exit();
-    });
+      },function(err){
+        return res.status(200);
+      });
+    }
+    else
+      return res.status(200);
   });
 
 },
@@ -559,7 +563,6 @@ beginVote: function(req,res){
   var nowMinus2h = moment().subtract(2, 'hours').format();
   var nowMinus3h = moment().subtract(3, 'hours').format();
   Foot.find({ date: { '<': nowMinus2h, '>': nowMinus3h }}).exec(function(err, foots){
-    console.log(foots);
     if(foots.length>0){
       async.each(foots, function(foot, callback){
         Player.find({foot:foot.id, statut:[2,3]}).exec(function(err, players){              
@@ -581,8 +584,11 @@ beginVote: function(req,res){
           }
         });
       }, function(err){
-        process.exit();
+        return res.status(200).end();
       });
+    }
+    else{
+      return res.status(200).end();
     }
   });
 },
@@ -595,7 +601,6 @@ endVote : function(req,res){
   Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre",function(err,results){
     if(results){
       var results = results.rows;
-      console.log(results);
       async.each(results, function(result, callback){
         Trophe.create({foot:result.foot, trophe:0, user:result.chevre}).exec(function(err,tr){
           console.log(err);
@@ -619,15 +624,18 @@ endVote : function(req,res){
       }, function(err){
         finish++;
         if(finish==2)
-          process.exit();
+          return res.status(200).end();
       });
     }
+    else
+      finish++;
+      if(finish==2)
+        return res.status(200).end();
   });
 
 Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.homme, v.foot) x group by foot, homme",function(err,results){
  if(results){
   var results = results.rows;
-  console.log(results);
   async.each(results, function(result, callback){
     Trophe.create({foot:result.foot, trophe:1, user:result.homme});
     Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:result.foot}).exec(function(err,actu){
@@ -647,9 +655,13 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
   }, function(err){
     finish++;
     if(finish==2)
-      process.exit();
+      return res.status(200).end();
   });
 }
+else
+  finish++;
+  if(finish==2)
+    return res.status(200).end();
 });
 }
 

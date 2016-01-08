@@ -122,7 +122,10 @@
     newPassword:true,
     resetPassword:true,
     updateSeen:'isLoggedInParam(\'id\')',
-    getLastNotif:'isLoggedInParam(\'id\')'
+    getLastNotif:'isLoggedInParam(\'id\')',
+    threeHoursBeforeMatch: true,
+    beginVote: true,
+    endVote: true
     // toConfirm
 
   },
