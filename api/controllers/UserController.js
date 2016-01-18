@@ -241,7 +241,6 @@ module.exports = {
 
     },
 
-<<<<<<< HEAD
   getAllFriends: function (req,res){
       var statuts = [];
       var results = [];
