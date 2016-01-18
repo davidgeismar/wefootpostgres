@@ -17,15 +17,15 @@ getNotif: function(req,res){
 getActu: function(req,res){
 	var moment = require('moment');
 	var friends = req.param('friends');
-	if(req.param('friends').length == 0) 
+	if(req.param('friends').length == 0)
 		friends = [0]; //Prevent from sails-mysql bug
-	var query = {where: 
+	var query = {where:
 					{ or:[{related_user: friends,typ:['footConfirm','newFriend','demandAccepted'],user: {'!': req.param('user').id}},
 						{user:friends,typ:['hommeDuMatch','chevreDuMatch']},
 						{user:friends, typ:['newFriend'], related_user: {'!': req.param('user').id}},
 						{typ: 'WF'}],
 					 id: {'>': req.param('skip')},
-					 createdAt: {'>': req.param('user').createdAt}, 
+					 createdAt: {'>': req.param('user').createdAt},
 					},
 				sort:'createdAt DESC',
 				limit:30};
@@ -77,7 +77,7 @@ newNotif: function(req,res){
 	// 							if(index==connexions.length-1)
 	// 								callback();
 	// 					});
-	// 				}	
+	// 				}
 	// 				else callback();
 	// 			});
 	// 		});
