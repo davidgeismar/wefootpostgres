@@ -32,7 +32,7 @@
       Foot.create(params, function FootCreated(err, foot){
         if(err){
           console.log(err);
-          return res.status(406).end();         
+          return res.status(406).end();
         }
         else{
           var id = foot.id;
@@ -61,10 +61,10 @@
     update: function(req,res){
       Foot.update({id: req.param('id')},req.params.all(),function(err){
         if(err) { console.log(err); return res.status(400).end()};
-        res.status(200).end(); 
+        res.status(200).end();
       });
     },
-    
+
     getFootByUser: function(req,res){ //SQL Query pour utiliser une jointure, Garde le footID(seconde position)
       Player.query("SELECT * FROM player p INNER JOIN foot f ON f.id=p.foot WHERE p.user ="+req.param('player')+" AND f.date > '"+moment().format('YYYY-MM-DD HH:mm:ss')+"' AND f.is_canceled <> TRUE ORDER BY f.date", function(err,foots){
         if(err) return res.status(400).end();
@@ -95,7 +95,7 @@
         //info.field = field[0]; FOR POSTGRES
         info.field = field.rows[0]; //FOR POSTGRES
         if(info.orgaName) return res.json(info).status(200).end();
-      });      
+      });
     },
 
     getPlayers: function(req,res){
@@ -106,7 +106,7 @@
         },
         {
           foot: req.param('id'),
-          statut : 3 
+          statut : 3
         }]
       }).exec(function(err,players){
         results = _.pluck(players, 'user');
@@ -211,8 +211,8 @@
       dateReq = dateReq.replace(/,+/g, '');
       Field.find().where({
         cleanname: {
-          'contains': ToolsService.clean(req.param('field')) 
-        }  
+          'contains': ToolsService.clean(req.param('field'))
+        }
       }).exec(function(err,fields){
         if(err) return res.status(400).end();
         fieldsId = _.pluck(fields,'id');

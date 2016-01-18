@@ -66,15 +66,7 @@
   * Run: npm install sails-mongo                                             *
   *                                                                          *
   ***************************************************************************/
-  mongodb: {
-    adapter: 'sails-mongo',
-    host: 'localhost',
-    port: 27017,
-    user: 'root',
-    password: 'root',
-    database: 'wefoot'
-    //schema : true
-  },
+
 
   /***************************************************************************
   *                                                                          *
@@ -100,9 +92,9 @@
       adapter: 'sails-postgresql',
       host: 'localhost',
       port: 5432,
-      user: 'raphaelfettaya',
+      user: 'davidgeismar',
       password: '',
-      database: 'wefoot'
+      database: 'wefoot_local_dev'
    }
 
 

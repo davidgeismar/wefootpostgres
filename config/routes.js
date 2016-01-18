@@ -51,11 +51,11 @@
   'GET /field/search/:id/:word': 'FieldController.searchFields', //DEPRECATED
 
   'GET /field/near/:lat/:long':'FieldController.searchFields', //DEPRECATED
-  
-  'GET /field/getFieldInfo/:name': 'FieldController.getFieldInfo', 
+
+  'GET /field/getFieldInfo/:name': 'FieldController.getFieldInfo',
 
   '/addFriend': 'UserController.addFriend',
-  
+
   'GET /getAllFriends/:id/:skip': 'UserController.getAllFriends',
 
   '/addFavorite': 'UserController.addFavorite',
@@ -109,6 +109,8 @@
   'GET /trophe/getNbTrophes/:id' : 'TropheController.getNbTrophes',
 
   'GET /field/getStudentDiscount/:id' :'FieldController.getStudentDiscount',
+
+  'GET /getHommeAndChevre/:id' : 'TropheController.getHommeAndChevre',
 
   '/askVote':'UserController.beginVote',
 

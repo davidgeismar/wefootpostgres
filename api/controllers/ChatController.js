@@ -8,7 +8,7 @@
  var async = require('async');
  var merge = require('merge');
  var moment = require('moment');
- 
+
  var shrinkUsers = function(users){
   return _.map(users, function(obj) { return _.pick(obj, 'first_name','last_name' ,'picture', 'id'); });
 };
@@ -18,7 +18,7 @@ module.exports = {
  create: function(req, res, next){
   Chat.create({typ:req.param('typ'), desc:req.param('desc'), related:req.param('related')}, function chatCreated(err, chat){
     if(err){
-      return res.status(406).end();         
+      return res.status(406).end();
     }
     async.each(req.param('users'),function(user,callback){
       Chatter.create({user:user,chat:chat.id}, function chatterCreated(err, chatter){ callback();});
@@ -41,7 +41,7 @@ module.exports = {
                 return res.status(200).end();
               });
             }
-          });      
+          });
         });
       }
     });
@@ -61,14 +61,14 @@ getChat: function (req, res, next){
   Chat.findOne(reqParam).populate('messages').exec(function(err,chat){
     if(err){
       console.log(err);
-      return res.status(406).end();         
+      return res.status(406).end();
     }
     if(!chat)
       return res.status(200).end();
     Chatter.find({chat:chat.id}).exec(function(err, usersChatters){
       if(err){
         console.log(err);
-        return res.status(406).end();         
+        return res.status(406).end();
       }
       var currentChatter = _.find(usersChatters, function(chatter){return chatter.user==req.param('id')});
       if(currentChatter){
@@ -80,7 +80,7 @@ getChat: function (req, res, next){
       User.find(usersID).exec(function(err, bigUsers){
         if(err){
           console.log(err);
-          return res.status(406).end();         
+          return res.status(406).end();
         }
         var smallUsers = shrinkUsers(bigUsers);
         return res.status(200).json({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: moment(), users : smallUsers});
@@ -99,14 +99,14 @@ getAllChats: function (req, res, next){
   Chatter.find({user:req.param('id'), deactivate:false}).exec(function(err,chatters){
     if(err){
       console.log(err);
-      return res.status(406).end();         
+      return res.status(406).end();
     }
     if(chatters){
       async.each(chatters,function(chatter,callback){
         Chat.findOne({id:chatter.chat}).populate('messages').exec(function(err,chat){
           if(err){
             console.log(err);
-            return res.status(406).end();         
+            return res.status(406).end();
           }
           else if(!chat){
             callback();
@@ -118,10 +118,11 @@ getAllChats: function (req, res, next){
                 User.find(usersID).exec(function(err, bigUsers){
                   if(err){
                     console.log(err);
-                    return res.status(406).end();         
+                    return res.status(406).end();
                   }
                   var smallUsers = shrinkUsers(bigUsers);
                   chats.push({id:chat.id, typ:chat.typ, desc:chat.desc, messages:chat.messages, createdAt:chat.createdAt,  updatedAt:chat.updatedAt, related:chat.related ,lastTime: chatter.last_time_seen, users : smallUsers});
+                  console.log("heeeeeelloo chats");
                   callback();
                 });
               }
@@ -151,7 +152,7 @@ getNewChats: function (req, res){
   Chatter.find({user:req.param('id'), createdAt: { '>': lastTimeUpdated}}).exec(function(err, chatters){
     if(err){
       console.log(err);
-      return res.status(406).end();  
+      return res.status(406).end();
     }
     if(chatters.length>0)
     {
@@ -160,7 +161,7 @@ getNewChats: function (req, res){
       // _.map(chats, function(obj) { return _.pick(obj, 'id','typ' ,'desc', 'id'); }); {id:chat.id, typ:chat.typ, desc:chat.desc, messages:[], createdAt:chat.createdAt, updatedAt:chat.updatedAt, related:chat.related ,lastTime: null, users : smallUsers});
       _.each(chats, function(element, index) {
         chats[index] = _.extend(element, {lastTime: null}, {users: []}, {"messages":[]});
-      }); 
+      });
       return res.status(200).json(chats);
     });
     }
@@ -178,7 +179,7 @@ getNewChatters: function (req, res, next){
       if(chatter){
         if(err){
           console.log(err);
-          return res.status(406).end();         
+          return res.status(406).end();
         }
         User.findOne(chatter.user).exec(function(err, user){
           if(user){
@@ -204,12 +205,12 @@ getUnseenMessages: function (req, res, next){
   Message.find({ chat:chats, createdAt: { '>': lastTimeUpdated}}).limit(20000).sort({createdAt: 'asc'}).exec(function(err, messages){
     if(err){
       console.log(err);
-      return res.status(406).end();         
+      return res.status(406).end();
     }
     if(messages.length>0)
-      return res.status(200).json(messages); 
+      return res.status(200).json(messages);
     else
-      return res.status(200).end(); 
+      return res.status(200).end();
   });
 }
 
