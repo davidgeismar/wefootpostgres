@@ -17,18 +17,18 @@ module.exports = {
 	  	type: 'integer',
   		foreignKey: true,
     	references: 'user',
-   		on: 'id'  
+   		on: 'id'
 	},
 	related_user: {
 		type: 'integer',
   		foreignKey: true,
     	references: 'user',
-   		on: 'id' 
+   		on: 'id'
 	},
 	typ: {
 		type: 'string',
-		enum: ['newFriend','endGame','hommeDuMatch','chevreDuMatch','footInvit','messageReceived','footConfirm','footAnnul','footDemand','footEdit','demandAccepted','demandRefused', '3hoursBefore','WF', 'footLeav']
-	}, 
+		enum: ['newFriend','endGame','resultFoot','footInvit','messageReceived','footConfirm','footAnnul','footDemand','footEdit','demandAccepted','demandRefused', '3hoursBefore','WF', 'footLeav']
+	},
 	//For WF types
 	attached_text: {
 		type: 'string'

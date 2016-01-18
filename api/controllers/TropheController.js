@@ -24,22 +24,77 @@
  		})
  	},
 
+  // getHommeAndChevre: function (req, res) {
+  //     // console.log(req.param("id"));
+  //     Trophe.find({foot: req.param('id')}, function(err, trophes){
+  //       if(!trophes) {return res.status(400).end();}
+  //       if(trophes){
+  //         _.each(trophes, function(trophe, index){
+  //           User.find(trophe.id, function(err, user){
+  //             // console.log(user);
+  //             if (trophe.trophe == 0) {var chevre = trophe; chevre.picture = user.picture; chevre.name = user.first_name; };
+  //             if (trophe.trophe == 1) {var homme = trophe; homme.picture = user.picture; homme.name = user.first_name;};
+  //             if (index == trophes.length - 1)
 
-  getHommeAndChevre: function (req, res) {
-    console.log(req.param("id"));
-    Trophe.query("SELECT 'user'.id, 'user'.picture, 'user'.first_name, 'trophe'.trophe FROM 'user' INNER JOIN 'trophe' ON 'trophe'.user = 'user'.id WHERE 'trophe'.foot ="+req.param('id'), function(err,trophes){
-      console.log(trophes)
-      // if(err) {console.log(err);}
-      if(!trophes) {return res.status(400).end();}
-      if(trophes){
-        _each(trophes, function(trophe){
-          if (trophe.trophe == 0) {var chevre = trophe};
-          if (trophe.trophe == 1) { var homme = trophe};
-        })
-       return res.status(200).json({chevre: chevre, homme: homme})
-      }
-    });
-  }
+  //               return res.status(200).json({chevre: chevre, homme: homme});
+  //           });
+  //         });
+  //       }
+  //     });
+  //   }
+
+    getHommeAndChevre: function (req, res) {
+      // console.log(req.param("id"));
+      var HC = [];
+      Trophe.find({foot: req.param('id')}, function(err, trophes){
+        if(!trophes) {return res.status(400).end();}
+        if(trophes){
+          _.each(trophes, function(trophe, index){
+            User.findOne(trophe.user).exec(function(err, user){
+              // if (trophe.trophe == 0) {
+              //   console.log("here");
+              //   var chevre =
+              //   { trophe:trophe,
+              //     picture:user.picture,
+              //     name:user.first_name
+              //   }
+              //   }
+              // if (trophe.trophe == 1) {
+
+              //   var homme =
+              //   { trophe:trophe,
+              //     picture:user.picture,
+              //     name:user.first_name
+              //   }
+              // }
+              HC.push({ trophe:trophe,
+                  picture:user.picture,
+                  name:user.first_name
+                });
+              if (index == trophes.length - 1){
+                return res.status(200).json(HC);
+              }
+            });
+          });
+        }
+      });
+    }
+
+
+  // getHommeAndChevre: function (req, res) {
+  //   Trophe.query('SELECT "user".id, "user".picture, "user".first_name, "trophe".trophe FROM "user" INNER JOIN "trophe" ON "trophe".user = "user".id WHERE "trophe".foot ='+req.param('id'), function(err,trophes){
+  //     // console.log(trophes)
+  //     if(!trophes) {return res.status(400).end();}
+  //     if(trophes){
+  //       _.each(trophes, function(trophe, index){
+  //         console.log("trophé@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ")
+  //         if (trophe.trophe == 0) {  console.log("chèvre!!!!!!!!!!!!!!!" ); };
+  //         if (trophe.trophe == 1) {  console.log("homme!!!!!!!!!!!!!!"); };
+  //         if (index == trophes.length - 1) { return res.status(200).json({chevre: chevre, homme: homme});};
+  //       })
+  //     }
+  //   });
+  // }
 
 
  };
