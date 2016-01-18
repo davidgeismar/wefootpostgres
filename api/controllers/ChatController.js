@@ -51,7 +51,14 @@ module.exports = {
 //get a chat for a given user
 getChat: function (req, res, next){
   var related = req.param('related');
-  Chat.findOne({related:related}).populate('messages').exec(function(err,chat){
+  var chat = req.param('chat');
+  var reqParam = {};
+  if(chat)
+    reqParam = {chat:chat};
+  else if(related)
+    reqParam = {related:related};
+
+  Chat.findOne(reqParam).populate('messages').exec(function(err,chat){
     if(err){
       console.log(err);
       return res.status(406).end();         

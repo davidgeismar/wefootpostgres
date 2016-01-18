@@ -5,8 +5,8 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var moment = require('moment');
-var async = require('async');
+ var moment = require('moment');
+ var async = require('async');
 
 
  module.exports = {
@@ -528,7 +528,8 @@ threeHoursBeforeMatch: function(req,res){
       var usersId = _.pluck(players, 'user');
       Push.find({user:usersId}).exec(function(err, pushes){
         if(pushes){
-          PushService.sendPush(pushes, "Votre rencontre démarre dans 3h, ne soyez pas en retard");
+          var pushesId = _.pluck(pushes,'push_id');
+          PushService.sendPush(pushesId, "Votre rencontre démarre dans 3h, ne soyez pas en retard");
         }
       });
       //We create actu and send it by socket
@@ -550,12 +551,12 @@ threeHoursBeforeMatch: function(req,res){
 
     });
       },function(err){
-        return res.status(200);
+        return res.status(200).end();
       });
-    }
-    else
-      return res.status(200);
-  });
+}
+else
+  return res.status(200).end();
+});
 
 },
 
@@ -597,11 +598,11 @@ endVote : function(req,res){
  var nowMinus3d = moment().subtract(3, 'days').format('YYYY-MM-DD HH:mm:ss');
  var nowMinus4d = moment().subtract(4, 'days').format('YYYY-MM-DD HH:mm:ss');
  var finish = 0;
+ // Vote.query("select chevre, homme, foot from (select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.homme, v.foot) x group by foot, homme)x,(select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre) y where y.foot = x.foot ")
   // On sélectionne les chevres et hommes des foots qui ont plus de 3 jours     
   Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre",function(err,results){
     if(results){
-      var results = results.rows;
-      async.each(results, function(result, callback){
+      async.each(results.rows, function(result, callback){
         Trophe.create({foot:result.foot, trophe:0, user:result.chevre}).exec(function(err,tr){
           console.log(err);
         });
@@ -629,15 +630,16 @@ endVote : function(req,res){
     }
     else
       finish++;
-      if(finish==2)
-        return res.status(200).end();
+    if(finish==2)
+      return res.status(200).end();
   });
 
 Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.homme, v.foot) x group by foot, homme",function(err,results){
  if(results){
-  var results = results.rows;
-  async.each(results, function(result, callback){
-    Trophe.create({foot:result.foot, trophe:1, user:result.homme});
+  async.each(results.rows, function(result, callback){
+    Trophe.create({foot:result.foot, trophe:1, user:result.homme}).exec(function(err,tr){
+      console.log(err);
+    });
     Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:result.foot}).exec(function(err,actu){
       if(err)
         console.log(err);
@@ -660,8 +662,8 @@ Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) a
 }
 else
   finish++;
-  if(finish==2)
-    return res.status(200).end();
+if(finish==2)
+  return res.status(200).end();
 });
 }
 
