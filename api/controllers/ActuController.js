@@ -31,7 +31,7 @@ getActu: function(req,res){
 				limit:30};
 	Actu.find(query,function(err,actu){
 			var notMine = _.filter(actu,function(elem){return elem.user!=req.param('user')&&elem.related_user != req.param('user')});
-			var result = _.groupBy(notMine, function(elem){return moment(elem.createdAt).lang('fr').format('L')});
+			var result = _.groupBy(notMine, function(elem){return moment(elem.createdAt).locale('fr').format('L')});
 			res.status(200).json(result);
 		});
 },
