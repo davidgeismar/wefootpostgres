@@ -605,23 +605,10 @@ module.exports = {
         var results = results.rows;
         async.each(results, function(result, callback){
           Trophe.create({foot:result.foot, trophe:0, user:result.chevre}).exec(function(err,tr){
-            console.log(err);
+            if (err)
+              console.log(err);
+            callback();
           });
-          // Actu.create({user:result.chevre, related_user:result.chevre, typ:'chevreDuMatch', related_stuff:result.foot}).exec(function(err,actu){
-          //   if(err)
-          //     console.log(err);
-          //   Connexion.findOne({user:result.chevre}).exec(function(err, connexion){
-          //     if(connexion){
-          //       sails.sockets.emit(connexion.socket_id,'notif',actu);
-          //       callback();
-          //     }
-
-          //     else{
-          //       callback();
-          //     }
-          //   });
-
-          // });
 
         }, function(err){
           finish++;
@@ -639,20 +626,11 @@ module.exports = {
      if(results){
         var results = results.rows;
         async.each(results, function(result, callback){
-          Trophe.create({foot:result.foot, trophe:1, user:result.homme});
-          // Actu.create({user:result.homme, related_user:result.homme, typ:'hommeDuMatch', related_stuff:result.foot}).exec(function(err,actu){
-          //   if(err)
-          //     console.log(err);
-          //   Connexion.findOne({user:result.homme}).exec(function(err, connexion){
-          //     if(connexion){
-          //       sails.sockets.emit(connexion.socket_id,'notif',actu);
-          //       callback();
-          //     }
-          //     else
-          //       callback();
-          //   });
-
-          // });
+          Trophe.create({foot:result.foot, trophe:1, user:result.homme}).exec(function(err, tr){
+            if (err)
+              console.log(err);
+            callback();
+          });
 
         }, function(err){
           finish++;
