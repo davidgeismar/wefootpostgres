@@ -27,7 +27,7 @@ module.exports = {
 	},
 	typ: {
 		type: 'string',
-		enum: ['newFriend','endGame','resultFoot','footInvit','messageReceived','footConfirm','footAnnul','footDemand','footEdit','demandAccepted','demandRefused', '3hoursBefore','WF', 'footLeav']
+		enum: ['newFriend','endGame','resultFoot','footInvit','messageReceived','footConfirm','footAnnul','footDemand','footEdit','demandAccepted','demandRefused', '3hoursBefore','WF', 'footLeav', 'playerRemov']
 	},
 	//For WF types
 	attached_text: {
