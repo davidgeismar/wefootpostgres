@@ -651,31 +651,36 @@ endVote : function(req,res){
 
     // on créee les notif homme chevre pour tous les joueurs de la partie ssi un trophé existe pour le foot
     Foot.query("SELECT id FROM foot WHERE foot.date <'"+nowMinus3d+"' AND date >'"+nowMinus4d+"'", function(err, results){
+        // console.log("resultats")
+        // console.log(results);
       _.each(results.rows, function(result, err){
         Player.query("SELECT player.user, player.foot FROM player WHERE (player.statut = 2 OR player.statut = 3) AND player.foot ='"+result["id"]+"'", function(err, players){
           async.each(players.rows, function(player, callback){
             console.log("@@@@@ iddddddddddd du foot");
             console.log(player["foot"]);
             Trophe.findOne({foot: player["foot"]}).exec(function findOneCB(err, trophe){
-             if (err) {console.log(err);}
-             if (trophe){
-                console.log(trophe);
-                Actu.create({user:player["user"], related_user:player["user"], typ:'resultFoot', related_stuff: player["foot"]}).exec(function(err,actu){
-                  if(err){
-                    console.log(err);
-                  }
-                  else {
-                    Connexion.findOne({user:player["user"]}).exec(function(err, connexion){
-                      if (connexion){
-                        sails.sockets.emit(connexion.socket_id,'notif',actu);
-                        callback();
-                      }
-                      else {
-                        callback();
-                      }
-                    });
-                  }
-                });
+               if (err) {console.log(err);}
+               if (trophe){
+                  console.log(trophe);
+                  Actu.create({user:player["user"], related_user:player["user"], typ:'resultFoot', related_stuff: player["foot"]}).exec(function(err,actu){
+                    if(err){
+                      console.log(err);
+                    }
+                    else {
+                      Connexion.findOne({user:player["user"]}).exec(function(err, connexion){
+                        if (connexion){
+                          sails.sockets.emit(connexion.socket_id,'notif',actu);
+                          callback();
+                        }
+                        else {
+                          callback();
+                        }
+                      });
+                    }
+                  });
+                }
+              else {
+                console.log("Personne n'a été élu sur ce foot")
               }
             });
           },function(){
@@ -683,9 +688,8 @@ endVote : function(req,res){
           })
         })
       })
-
-})
-}
+    })
+  }
 }
 
 
