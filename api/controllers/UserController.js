@@ -681,6 +681,7 @@ endVote : function(req,res){
                 }
               else {
                 console.log("Personne n'a été élu sur ce foot")
+                callback();
               }
             });
           },function(){
