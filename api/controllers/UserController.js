@@ -601,70 +601,79 @@ endVote : function(req,res){
  var nowMinus3d = moment().subtract(3, 'days').format('YYYY-MM-DD HH:mm:ss');
  var nowMinus4d = moment().subtract(4, 'days').format('YYYY-MM-DD HH:mm:ss');
  var finish = 0;
+ console.log("helllooo");
     // On sélectionne les chevres et hommes des foots qui ont plus de 3 jours
-    Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre",function(err,results){
-      if(results){
-        var results = results.rows;
-        async.each(results, function(result, callback){
-          Trophe.create({foot:result.foot, trophe:0, user:result.chevre}).exec(function(err,tr){
-            if (err)
-              console.log(err);
-            callback();
-          });
+  //   Vote.query("select max(nbVotes) as maxVotes, chevre, foot from (select count(*) as nbVotes, v.chevre, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.chevre IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.chevre, v.foot) x group by foot, chevre",function(err,results){
+  //     if(results){
+  //       var results = results.rows;
+  //       async.each(results, function(result, callback){
+  //         Trophe.create({foot:result.foot, trophe:0, user:result.chevre}).exec(function(err,tr){
+  //           if (err)
+  //             console.log(err);
+  //           callback();
+  //         });
 
-        }, function(err){
-          finish++;
-          if(finish==2)
-            return res.status(200).end();
-        });
-      }
-      else
-        finish++;
-      if(finish==2)
-        return res.status(200).end();
-    });
+  //       }, function(err){
+  //         finish++;
+  //         if(finish==2)
+  //           return res.status(200).end();
+  //       });
+  //     }
+  //     else
+  //       finish++;
+  //     if(finish==2)
+  //       return res.status(200).end();
+  //   });
 
-    Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.homme, v.foot) x group by foot, homme",function(err,results){
-     if(results){
-      var results = results.rows;
-      async.each(results, function(result, callback){
-        Trophe.create({foot:result.foot, trophe:1, user:result.homme}).exec(function(err, tr){
-          if (err)
-            console.log(err);
-          callback();
-        });
+  //   Vote.query("select max(nbVotes) as maxVotes, homme, foot from (select count(*) as nbVotes, v.homme, v.foot from vote v inner join foot f on f.id = v.foot WHERE v.homme IS NOT NULL and f.date < '"+nowMinus3d+"' and f.date > '"+nowMinus4d+"' group by v.homme, v.foot) x group by foot, homme",function(err,results){
+  //    if(results){
+  //     var results = results.rows;
+  //     async.each(results, function(result, callback){
+  //       Trophe.create({foot:result.foot, trophe:1, user:result.homme}).exec(function(err, tr){
+  //         if (err)
+  //           console.log(err);
+  //         callback();
+  //       });
 
-      }, function(err){
-        finish++;
-        if(finish==2)
-          return res.status(200).end();
-      });
-    }
-    else
-      finish++;
-    if(finish==2)
-      return res.status(200).end();
-  });
+  //     }, function(err){
+  //       finish++;
+  //       if(finish==2)
+  //         return res.status(200).end();
+  //     });
+  //   }
+  //   else
+  //     finish++;
+  //   if(finish==2)
+  //     return res.status(200).end();
+  // });
 
 
+
+    // on créee les notif homme chevre pour tous les joueurs de la partie ssi un trophé existe pour le foot
     Foot.query("SELECT id FROM foot WHERE foot.date <'"+nowMinus3d+"' AND date >'"+nowMinus4d+"'", function(err, results){
-      // console.log(results)
       _.each(results.rows, function(result, err){
-        // console.log(result["id"]);
         Player.query("SELECT player.user, player.foot FROM player WHERE (player.statut = 2 OR player.statut = 3) AND player.foot ='"+result["id"]+"'", function(err, players){
           async.each(players.rows, function(player, callback){
-            Actu.create({user:player["user"], related_user:player["user"], typ:'resultFoot', related_stuff: player["foot"]}).exec(function(err,actu){
-              if(err){
-                console.log(err);
-              }
-              else {
-                Connexion.findOne({user:player["user"]}).exec(function(err, connexion){
-                  if (connexion){
-                    sails.sockets.emit(connexion.socket_id,'notif',actu);
-                    callback();
+            console.log("@@@@@ iddddddddddd du foot");
+            console.log(player["foot"]);
+            Trophe.findOne({foot: player["foot"]}).exec(function findOneCB(err, trophe){
+             if (err) {console.log(err);}
+             if (trophe){
+                console.log(trophe);
+                Actu.create({user:player["user"], related_user:player["user"], typ:'resultFoot', related_stuff: player["foot"]}).exec(function(err,actu){
+                  if(err){
+                    console.log(err);
                   }
                   else {
-                    callback();
+                    Connexion.findOne({user:player["user"]}).exec(function(err, connexion){
+                      if (connexion){
+                        sails.sockets.emit(connexion.socket_id,'notif',actu);
+                        callback();
+                      }
+                      else {
+                        callback();
+                      }
+                    });
                   }
                 });
               }
@@ -678,5 +687,6 @@ endVote : function(req,res){
 })
 }
 }
+
 
 

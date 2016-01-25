@@ -44,11 +44,11 @@
   // -OR-
   //
 
-  adapter: 'socket.io-redis',
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  db: process.env.REDIS_DB,
-  pass: process.env.REDIS_PASSWORD,
+  // adapter: 'socket.io-redis',
+  // host: process.env.REDIS_HOST,
+  // port: process.env.REDIS_PORT,
+  // db: process.env.REDIS_DB,
+  // pass: process.env.REDIS_PASSWORD,
 
  /***************************************************************************
   *                                                                          *
@@ -107,7 +107,7 @@
   // beforeConnect: function(handshake, cb) {
   //   // `true` allows the connection
   //   return cb(null, true);
-  
+
   //   // (`false` would reject the connection)
   // },
 
@@ -139,7 +139,7 @@
   *                                                                          *
   ***************************************************************************/
   transports: ["polling"],
-  "polling duration": 20, 
+  "polling duration": 20,
   origins: '*:*'
 
 };
