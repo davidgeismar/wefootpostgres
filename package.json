@@ -5,7 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "apn": "~1.7.4",
+    "apn": "~2.1.5",
     "async": "~1.2.0",
     "atob": "^1.1.2",
     "aws-sdk": "^2.2.4",
