@@ -47,11 +47,14 @@
     "socket.io-redis": "^0.1.4",
     "trello": "^0.4.1",
     "twilio": "^2.2.1",
-    "urllib": "^2.3.8"
+    "urllib": "^2.3.8",
+    "snyk": "^1.189.0"
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "main": "app.js",
   "repository": {
@@ -59,5 +62,6 @@
     "url": "git://github.com/mac/wefootV2.git"
   },
   "author": "mac",
-  "license": ""
+  "license": "",
+  "snyk": true
 }
