@@ -10,7 +10,7 @@
     "atob": "^1.1.2",
     "aws-sdk": "^2.2.4",
     "basic-auth": "^1.0.3",
-    "bcrypt": "~0.8.3",
+    "bcrypt": "~5.0.0",
     "connect-redis": "1.4.5",
     "easyimage": "~2.0.3",
     "ejs": "~0.8.4",
