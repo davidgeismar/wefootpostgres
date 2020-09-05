@@ -14,8 +14,8 @@
     "connect-redis": "1.4.5",
     "easyimage": "~2.0.3",
     "ejs": "~0.8.4",
-    "google-auth-library": "^0.9.6",
-    "googleapis": "^2.1.1",
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^16.0.0",
     "googlemaps": "1.0.1",
     "grunt": "0.4.2",
     "grunt-contrib-clean": "~0.5.0",
@@ -46,7 +46,7 @@
     "sails-postgresql": "0.10.15",
     "socket.io-redis": "^0.1.4",
     "trello": "^0.4.1",
-    "twilio": "^2.2.1",
+    "twilio": "^3.41.0",
     "urllib": "^2.3.8"
   },
   "scripts": {
