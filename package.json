@@ -33,7 +33,7 @@
     "ionic-push-server": "~1.0.0",
     "jsonwebtoken": "5.0.1",
     "mangopay": "0.0.14",
-    "merge": "^1.2.0",
+    "merge": "^2.1.0",
     "moment": "~2.10.3",
     "node-gcm": "^0.10.0",
     "rc": "~0.5.0",
